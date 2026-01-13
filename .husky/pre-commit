@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Entra na pasta server
+cd server
+
+# 1. Roda o Lint apenas nos arquivos modificados (Rápido)
+npx lint-staged
+
+# 2. SE o lint passar, roda o Type-Check no projeto todo (Lê o tsconfig corretamente)
+npm run type-check
