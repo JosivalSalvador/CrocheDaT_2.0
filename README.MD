@@ -1,162 +1,177 @@
 # CrocheDaT 2.0
 
-Este repositório contém o código-fonte da plataforma CrocheDaT, estruturada como um monorepo que agrega tanto o serviço de backend (API) quanto o frontend (Aplicação Web). O projeto utiliza uma arquitetura baseada em microsserviços containerizados para produção e desenvolvimento local.
+Repositório monorepo da plataforma de e-commerce CrocheDaT. O projeto integra uma API REST de alta performance e um frontend moderno, utilizando conteinerização para padronização de ambientes.
 
-## Visão Geral da Arquitetura
+## Stack Tecnológica
 
-O sistema é dividido em dois diretórios principais dentro da raiz:
+### Server (Backend)
+Microsserviço de API construído sobre o ecossistema Node.js (v22+).
+* **Core Framework:** Fastify v5 (Foco em performance e baixo overhead).
+* **Validação & Tipagem:** Zod + `fastify-type-provider-zod` (Inferência de tipos automática e validação de runtime).
+* **Banco de Dados:** PostgreSQL interagido via Prisma ORM v7.
+* **Documentação:** Swagger (OpenAPI) visualizado via Scalar API Reference.
+* **Testes:** Vitest + Supertest (Testes de integração e unitários).
+* **Segurança:** JWT para autenticação, Bcryptjs para hashing, Helmet e Rate Limit.
 
-* **server/**: API RESTful construída com NestJS. Responsável por regras de negócio, autenticação, integração com banco de dados e validação de dados.
-* **web/**: Interface do usuário construída com Next.js (React). Consome a API do servidor e gerencia o estado da aplicação no lado do cliente.
+### Web (Frontend)
+Aplicação renderizada via Server Components e Client Components.
+* **Framework:** Next.js 16 (App Router).
+* **Library:** React 19 (RC/Latest).
+* **Estilização:** TailwindCSS v4 + `tailwindcss-animate` + `clsx`/`tailwind-merge`.
+* **State Management/Fetching:** TanStack Query v5.
+* **Testes:** Vitest, React Testing Library e MSW (Mock Service Worker).
+* **Componentes:** Radix UI Primitives, Lucide React, Framer Motion.
 
-A infraestrutura é orquestrada via Docker, garantindo paridade entre os ambientes de desenvolvimento e produção.
-
-## Tecnologias e Ferramentas
-
-### Frontend (Web)
-* **Framework:** Next.js (React)
-* **Linguagem:** TypeScript
-* **Estilização:** TailwindCSS
-* **Testes:** Vitest (Testes Unitários)
-* **HTTP Client:** Axios ou Fetch API nativa
-
-### Backend (Server)
-* **Runtime:** Node.js v22
-* **Framework:** NestJS
-* **Banco de Dados:** PostgreSQL
-* **ORM:** Prisma
-* **Testes:** Jest (Unitários e Integração)
-* **Autenticação:** JWT (JSON Web Tokens)
-
-### Infraestrutura e DevOps
-* **Containerização:** Docker & Docker Compose
-* **CI/CD:** GitHub Actions
-* **Controle de Qualidade:** Husky, Lint-staged, ESLint e Prettier
-* **Registry:** DockerHub
+### DevOps & Tooling
+* **Linting/Formatting:** ESLint 9 (Flat Config), Prettier.
+* **Hooks:** Husky + Lint-staged.
+* **Containerização:** Docker e Docker Compose.
+* **CI/CD:** GitHub Actions.
 
 ---
 
-## Configuração do Ambiente de Desenvolvimento
+## Estrutura do Monorepo
 
-Para executar este projeto localmente, certifique-se de ter instalado:
-* Node.js (versão 22 ou superior)
-* Docker e Docker Compose
-* Git
-
-### 1. Variáveis de Ambiente
-
-O projeto não funcionará sem as variáveis de ambiente configuradas. Crie os arquivos `.env` nas pastas respectivas baseando-se nos arquivos de exemplo.
-
-**Backend (`server/.env`):**
-```env
-# Conexão com o banco de dados (exemplo para Docker local)
-DATABASE_URL="postgresql://user:password@localhost:5432/crochedat?schema=public"
-
-# Segredo para assinatura de tokens JWT
-JWT_SECRET="segredo_desenvolvimento"
+```text
+/
+├── .github/                # Workflows de CI/CD
+├── server/                 # Aplicação Backend (Fastify)
+│   ├── src/                # Código fonte
+│   ├── prisma/             # Schemas e Migrations
+│   └── ...
+├── web/                    # Aplicação Frontend (Next.js)
+│   ├── src/                # Componentes, Hooks, Pages
+│   └── ...
+├── docker-compose.yml      # Infraestrutura de desenvolvimento (Postgres)
+└── docker-compose.prod.yml # Orquestração para produção
 ```
 
-**Frontend (`web/.env`):**
-```env
-# URL base da API
+---
+
+## Configuração e Execução
+
+### 1. Pré-requisitos
+* Node.js v22+ (Gerenciado via NVM recomendado).
+* Docker & Docker Compose (Para o banco de dados).
+* NPM ou PNPM.
+
+### 2. Variáveis de Ambiente
+Duplique os arquivos de exemplo (`.env.example` se existirem) ou crie novos `.env` em cada diretório.
+
+**server/.env**
+```ini
+DATABASE_URL="postgresql://user:password@localhost:5432/crochedat?schema=public"
+JWT_SECRET="seu_segredo_jwt_super_seguro"
+PORT=3333
+# NODE_ENV é setado automaticamente pelos scripts
+```
+
+**web/.env**
+```ini
 NEXT_PUBLIC_API_URL="http://localhost:3333"
 ```
 
-### 2. Inicialização da Infraestrutura (Banco de Dados)
-
-Antes de iniciar as aplicações, suba o container do banco de dados PostgreSQL definido na raiz do projeto.
-
+### 3. Infraestrutura (Banco de Dados)
+Antes de iniciar as aplicações, suba o serviço de persistência:
 ```bash
 docker compose up -d
 ```
-Isso iniciará o serviço de banco de dados na porta `5432`.
+Isso iniciará o PostgreSQL na porta `5432`.
 
-### 3. Instalação e Execução
+### 4. Executando o Backend (Server)
+O servidor utiliza `tsx` para execução e `prisma` para gerenciamento de esquema.
 
-Recomenda-se executar o backend e o frontend em terminais separados para melhor visualização dos logs.
-
-**Terminal 1 - Backend (Server):**
 ```bash
 cd server
 npm install
 
-# Executar migrações do Prisma para criar as tabelas
+# Aplica as migrações no banco de dados
 npx prisma migrate dev
 
-# Iniciar em modo de desenvolvimento (watch mode)
-npm run start:dev
+# Inicia o servidor em modo watch (com logs formatados pelo pino-pretty)
+npm run dev
 ```
-O servidor estará rodando em `http://localhost:3333`.
+* API: `http://localhost:3333`
+* Documentação Swagger/Scalar: `http://localhost:3333/docs` (se configurado na rota padrão).
 
-**Terminal 2 - Frontend (Web):**
+### 5. Executando o Frontend (Web)
 ```bash
 cd web
 npm install
 
-# Iniciar em modo de desenvolvimento
+# Inicia o servidor de desenvolvimento Next.js
 npm run dev
 ```
-A aplicação web estará acessível em `http://localhost:3000`.
+* Aplicação: `http://localhost:3000`
 
 ---
 
-## Padrões de Código e Hooks (Git)
+## Rotinas de Testes e Qualidade
 
-Este projeto utiliza **Husky** para garantir a qualidade do código antes de cada commit.
+O projeto utiliza **Vitest** em ambos os ambientes para paridade de ferramentas.
 
-Ao executar `git commit`, os seguintes processos são disparados automaticamente via `lint-staged`:
-1.  **ESLint:** Verifica erros de sintaxe e padrões de código nos arquivos modificados.
-2.  **Type-Check:** Verifica a consistência da tipagem TypeScript.
-3.  **Prettier:** Formata o código automaticamente.
+### Backend (Server)
+Os testes do servidor exigem um banco de dados de teste limpo. O script `test:setup` cuida de resetar o banco antes de rodar.
 
-Se qualquer uma dessas etapas falhar, o commit será abortado. Corrija os erros apontados no terminal e tente novamente.
+* **Rodar testes (Single Run):** Utiliza um arquivo `.env.test` específico.
+    ```bash
+    cd server
+    npm run test
+    ```
+* **Modo Watch:**
+    ```bash
+    cd server
+    npm run test:watch
+    ```
+* **Type Check:**
+    ```bash
+    cd server
+    npm run type-check
+    ```
+
+### Frontend (Web)
+Inclui testes de componentes e mocks de API via MSW.
+
+* **Rodar testes (Headless):**
+    ```bash
+    cd web
+    npm run test:run
+    ```
+* **Interface Gráfica (Vitest UI):**
+    ```bash
+    cd web
+    npm run test:ui
+    ```
+
+### Hooks de Git (Husky)
+Ao realizar um commit, o **lint-staged** é acionado automaticamente:
+1.  **Server:** Roda `eslint --fix` em arquivos `.ts` e `.js`.
+2.  **Web:** Roda `eslint --fix` e `prettier --write` em arquivos `.tsx`, `.ts`, `.json`, etc.
 
 ---
 
-## Testes Automatizados
+## Build e Produção
 
-A suíte de testes é dividida por aplicação.
+Para gerar os artefatos otimizados para produção:
 
-**Executando testes do Backend:**
+**Server:**
+Compila o TypeScript para JavaScript puro na pasta `dist/`.
 ```bash
 cd server
-npm run test        # Executa testes unitários
-npm run test:e2e    # Executa testes de ponta a ponta (se configurado)
+npm run build
+npm start # Roda node dist/server.js
 ```
-*Nota: Para ambientes de CI, utilize `npm run test -- --ci --forceExit` para evitar travamentos.*
 
-**Executando testes do Frontend:**
+**Web:**
+Gera o build otimizado do Next.js.
 ```bash
 cd web
-npm run test:run
+npm run build
+npm start
 ```
 
----
-
-## Pipeline de CI/CD
-
-O fluxo de integração e entrega contínua é gerenciado pelo GitHub Actions e segue o fluxo de trabalho abaixo:
-
-### Pull Request (Branch `dev`)
-Sempre que um push é feito na branch `dev` ou um Pull Request é aberto:
-1.  Instalação de dependências.
-2.  Execução de Linting e verificação de tipos.
-3.  Execução dos testes do Server e Web em paralelo.
-4.  Verificação de build do Docker (garante que a imagem de produção é montável).
-5.  Se aprovado, um PR é criado automaticamente ou atualizado para a branch `main`.
-
-### Deploy (Branch `main`)
-Quando o código é mergeado na branch `main`:
-1.  O workflow de CD é acionado.
-2.  As imagens Docker de produção (`server` e `web`) são construídas.
-3.  As imagens são enviadas (push) para o DockerHub com a tag `latest`.
-4.  (Opcional) Trigger de atualização no ambiente de hospedagem.
-
-## Docker em Produção
-
-Para simular o ambiente de produção localmente ou para deploy, utilize o arquivo `docker-compose.prod.yml`. Este arquivo utiliza as imagens otimizadas geradas pelos Dockerfiles de produção.
-
+**Docker:**
+Para subir todo o ambiente simulando produção (utilizando `docker-compose.prod.yml`):
 ```bash
-# Construir e rodar as imagens de produção localmente
 docker compose -f docker-compose.prod.yml up --build
 ```
