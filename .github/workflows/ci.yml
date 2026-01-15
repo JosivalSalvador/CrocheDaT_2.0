@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI (Quality & Tests)
 
 on:
   push:
@@ -50,6 +50,12 @@ jobs:
 
       - name: Install Deps
         run: npm ci --prefer-offline --no-audit
+
+      # --- CORREÇÃO DO ERRO ---
+      # Gera os tipos do PrismaClient antes de rodar o Lint/TypeCheck
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      # ------------------------
 
       - name: Create .env.test
         run: |
@@ -122,7 +128,7 @@ jobs:
           echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > ./web/.env
 
       - name: Build Production Images
-        # Tenta construir as imagens usando o arquivo de produção
+        # Garante que estamos testando o arquivo de PRODUÇÃO
         run: docker compose -f docker-compose.yml build
 
   # ====================================================
