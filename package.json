@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "cd web && npm run lint && cd ../server && npm run lint",
+    "type-check": "cd web && npm run type-check && cd ../server && npm run type-check",
+    "build": "cd web && npm run build && cd ../server && npm run build"
   },
   "repository": {
     "type": "git",

@@ -1,55 +1,36 @@
-name: CI (Quality & Tests)
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [dev] # Agora roda na dev
+    branches: [dev]
   pull_request:
-    branches: [dev, main] # Roda ao abrir PR para dev ou main
+    branches: [dev, main]
+
+# Permissão necessária para abrir o PR automaticamente
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  # JOB 1: Análise Estática (Roda rápido e valida código)
-  static-checks:
-    name: Lint & Type Check
+  # ====================================================
+  # 1. VERIFICAÇÃO DE QUALIDADE (SERVER)
+  # ====================================================
+  server-check:
+    name: Server (Lint, Types, Tests)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./server
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: './server/package-lock.json'
-
-      - name: Install Dependencies
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Run Linter
-        run: npm run lint
-
-      - name: TypeScript Check
-        run: npm run type-check
-
-  # JOB 2: Testes E2E (Roda em paralelo com o Job 1)
-  integration-tests:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-    needs: [] # Array vazio = Não espera ninguém, roda em paralelo!
-    
-    # Otimização Suprema: Banco de dados rodando na RAM
+    # Banco na RAM para teste
     services:
-      postgres_test:
-        image: postgres:latest
+      postgres:
+        image: postgres:18-alpine
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: docker
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: ecommerce_test
         ports:
           - 5432:5432
-        # Monta o volume de dados na memória RAM temporária (tmpfs)
         options: >-
           --mount type=tmpfs,destination=/var/lib/postgresql/data
           --health-cmd pg_isready
@@ -57,29 +38,127 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    defaults:
-      run:
-        working-directory: ./server
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: './server/package-lock.json'
 
-      - name: Install Dependencies
+      - name: Install Deps
         run: npm ci --prefer-offline --no-audit
 
-      - name: Run Tests
-        env:
-          DATABASE_URL: "postgresql://postgres:docker@localhost:5432/ecommerce_test?schema=public"
-          JWT_SECRET: "ci-secret-token"
-          NODE_ENV: "test"
-        # O reset é rápido pois o banco está vazio e na RAM
+      - name: Create .env.test
         run: |
-          npx prisma migrate reset --force --skip-seed
-          npm run test
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test?schema=public" > .env.test
+          echo "JWT_SECRET=ci-secret" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Type Check
+        run: npm run type-check
+
+      - name: Run Tests
+        run: npm run test
+
+  # ====================================================
+  # 2. VERIFICAÇÃO DE QUALIDADE (WEB)
+  # ====================================================
+  web-check:
+    name: Web (Lint, Types, Tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './web/package-lock.json'
+
+      - name: Install Deps
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Type Check
+        run: npm run type-check
+
+      - name: Run Tests
+        run: npm run test:run
+
+  # ====================================================
+  # 3. VERIFICAÇÃO DE BUILD DOCKER (PRODUÇÃO)
+  # ====================================================
+  docker-build-check:
+    name: Verify Prod Docker Build
+    runs-on: ubuntu-latest
+    # Só roda se os testes de Server E Web passarem
+    needs: [server-check, web-check]
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      # Criamos arquivos .env falsos apenas para o Docker Compose não reclamar de arquivo faltando
+      # As variáveis reais dentro da imagem são tratadas pelos Dockerfiles (ARG/dummy)
+      - name: Create Dummy Envs for Compose
+        run: |
+          echo "POSTGRES_USER=user" > ./server/.env
+          echo "POSTGRES_PASSWORD=pass" >> ./server/.env
+          echo "POSTGRES_DB=db" >> ./server/.env
+          echo "DATABASE_URL=postgres://dummy" >> ./server/.env
+          echo "JWT_SECRET=dummy" >> ./server/.env
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > ./web/.env
+
+      - name: Build Production Images
+        # Tenta construir as imagens usando o arquivo de produção
+        run: docker compose -f docker-compose.yml build
+
+  # ====================================================
+  # 4. ABRIR PULL REQUEST (DEV -> MAIN)
+  # ====================================================
+  auto-pr:
+    name: Open PR to Main
+    runs-on: ubuntu-latest
+    needs: [docker-build-check]
+    # Só roda se for um push na branch 'dev'
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for existing PR
+        id: check_pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Verifica se já existe PR aberto de dev para main
+          count=$(gh pr list --base main --head dev --json id --jq '. | length')
+          if [ "$count" -gt 0 ]; then
+            echo "PR already exists."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.check_pr.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head dev \
+            --title "🚀 Release: Merge dev to main" \
+            --body "Automated PR created by CI pipeline after passing all tests and build checks."

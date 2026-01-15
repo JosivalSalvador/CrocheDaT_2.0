@@ -1,56 +1,62 @@
 services:
-  # --- BANCO DEV (Persistente no Disco) ---
-  postgres:
-    image: postgres:latest
-    container_name: fastify_pg_dev
+  database:
+    image: postgres:18-alpine
+    container_name: fastify_pg_prod
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: ecommerce_dev
-      # CORREÇÃO CRÍTICA 1: Força os dados para uma subpasta
-      PGDATA: /var/lib/postgresql/data/pgdata 
+    env_file:
+      - ./server/.env
     ports:
       - "5432:5432"
     volumes:
-      - pgdata_dev:/var/lib/postgresql/data
+      - pgdata_prod:/var/lib/postgresql/data
+    healthcheck:
+      # Verificação usando as credenciais que sabemos que funcionam (user/db)
+      test: ["CMD-SHELL", "pg_isready -U user -d db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_net
 
-  # --- BANCO TESTES (Volátil na RAM - Super Rápido) ---
-  postgres_test:
-    image: postgres:latest
-    container_name: fastify_pg_test
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: ecommerce_test
-      # CORREÇÃO CRÍTICA 2: Mesma coisa aqui, senão o tmpfs falha
-      PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "5433:5432"
-    tmpfs: 
-      - /var/lib/postgresql/data
-
-  # --- API BACKEND (Hot Reload) ---
   api:
-    build: 
+    build:
       context: ./server
       dockerfile: Dockerfile
-      target: builder
-    container_name: fastify_api_dev
-    command: npm run dev
+    container_name: fastify_api_prod
+    env_file:
+      - ./server/.env
+    environment:
+      # --- AJUSTES CRÍTICOS ---
+      - NODE_ENV=production
+      # O Host aqui deve ser "database" (o nome do serviço definido na linha 2)
+      - DATABASE_URL=postgresql://user:pass@database:5432/db?schema=public
     ports:
       - "3333:3333"
     depends_on:
-      - postgres
+      database:
+        condition: service_healthy
+    networks:
+      - app_net
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: next_web_prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./web/.env
     environment:
-      # Ajuste: Apenas para garantir, vamos remover o ?schema=public da string por enquanto
-      # para evitar erros de parser, o padrão já é public.
-      - DATABASE_URL=postgresql://postgres:docker@postgres:5432/ecommerce_dev
-      - JWT_SECRET=dev-secret-key
-      - NODE_ENV=development
-    volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
+      - NODE_ENV=production
+    depends_on:
+      - api
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
 
 volumes:
-  pgdata_dev:
+  pgdata_prod:
