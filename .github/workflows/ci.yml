@@ -128,7 +128,7 @@ jobs:
           echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > ./web/.env
 
       - name: Build Production Images
-        run: docker compose -f docker-compose.prod.yml build
+        run: docker compose -f docker-compose.yml build
 
   # ====================================================
   # 4. ABRIR PULL REQUEST (DEV -> MAIN)
