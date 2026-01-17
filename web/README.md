@@ -1,137 +1,105 @@
-# CrocheDaT Web Client
+# CrocheDaT 2.0 - Web Client
 
-Este diretório contém a interface de usuário (Frontend) da plataforma. A aplicação é construída sobre o **Next.js 16 (App Router)** e **React 19**, utilizando uma arquitetura modular focada em funcionalidades (Feature-First) e estilização moderna com **TailwindCSS v4**.
+Este diretório contém a aplicação Frontend da plataforma, desenvolvida para oferecer uma experiência de usuário moderna, responsiva e performática. A arquitetura utiliza as versões mais recentes do ecossistema React, incluindo Next.js 16 (App Router), React 19 e Tailwind CSS 4.
 
 ## Stack Tecnológica
 
-O projeto utiliza as versões mais recentes do ecossistema React.
+A aplicação é construída sobre um conjunto robusto de ferramentas:
 
-- **Framework:** Next.js 16.1 (App Router & Server Components).
-- **Core:** React 19 & React DOM 19.
-- **Gerenciamento de Estado/Cache:** TanStack Query v5.
-- **Estilização:** TailwindCSS v4 + `tailwindcss-animate`.
-- **Componentes:** Radix UI (Headless) + Lucide React (Ícones).
-- **Animações:** Framer Motion.
-- **Testes:** Vitest, React Testing Library e MSW (Mock Service Worker).
+- **Framework**: Next.js 16.1 (App Router & Server Actions).
+- **Core**: React 19 & React DOM 19.
+- **Linguagem**: TypeScript (v5).
+- **Estilização**: Tailwind CSS v4 (com PostCSS), `clsx` e `tailwind-merge`.
+- **Componentes UI**: Primitivos do Radix UI (`@radix-ui`) e padrão Shadcn/ui.
+- **Animações**: Framer Motion e `tailwindcss-animate`.
+- **Gerenciamento de Estado/Cache**: TanStack React Query v5.
+- **Validação de Ambiente**: T3 Env (`@t3-oss/env-nextjs`).
+- **Testes**: Vitest, React Testing Library e MSW (Mock Service Worker).
 
-## Arquitetura e Estrutura
+## Estrutura de Diretórios e Arquitetura
 
-O projeto adota o padrão **Colocation** (Co-localização). Em vez de separar arquivos por "tipo" (ex: todos os hooks em uma pasta global), agrupamos arquivos por **Funcionalidade/Domínio** dentro do diretório `app/`.
+O projeto adota uma arquitetura modular baseada em funcionalidades (Feature-based Architecture) dentro do diretório `app/`, co-localizando arquivos relacionados para facilitar a manutenção.
 
-```text
-src/
-├── app/
-│   ├── layout.tsx              # Root Layout e Providers Globais
-│   ├── globals.css             # Configurações do Tailwind v4
-│   └── users/                  # [Feature Module]: Usuários
-│       ├── page.tsx            # A Rota (Server Component)
-│       ├── loading.tsx         # Estado de carregamento (Suspense)
-│       ├── components/         # Componentes visuais exclusivos desta feature
-│       ├── hooks/              # Hooks customizados (ex: useUser)
-│       ├── services/           # Chamadas à API (TanStack Query fetchers)
-│       └── types.ts            # Tipagens locais
-├── components/
-│   └── ui/                     # Design System (Botões, Inputs, Modais genéricos)
-├── lib/
-│   ├── api/                    # Cliente HTTP (Axios/Fetch Wrapper)
-│   ├── query/                  # Configuração do QueryClient
-│   └── utils/                  # Utilitários globais (cn, formatters)
-└── ...
-```
+- **app/**: Contém as rotas, layouts e módulos da aplicação.
+  - **[feature]/** (ex: `users/`):
+    - `page.tsx`: A rota pública (Server Component).
+    - `components/`: Componentes visuais específicos desta funcionalidade.
+    - `hooks/`: Hooks customizados (lógica de UI/estado).
+    - `services/`: Funções de interação direta com a API.
+    - `types.ts`: Tipagem local específica do módulo.
+  - `globals.css`: Estilos globais e diretivas do Tailwind.
+  - `providers.tsx`: Wrapper de contextos globais (React Query, Temas, etc).
+- **components/ui/**: Componentes reutilizáveis e agnósticos de negócio (Botões, Inputs, Modais), seguindo o padrão de design system.
+- **lib/**: Utilitários e configurações centrais.
+  - `animations/`: Configurações de variantes do Framer Motion.
+  - `api/`: Cliente HTTP (Fetch wrapper) configurado com interceptors.
+  - `query/`: Configuração do `QueryClient` e estratégias de cache.
+  - `utils/`: Funções auxiliares e validação de variáveis de ambiente (`env.ts`).
 
-### Por que essa estrutura?
+## Variáveis de Ambiente
 
-Se você excluir a pasta `app/users`, toda a funcionalidade de usuários desaparece sem deixar "lixo" ou arquivos órfãos em outras pastas. Isso facilita a manutenção e escalabilidade.
+A segurança e tipagem das variáveis de ambiente são garantidas pela biblioteca T3 Env. O arquivo `lib/utils/env.ts` define o esquema de validação (Zod).
 
-## Configuração do Ambiente
+| Variável              | Descrição                                                                        | Exemplo                 |
+| :-------------------- | :------------------------------------------------------------------------------- | :---------------------- |
+| `NEXT_PUBLIC_API_URL` | URL pública da API acessível pelo navegador (Client-side).                       | `http://localhost:3333` |
+| `API_INTERNAL_URL`    | URL da API acessível internamente pelo container Docker (Server-side rendering). | `http://api:3333`       |
 
-O frontend precisa saber onde a API está rodando. Crie um arquivo `.env` na raiz de `/web`.
-
-```ini
-# URL da API Backend (Fastify)
-NEXT_PUBLIC_API_URL="http://localhost:3333"
-```
-
-## Instalação e Execução
-
-### 1. Instalar Dependências
-
-```bash
-npm install
-```
-
-### 2. Rodar em Desenvolvimento
-
-Inicia o servidor Next.js com Turbopack (se disponível) ou Webpack.
-
-```bash
-npm run dev
-```
-
-A aplicação estará disponível em `http://localhost:3000`.
-
-### 3. Build de Produção
-
-Gera os arquivos estáticos e otimiza as imagens.
-
-```bash
-npm run build
-npm start
-```
+O build falhará caso as variáveis obrigatórias não estejam definidas.
 
 ## Scripts Disponíveis
 
-| Script               | Descrição                                            |
-| :------------------- | :--------------------------------------------------- |
-| `npm run dev`        | Inicia o ambiente de desenvolvimento.                |
-| `npm run build`      | Cria a build otimizada para produção.                |
-| `npm run start`      | Inicia o servidor de produção (requer build prévio). |
-| `npm run lint`       | Roda o ESLint (Next.js Config).                      |
-| `npm run type-check` | Valida tipagem TypeScript em todo o projeto.         |
-| `npm run test`       | Roda os testes em modo watch.                        |
-| `npm run test:ui`    | Abre a interface gráfica do Vitest no navegador.     |
+Os comandos podem ser executados via `npm run` dentro da pasta `web` ou via Turbo na raiz.
 
-## Fluxo de Desenvolvimento (Features)
+### Desenvolvimento
 
-Para criar uma nova tela/funcionalidade, siga este fluxo:
+- `dev`: Inicia o servidor de desenvolvimento do Next.js com Hot Reload.
+- `start`: Inicia o servidor de produção (requer build prévio).
 
-1.  **Service (`services/`):** Crie a função que busca os dados na API.
-    - _Ex:_ `getProducts()` que chama `httpClient.get('/products')`.
-2.  **Hook (`hooks/`):** Crie um hook do React Query para gerenciar o cache e estado de loading.
-    - _Ex:_ `useProducts()` que usa `useQuery`.
-3.  **Components (`components/`):** Crie os componentes de UI (Cards, Listas) que consomem os dados.
-4.  **Page (`page.tsx`):** Monte a página final.
-    - Se for uma rota pública, pode ser estática.
-    - Se precisar de SEO, faça o pre-fetch no Server Component (Hydration Boundary).
+### Build e Qualidade
 
-## Estilização (Tailwind v4)
+- `build`: Cria a versão otimizada para produção.
+- `lint`: Executa o ESLint com regras para Next.js e React Hooks.
+- `type-check`: Valida a tipagem TypeScript sem emitir arquivos.
 
-Utilizamos a função utilitária `cn` (classnames) localizada em `lib/utils.ts`. Ela combina `clsx` e `tailwind-merge` para permitir sobrescrita de classes de forma segura.
+### Testes (Vitest)
 
-**Exemplo correto:**
+- `test`: Executa a suíte de testes unitários e de integração.
+- `test:watch`: Executa os testes em modo de observação.
+- `test:ui`: Abre a interface gráfica do Vitest para visualização dos testes.
+
+## Integração com API (React Query)
+
+A comunicação com o Backend é gerenciada pelo TanStack Query.
+
+1.  **Services**: As chamadas HTTP cruas ficam em `services/`.
+2.  **Hooks**: Hooks customizados (ex: `useUser`) encapsulam o `useQuery` ou `useMutation`.
+3.  **Client**: O `http-client.ts` centraliza a configuração de headers (como Auth Bearer token) e tratamento de erros de rede.
+
+## Estilização e Design System
+
+A interface utiliza **Tailwind CSS 4**. A combinação de classes é gerenciada pela função utilitária `cn` (classnames), que une `clsx` e `tailwind-merge` para permitir a sobrescrita segura de estilos em componentes reutilizáveis.
+
+Exemplo de uso:
 
 ```tsx
-// Permite passar className extra que sobrescreve o bg-red-500 se necessário
-<div className={cn("bg-red-500 p-4", className)}>
+import { cn } from "@/lib/utils/utils";
+
+export function Button({ className, ...props }) {
+  return (
+    <button className={cn("bg-blue-500 px-4 py-2", className)} {...props} />
+  );
+}
 ```
 
-## Testes Automatizados
+## Estratégia de Testes
 
-A estratégia de testes no frontend foca em **Testes de Integração de Componentes** e **Unitários**.
+O ambiente de testes utiliza **Vitest** com **JSDOM**.
 
-- **Ferramentas:** Vitest + React Testing Library.
-- **Mocking de API (MSW):** Utilizamos o **MSW (Mock Service Worker)** para interceptar as chamadas HTTP durante os testes. Isso significa que **não precisamos do Backend rodando** para testar o Frontend.
-- **Vitest UI:** Para visualizar os testes graficamente:
-  ```bash
-  npm run test:ui
-  ```
+- **Componentes**: Testados com `@testing-library/react` para garantir acessibilidade e comportamento do usuário.
+- **Integração**: Utiliza **MSW (Mock Service Worker)** para interceptar requisições de rede. Isso permite testar cenários de sucesso e erro sem depender do Backend estar rodando.
+- **Configuração**: Arquivos `vitest.config.ts` e `vitest.setup.ts` garantem que os mocks e matchers do DOM estejam carregados globalmente.
 
-### Como rodar
+## Docker e Deploy
 
-```bash
-# Rodar bateria completa (Headless)
-npm run test:run
-
-# Rodar em modo interativo
-npm run test
-```
+O `Dockerfile` utiliza um build multi-estágio para otimizar o tamanho da imagem final. Ele considera o modo `standalone` do Next.js, copiando apenas os arquivos necessários para a pasta `.next/standalone`, reduzindo drasticamente o tamanho da imagem em produção.

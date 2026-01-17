@@ -1,100 +1,114 @@
-# CrocheDaT 2.0 - Monorepo
+# CrocheDaT 2.0 - Arquitetura Monorepo
 
-Este repositório centraliza o código-fonte da plataforma CrocheDaT, estruturada como um monorepo que agrega o backend (API), frontend (Web) e configurações de infraestrutura. A arquitetura visa a separação de responsabilidades mantendo um fluxo de desenvolvimento unificado via Docker e Scripts NPM.
+Este repositório armazena o código-fonte da plataforma Crochê da T (versão 2.0), utilizando uma arquitetura de Monorepo gerenciada pelo Turborepo. O projeto unifica o desenvolvimento da API (Server) e do Frontend (Web), garantindo consistência de código, tipagem e processos de deploy.
 
-## Arquitetura do Sistema
+## Visão Geral da Estrutura
 
-O projeto é composto por três pilares principais localizados na raiz:
+O projeto utiliza NPM Workspaces para gerenciamento de dependências. A estrutura de diretórios é organizada da seguinte forma:
 
-1.  **Orquestração de Containers:** Arquivos Docker Compose para gerenciar o ciclo de vida da aplicação em diferentes ambientes.
-2.  **Automação de Qualidade (Git Hooks):** Configuração do Husky para garantir integridade do código antes do versionamento.
-3.  **Workflows de CI/CD:** Pipelines do GitHub Actions para integração e entrega contínua.
+* **.github/**: Contém os fluxos de trabalho do GitHub Actions para Integração Contínua (CI) e Entrega Contínua (CD).
+* **.husky/**: Configuração de Git Hooks para validação automática de código antes do commit.
+* **.turbo/**: Diretório de cache do Turborepo para acelerar builds e tarefas repetitivas.
+* **server/**: Aplicação Backend desenvolvida com Fastify, TypeScript, Prisma ORM e PostgreSQL.
+* **web/**: Aplicação Frontend desenvolvida com Next.js (App Router), Tailwind CSS e TypeScript.
+* **docker-compose.dev.yml**: Orquestração de contêineres para o ambiente de desenvolvimento local (Bancos de dados).
+* **docker-compose.yml**: Orquestração de contêineres simulando o ambiente de produção final.
 
-## Estrutura de Diretórios
+## Pré-requisitos do Sistema
 
-```text
-/
-├── .github/                # Definições de pipelines (CI/CD)
-├── .husky/                 # Scripts de Git Hooks (Pre-commit)
-├── server/                 # Microsserviço API (Fastify/Node.js)
-├── web/                    # Aplicação Frontend (Next.js/React)
-├── docker-compose.dev.yml  # Definição de infraestrutura para Desenvolvimento
-├── docker-compose.yml      # Definição de infraestrutura para Produção
-└── package.json            # Scripts de orquestração global
-```
+Para executar este projeto, o ambiente deve possuir as seguintes ferramentas instaladas:
 
-## Estratégia de Conteinerização (Docker)
+* **Node.js**: Versão 22 (LTS) ou superior.
+* **NPM**: Versão 10 ou superior.
+* **Docker Engine & Docker Compose**: Para execução dos bancos de dados e simulação de produção.
 
-O projeto utiliza dois arquivos de composição distintos para atender aos requisitos específicos de desenvolvimento e produção.
+## Instalação e Configuração
 
-### 1. Ambiente de Desenvolvimento (`docker-compose.dev.yml`)
-Este arquivo é configurado para maximizar a experiência do desenvolvedor (DX).
+1.  **Instalação de Dependências**
+    Execute o comando na raiz do projeto para instalar as dependências de todos os workspaces (root, server e web) simultaneamente:
+    ```bash
+    npm install
+    ```
 
-* **Volumes (Bind Mounts):** Mapeia o código local para dentro dos containers. Alterações nos arquivos host refletem imediatamente no container.
-* **Hot-Reload:** Os serviços são iniciados em modo de observação (`watch`), reiniciando ou atualizando automaticamente ao detectar mudanças.
-* **Exposição de Portas:** O banco de dados e serviços expõem portas para acesso direto via localhost.
+2.  **Configuração de Ambiente (Hooks)**
+    O comando de instalação executará automaticamente a configuração do Husky (`prepare`), ativando as validações de `pre-commit`.
 
-**Execução:**
+## Ambiente de Desenvolvimento
+
+### 1. Banco de Dados (PostgreSQL)
+O projeto utiliza dois contêineres de banco de dados isolados para evitar conflitos entre dados de desenvolvimento e execução de testes automatizados.
+
+Execute o comando abaixo para iniciar os bancos:
 ```bash
-docker compose -f docker-compose.dev.yml up --build
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-### 2. Ambiente de Produção (`docker-compose.yml`)
-Este arquivo simula o ambiente final de implantação.
+* **Instância de Desenvolvimento**: Acessível na porta `5432`.
+* **Instância de Testes**: Acessível na porta `5433` (utilizada pelos testes de integração).
 
-* **Imutabilidade:** Não utiliza volumes de código. As imagens são construídas copiando o código-fonte e gerando os artefatos de build (`dist/`, `.next/`).
-* **Otimização:** Executa as versões transpiladas e minificadas das aplicações.
-* **Isolamento:** A rede interna é restrita, expondo apenas o gateway necessário.
+### 2. Execução da Aplicação
+O Turborepo gerencia a execução paralela dos serviços. Para iniciar tanto o Backend quanto o Frontend em modo de desenvolvimento (watch mode):
 
-**Execução:**
+```bash
+npm run dev
+```
+
+Caso deseje executar os serviços individualmente:
+* Frontend apenas: `npm run dev:web`
+* Backend apenas: `npm run dev:server`
+
+### 3. Gerenciamento do Banco de Dados (Prisma)
+Os scripts de banco de dados são executados a partir da raiz, mas direcionados ao workspace do servidor:
+
+* **Aplicar Migrations**: `npm run db:migrate` (Atualiza o esquema do banco de desenvolvimento).
+* **Gerar Cliente Prisma**: `npm run db:gen` (Atualiza a tipagem do Prisma Client).
+* **Prisma Studio**: `npm run db:studio` (Interface visual para gerenciamento de dados).
+* **Seed Database**: `npm run db:seed` (Popula o banco com dados iniciais).
+
+## Scripts Disponíveis (Raiz)
+
+| Script | Função | Escopo |
+| :--- | :--- | :--- |
+| `dev` | Inicia o ambiente de desenvolvimento completo. | Global (Turbo) |
+| `build` | Compila o Server e o Web para produção. | Global (Turbo) |
+| `lint` | Executa verificação estática de código (ESLint). | Global (Turbo) |
+| `type-check` | Verifica a integridade da tipagem TypeScript. | Global (Turbo) |
+| `test` | Executa a suíte de testes (Vitest). | Global (Turbo) |
+
+## Qualidade de Código e CI/CD
+
+### Git Hooks (Husky)
+Antes de cada commit, o Husky executa o Turborepo para validar apenas os arquivos modificados na branch atual (`dev`) em relação à branch principal. São executados:
+* Linting
+* Type Checking
+
+Isso impede que código fora dos padrões seja enviado ao repositório.
+
+### Integração Contínua (CI)
+O arquivo `.github/workflows/ci.yml` é acionado em pushes para a branch `dev` ou Pull Requests. O fluxo consiste em:
+
+1.  **Server Check**: Levanta um serviço Postgres temporário, gera o Prisma Client e executa Lint, Type-Check e Testes no Backend.
+2.  **Web Check**: Executa Lint, Type-Check e Testes no Frontend.
+3.  **Docker Build Check**: Verifica se os `Dockerfile` de produção de ambos os projetos são construídos com sucesso.
+4.  **Auto PR**: Se todas as etapas anteriores passarem na branch `dev`, um Pull Request é criado automaticamente para a branch `main`.
+
+### Entrega Contínua (CD)
+O arquivo `.github/workflows/cd.yml` é acionado em pushes para a branch `main`. O fluxo consiste em:
+
+1.  **Build Multi-arquitetura**: Constrói imagens Docker para arquiteturas `linux/amd64` e `linux/arm64`.
+2.  **Publicação**: Envia as imagens para o Docker Hub com as tags `latest` e o hash do commit (`sha`).
+    * API: `josivaljunior/croche-api`
+    * Web: `josivaljunior/croche-web`
+3.  **Injeção de Segredos**: As variáveis de ambiente do Frontend (URLs da API) são injetadas durante o build via GitHub Secrets.
+
+## Simulação de Produção (Docker Local)
+
+Para verificar o comportamento da aplicação final (exatamente como será implantada), utilize o Docker Compose de produção. Este comando irá compilar o código TypeScript, gerar os builds otimizados e subir os contêineres finais.
+
 ```bash
 docker compose -f docker-compose.yml up --build
 ```
 
-## Controle de Qualidade e Git Hooks (Husky)
-
-Para assegurar a estabilidade do repositório, foi implementado o **Husky** para gerenciar Git Hooks. O hook `pre-commit` está configurado para interceptar commits e executar validações automáticas.
-
-Ao executar `git commit`, o sistema dispara:
-1.  **Linting:** Executa o ESLint no diretório `server` e `web`.
-2.  **Type-Check:** Executa a verificação do TypeScript em ambos os projetos.
-
-Se qualquer verificação falhar, o commit é abortado. Isso impede que código com erros de sintaxe ou tipagem entre na branch de versionamento.
-
-**Instalação dos Hooks:**
-Ao clonar o projeto, é necessário instalar os hooks localmente:
-```bash
-npm install
-npm run prepare
-```
-
-## Scripts de Orquestração (Root)
-
-O arquivo `package.json` na raiz atua como um agregador de comandos, permitindo executar tarefas em múltiplos pacotes simultaneamente.
-
-| Script | Função |
-| :--- | :--- |
-| `npm run prepare` | Instala as dependências do Husky e ativa os Git Hooks. |
-| `npm run lint` | Dispara o processo de linting sequencialmente em `web` e `server`. |
-| `npm run type-check` | Dispara a verificação de tipos do TypeScript em `web` e `server`. |
-| `npm run build` | Executa o build de produção de ambas as aplicações para verificação local. |
-
-## Pipeline de CI/CD
-
-A automação está definida no diretório `.github/workflows`:
-
-1.  **Continuous Integration (ci.yml):**
-    * Gatilho: Push ou Pull Request na branch de desenvolvimento.
-    * Tarefas: Instalação de dependências, execução de Linter, Type-Check e Testes Unitários.
-    * Verificação de Build: Garante que o Dockerfile de produção é compilável.
-
-2.  **Continuous Delivery (cd.yml):**
-    * Gatilho: Merge na branch principal (`main`).
-    * Tarefas: Build das imagens Docker de produção e push para o registro de container (Docker Hub).
-
-## Documentação dos Módulos
-
-Para informações específicas sobre instalação de dependências, variáveis de ambiente e testes unitários de cada serviço, consulte a documentação interna:
-
-* [Documentação do Backend (Server)](./server/README.md)
-* [Documentação do Frontend (Web)](./web/README.md)
+Acesse os serviços em:
+* **Web**: http://localhost:3000
+* **API**: http://localhost:3333

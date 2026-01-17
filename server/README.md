@@ -1,130 +1,103 @@
-# CrocheDaT API Server
+# CrocheDaT 2.0 - Server API
 
-Este diretório contém o microsserviço de Backend da plataforma, responsável pela lógica de negócios, persistência de dados e autenticação. A aplicação é construída sobre o framework **Fastify**, priorizando performance, validação estrita de dados via **Zod** e arquitetura modular.
+Este diretório contém a API RESTful da plataforma Crochê da T 2.0. A aplicação é construída sobre o framework Fastify, utilizando TypeScript para tipagem estática, Prisma ORM para interação com o banco de dados PostgreSQL e Zod para validação de esquemas e inferência de tipos.
 
 ## Stack Tecnológica
 
-* **Runtime:** Node.js (v22+) & TypeScript.
-* **Framework:** Fastify v5.
-* **Validação:** Zod + `fastify-type-provider-zod` (Inferência automática de schemas HTTP).
-* **Banco de Dados:** PostgreSQL.
-* **ORM:** Prisma v7 (com `@prisma/adapter-pg` para performance serverless).
-* **Autenticação:** JWT (`@fastify/jwt`) e Bcrypt.js.
-* **Documentação:** Swagger (OpenAPI) via Scalar Reference.
-* **Testes:** Vitest + Supertest.
+A arquitetura baseia-se nas seguintes bibliotecas principais:
 
-## Arquitetura e Estrutura
+* **Core**: Fastify (v5).
+* **Linguagem**: TypeScript (v5.9).
+* **ORM**: Prisma Client e Prisma Migrate (Adapter PostgreSQL).
+* **Validação**: Zod + fastify-type-provider-zod (Tipagem ponta a ponta).
+* **Testes**: Vitest + Supertest.
+* **Documentação**: Scalar API Reference (Swagger).
+* **Autenticação**: JWT (@fastify/jwt) e Bcryptjs.
+* **Logging**: Pino (com pino-pretty em desenvolvimento).
 
-O projeto adota uma arquitetura baseada em **Recursos** (Resource-based Architecture) dentro de `src/resources`. Cada entidade do domínio possui seu próprio diretório contendo todas as camadas necessárias, isolando responsabilidades.
+## Estrutura de Diretórios e Arquitetura
 
-```text
-src/
-├── app.ts                  # Configuração da instância do Fastify e plugins globais
-├── server.ts               # Ponto de entrada (Entrypoint) e escuta de porta
-├── validateEnv/            # Validação estrita das variáveis de ambiente ao iniciar
-├── lib/
-│   ├── prisma.ts           # Instância singleton do Prisma Client
-│   └── error-handler.ts    # Handler global de exceções (Zod Error vs App Error)
-├── middlewares/            # Middlewares reutilizáveis (ex: Auth Guard)
-├── router/                 # Definição das rotas principais (API Gateway interno)
-└── resources/              # Módulos de Domínio
-    └── users/
-        ├── users.controller.ts # Camada HTTP (Request/Response)
-        ├── users.service.ts    # Regras de Negócio (Lógica pura sem HTTP)
-        ├── users.schema.ts     # Schemas Zod para validação de Input/Output
-        ├── users.types.ts      # Tipos estáticos inferidos
-        ├── users.router.ts     # Definição das rotas do recurso
-        └── tests/              # Testes unitários/integração específicos do recurso
-```
+O projeto segue uma arquitetura baseada em recursos (Resource-based), onde cada domínio da aplicação possui seus próprios controladores, serviços e rotas isolados.
 
-## Configuração do Ambiente
+* **prisma/**: Contém o esquema do banco de dados (`schema.prisma`) e scripts de seed.
+* **src/app.ts**: Configuração inicial da aplicação Fastify, registro de plugins e middlewares globais.
+* **src/server.ts**: Ponto de entrada que inicia o servidor HTTP.
+* **src/errors/**: Classes de erro customizadas (`AppError`) para tratamento centralizado de exceções.
+* **src/lib/**: Configurações de serviços de terceiros e instâncias compartilhadas (ex: cliente do Prisma).
+* **src/middlewares/**: Interceptadores de requisição, como verificação de autenticação JWT.
+* **src/resources/**: Módulos da aplicação organizados por domínio (ex: `users`).
+    * **controller.ts**: Gerencia entrada/saída HTTP (Request/Reply).
+    * **service.ts**: Contém a regra de negócio e chamadas ao banco.
+    * **schema.ts**: Definições Zod para validação de rotas.
+    * **routes.ts**: Registro das rotas do recurso no Fastify.
+    * **tests/**: Testes unitários e de integração (E2E) específicos do recurso.
+* **src/router/**: Agregador de rotas e versionamento da API (v1).
+* **src/validateEnv/**: Validação das variáveis de ambiente necessárias para o startup.
 
-O serviço depende de variáveis de ambiente para conectar ao banco e configurar a segurança. A validação dessas variáveis ocorre em `src/validateEnv/index.ts`. Se uma variável crítica estiver faltando, a aplicação falhará imediatamente ao iniciar (Fail Fast).
+## Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz de `/server`:
+O sistema utiliza arquivos `.env` para configuração. As variáveis são validadas na inicialização do serviço.
 
-```ini
-# Conexão com o PostgreSQL
-DATABASE_URL="postgresql://user:password@localhost:5432/crochedat?schema=public"
+| Variável | Descrição | Exemplo |
+| :--- | :--- | :--- |
+| `NODE_ENV` | Define o ambiente de execução (`dev`, `test`, `production`). | `dev` |
+| `PORT` | Porta onde o servidor será executado. | `3333` |
+| `DATABASE_URL` | String de conexão com o PostgreSQL. | `postgresql://user:pass@localhost:5432/db` |
+| `JWT_SECRET` | Chave secreta para assinatura de tokens. | `super-secret-key` |
 
-# Configuração do Servidor
-PORT=3333
-NODE_ENV="development"
-
-# Segurança
-JWT_SECRET="seu-segredo-jwt-aqui"
-```
-
-## Instalação e Execução
-
-Certifique-se de que o container do banco de dados (definido na raiz do monorepo) esteja rodando.
-
-```bash
-# 1. Instalar dependências
-npm install
-
-# 2. Executar migrações do banco
-npx prisma migrate dev
-
-# 3. Rodar servidor em desenvolvimento (Watch Mode)
-npm run dev
-```
-
-O servidor estará disponível em `http://localhost:3333`.
-A documentação interativa (Swagger/Scalar) estará em `http://localhost:3333/docs`.
+Arquivos de ambiente incluídos no repositório:
+* `.env.example`: Modelo de configuração.
+* `.env.test`: Configuração específica para execução de testes (aponta para porta 5433).
+* `.env.prod`: Configuração usada nos builds de produção/docker.
 
 ## Scripts Disponíveis
 
-| Script | Descrição |
-| :--- | :--- |
-| `npm run dev` | Inicia o servidor com `tsx watch` e logs formatados (`pino-pretty`). |
-| `npm run build` | Compila o TypeScript para JavaScript na pasta `dist/`. |
-| `npm start` | Executa o código compilado em produção (`dist/server.js`). |
-| `npm run lint` | Executa ESLint para análise estática. |
-| `npm run type-check` | Executa checagem de tipos do TypeScript (sem emitir arquivos). |
-| `npm run test` | Roda a suíte de testes uma única vez. |
+Os scripts podem ser executados via `npm run <script>` dentro da pasta `server` ou via `turbo run <script> --filter=server` na raiz.
 
-## Banco de Dados (Prisma)
+### Desenvolvimento
+* `dev`: Gera o cliente Prisma, carrega variáveis do `.env` e inicia o servidor com `tsx watch`. Inclui formatação de logs com `pino-pretty`.
+* `start`: Inicia a aplicação compilada (requer build prévio). Aponta para `dist/src/server.js`.
 
-Comandos úteis para o dia a dia:
+### Build e Qualidade
+* `build`: Compila o código TypeScript usando `tsc`.
+* `lint`: Executa o ESLint para verificar padrões de código.
+* `lint:fix`: Corrige automaticamente problemas de linting.
+* `type-check`: Executa o compilador TypeScript sem emitir arquivos, apenas para validar tipos.
 
-* **Criar nova migration:** `npx prisma migrate dev` (Rode sempre que alterar o `schema.prisma`).
-* **Visualizar dados (GUI):** `npx prisma studio`.
-* **Resetar banco de dados:** `npx prisma migrate reset` (Apaga todos os dados e recria tabelas).
+### Banco de Dados (Prisma)
+* `db:gen`: Gera os tipos do Prisma Client (`node_modules`). Deve ser rodado após alterações no schema.
+* `db:migrate`: Aplica migrações pendentes no banco de dados de desenvolvimento.
+* `db:studio`: Abre uma interface web para visualização e edição direta dos dados.
+* `db:seed`: Popula o banco de dados com informações iniciais definidas em `prisma/seed.ts`.
 
-## Fluxo de Desenvolvimento de Features
+### Testes (Vitest)
+O ambiente de testes é isolado e utiliza um banco de dados separado (definido em `.env.test`).
 
-Ao criar uma nova funcionalidade, siga o padrão estabelecido:
+* `test`: Executa todos os testes uma única vez.
+* `test:watch`: Executa testes em modo observação (rerun on save).
+* `test:setup`: Script de utilidade que reseta o banco de testes (`migrate reset --force`) antes da execução.
 
-1.  **Schema (`.schema.ts`):** Defina os schemas Zod para Body, Params e Response. Isso garante a tipagem.
-2.  **Service (`.service.ts`):** Implemente a lógica de negócio. O service **não deve saber** o que é HTTP (não receba `request`/`reply` aqui). Lance `AppError` em caso de falhas lógicas.
-3.  **Controller (`.controller.ts`):** Receba a requisição, chame o Service e retorne a resposta.
-4.  **Router (`.router.ts`):** Registre a rota utilizando o `fastify-type-provider-zod`.
+## Fluxo de Desenvolvimento
 
-Exemplo de rota tipada:
-```typescript
-app.withTypeProvider<ZodTypeProvider>().post('/', {
-  schema: {
-    body: createUserSchema,
-    response: { 201: userResponseSchema }
-  }
-}, UsersController.create)
-```
+1.  **Modelagem de Dados**: Alterações na estrutura do banco devem ser feitas em `prisma/schema.prisma`.
+2.  **Migração**: Execute `npm run db:migrate` para criar a migração SQL e atualizar o banco local.
+3.  **Tipagem**: O Prisma Client é atualizado automaticamente no comando de dev, mas pode ser forçado com `npm run db:gen`.
+4.  **Criação de Recurso**:
+    * Defina os esquemas Zod (`schema.ts`).
+    * Implemente a lógica de negócio (`service.ts`).
+    * Crie o controlador (`controller.ts`).
+    * Registre as rotas (`router.ts`).
+    * Adicione o router ao arquivo principal (`src/router/index.ts`).
 
-## Testes Automatizados
+## Tratamento de Erros e Validação
 
-Os testes utilizam **Vitest**. Existe uma configuração de ambiente isolado para garantir integridade.
+O projeto utiliza `fastify-type-provider-zod`. Isso garante que:
+1.  Os dados de entrada (body, query, params) são validados automaticamente antes de chegarem ao controlador.
+2.  Erros de validação retornam status `400` com detalhes formatados.
+3.  Erros de negócio devem lançar a classe `AppError` (ex: `throw new AppError('User not found', 404)`), que é capturada pelo `error-handler.ts` global.
 
-* **Setup:** O script `test:setup` reseta o banco de dados definido em `.env.test` antes de rodar os testes.
-* **Execução:**
-    ```bash
-    npm run test        # Rodar todos
-    npm run test:watch  # Rodar em modo assistido
-    ```
+## Docker e Deploy
 
-## Tratamento de Erros
+O `Dockerfile` na raiz deste diretório é otimizado para produção. Ele realiza o build em múltiplos estágios (multi-stage build) para reduzir o tamanho da imagem final.
 
-Erros são centralizados no `src/lib/error-handler.ts`.
-* **ZodError:** Retorna status `400` com os campos inválidos.
-* **AppError:** Erros de regra de negócio (ex: "Email já existe"). Retorna o status code definido na classe.
-* **Erro Genérico:** Qualquer outro erro retorna `500` (Internal Server Error) e não expõe detalhes ao cliente.
+Para execução local em contêineres, verifique os arquivos `docker-compose` na raiz do monorepo.
