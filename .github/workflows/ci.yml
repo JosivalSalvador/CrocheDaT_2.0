@@ -59,7 +59,7 @@ jobs:
 
       # 2. INSTALAR DEPENDÊNCIAS
       - name: Install Deps
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --ignore-scripts --prefer-offline --no-audit
 
       # 3. GERAR CLIENT PRISMA (AGORA VAI FUNCIONAR)
       # Agora ele vai achar o DATABASE_URL no .env criado acima
