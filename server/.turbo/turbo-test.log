@@ -36,73 +36,66 @@ migrations/
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
-[2m   Start at [22m18:06:59
-[2m   Duration [22m201ms
+[2m   Start at [22m07:44:44
+[2m   Duration [22m200ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.test.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.test.ts[2m [queued][22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
-[2m   Start at [22m18:06:59
+[2m   Start at [22m07:44:44
 [2m   Duration [22m906ms
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[90mstdout[2m | src/resources/users/tests/users.test.ts
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[90mstdout[2m | src/resources/categories/tests/categories.test.ts
+[22m[39m[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+
+[90mstdout[2m | src/resources/users/tests/users.test.ts
 [22m[39m[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
 
-[90mstdout[2m | src/resources/categories/tests/categories.test.ts
-[22m[39m[dotenv@17.2.3] injecting env (0) from .env.test -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 
-
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.test.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.test.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.test.ts[2m 0/3[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.test.ts[2m [queued][22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (2)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (4)[39m
-[2m   Start at [22m18:06:59
-[2m   Duration [22m1.52s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1768601221267,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:44131","remoteAddress":"::ffff:127.0.0.1","remotePort":56876},"msg":"incoming request"}
-{"level":30,"time":1768601221272,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:44021","remoteAddress":"::ffff:127.0.0.1","remotePort":41238},"msg":"incoming request"}
-{"level":30,"time":1768601221335,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":61.250408000312746,"msg":"request completed"}
-{"level":30,"time":1768601221354,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:33931","remoteAddress":"::ffff:127.0.0.1","remotePort":56368},"msg":"incoming request"}
-{"level":30,"time":1768601221365,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":9.993431000038981,"msg":"request completed"}
-{"level":30,"time":1768601221369,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:40901","remoteAddress":"::ffff:127.0.0.1","remotePort":43230},"msg":"incoming request"}
-{"level":30,"time":1768601221374,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":105.81391499983147,"msg":"request completed"}
-{"level":30,"time":1768601221377,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":7.599564000032842,"msg":"request completed"}
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m07:44:44
+[2m   Duration [22m1.12s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1768650285924,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40775","remoteAddress":"::ffff:127.0.0.1","remotePort":60968},"msg":"incoming request"}
+{"level":30,"time":1768650285925,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:45235","remoteAddress":"::ffff:127.0.0.1","remotePort":36744},"msg":"incoming request"}
+{"level":30,"time":1768650285955,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":29.11085300007835,"msg":"request completed"}
+{"level":30,"time":1768650285963,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:33119","remoteAddress":"::ffff:127.0.0.1","remotePort":39286},"msg":"incoming request"}
+{"level":30,"time":1768650285969,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":6.286329000256956,"msg":"request completed"}
+{"level":30,"time":1768650285971,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:45829","remoteAddress":"::ffff:127.0.0.1","remotePort":39412},"msg":"incoming request"}
+{"level":30,"time":1768650285973,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":48.332285000011325,"msg":"request completed"}
+{"level":30,"time":1768650285975,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":3.1346010002307594,"msg":"request completed"}
+{"level":30,"time":1768650285980,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"GET","url":"/api/v1/categories","host":"127.0.0.1:38363","remoteAddress":"::ffff:127.0.0.1","remotePort":55726},"msg":"incoming request"}
+{"level":30,"time":1768650285981,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:37349","remoteAddress":"::ffff:127.0.0.1","remotePort":52622},"msg":"incoming request"}
+{"level":30,"time":1768650285985,"pid":22368,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":5.1767830001190305,"msg":"request completed"}
 
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.test.ts[2m 1/3[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.test.ts[2m 0/4[22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m[1m[32m1 passed[39m[22m[90m (7)[39m
-[2m   Start at [22m18:06:59
-[2m   Duration [22m1.92s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1768601221392,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"GET","url":"/api/v1/categories","host":"127.0.0.1:41059","remoteAddress":"::ffff:127.0.0.1","remotePort":55764},"msg":"incoming request"}
-{"level":30,"time":1768601221392,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:46147","remoteAddress":"::ffff:127.0.0.1","remotePort":50334},"msg":"incoming request"}
-{"level":30,"time":1768601221404,"pid":28091,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":11.999478000216186,"msg":"request completed"}
- [32m✓[39m src/resources/categories/tests/categories.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 409[2mms[22m[39m
-{"level":30,"time":1768601221425,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":32.446366999763995,"msg":"request completed"}
-{"level":30,"time":1768601221431,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41949","remoteAddress":"::ffff:127.0.0.1","remotePort":33112},"msg":"incoming request"}
-{"level":30,"time":1768601221441,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":9.394404999911785,"msg":"request completed"}
-{"level":30,"time":1768601221450,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41431","remoteAddress":"::ffff:127.0.0.1","remotePort":51910},"msg":"incoming request"}
-{"level":30,"time":1768601221476,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":201},"responseTime":25.57337799994275,"msg":"request completed"}
-{"level":30,"time":1768601221481,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:46099","remoteAddress":"::ffff:127.0.0.1","remotePort":34976},"msg":"incoming request"}
-{"level":30,"time":1768601221507,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":200},"responseTime":25.965414999984205,"msg":"request completed"}
-
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.test.ts[2m 2/4[22m
-
-[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (2)[39m
-[2m      Tests [22m[1m[32m5 passed[39m[22m[90m (7)[39m
-[2m   Start at [22m18:06:59
-[2m   Duration [22m2.02s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1768601221515,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:34721","remoteAddress":"::ffff:127.0.0.1","remotePort":56946},"msg":"incoming request"}
-{"level":30,"time":1768601221544,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":28.085448999889195,"msg":"request completed"}
-{"level":30,"time":1768601221547,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:39619","remoteAddress":"::ffff:127.0.0.1","remotePort":54474},"msg":"incoming request"}
-{"level":30,"time":1768601221570,"pid":28089,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":401},"responseTime":22.16150499973446,"msg":"request completed"}
- [32m✓[39m src/resources/users/tests/users.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 570[2mms[22m[39m
+[2m   Start at [22m07:44:44
+[2m   Duration [22m1.32s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/categories/tests/categories.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 201[2mms[22m[39m
+{"level":30,"time":1768650285998,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":17.295299000106752,"msg":"request completed"}
+{"level":30,"time":1768650286002,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:36627","remoteAddress":"::ffff:127.0.0.1","remotePort":55626},"msg":"incoming request"}
+{"level":30,"time":1768650286009,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":6.849506000056863,"msg":"request completed"}
+{"level":30,"time":1768650286015,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41651","remoteAddress":"::ffff:127.0.0.1","remotePort":49946},"msg":"incoming request"}
+{"level":30,"time":1768650286026,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":201},"responseTime":11.751461999956518,"msg":"request completed"}
+{"level":30,"time":1768650286028,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:44559","remoteAddress":"::ffff:127.0.0.1","remotePort":58990},"msg":"incoming request"}
+{"level":30,"time":1768650286040,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":200},"responseTime":11.036871999967843,"msg":"request completed"}
+{"level":30,"time":1768650286043,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41839","remoteAddress":"::ffff:127.0.0.1","remotePort":35910},"msg":"incoming request"}
+{"level":30,"time":1768650286054,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":11.238148000091314,"msg":"request completed"}
+{"level":30,"time":1768650286056,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:42769","remoteAddress":"::ffff:127.0.0.1","remotePort":53168},"msg":"incoming request"}
+{"level":30,"time":1768650286065,"pid":22367,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":401},"responseTime":9.00226499978453,"msg":"request completed"}
+ [32m✓[39m src/resources/users/tests/users.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 277[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m [1m[32m7 passed[39m[22m[90m (7)[39m
-[2m   Start at [22m 18:06:59
-[2m   Duration [22m 2.18s[2m (transform 585ms, setup 0ms, import 2.63s, tests 979ms, environment 1ms)[22m
+[2m   Start at [22m 07:44:44
+[2m   Duration [22m 1.49s[2m (transform 364ms, setup 0ms, import 1.83s, tests 478ms, environment 1ms)[22m
 
 [?25h[1G[0K⠙[1G[0K

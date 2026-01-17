@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/server.ts | pino-pretty",
+    "dev": "npx prisma generate && tsx watch --env-file .env src/server.ts | pino-pretty",
     "build": "npx prisma generate && tsc",
     "start": "node dist/src/server.js",
     "type-check": "tsc --noEmit",
@@ -12,7 +12,11 @@
     "lint:fix": "eslint src --fix",
     "test": "npm run test:setup && dotenv -e .env.test -- vitest run",
     "test:watch": "npm run test:setup && dotenv -e .env.test -- vitest",
-    "test:setup": "dotenv -e .env.test -- prisma migrate reset --force"
+    "test:setup": "dotenv -e .env.test -- prisma migrate reset --force",
+    "db:gen": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed"
   },
   "keywords": [],
   "author": "",
