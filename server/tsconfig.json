@@ -2,8 +2,8 @@
   "compilerOptions": {
     /* --- 1. Módulos e Resolução (O Padrão Moderno) --- */
     "target": "ES2022",
-    "module": "NodeNext",          // Gera imports/exports nativos (ESM)
-    "moduleResolution": "NodeNext", // Algoritmo de resolução moderno
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     
     /* --- 2. Estrutura --- */
     "rootDir": ".",
@@ -11,7 +11,7 @@
     "sourceMap": true,
 
     /* --- 3. Interoperabilidade --- */
-    "esModuleInterop": true,       // Permite importar pacotes CJS antigos
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     
     /* --- 4. Rigor Técnico (Strict) --- */
@@ -30,6 +30,7 @@
   
   "include": [
     "src/**/*",
+    "prisma/**/*",
     "prisma.config.ts",
     "vitest.config.ts"
   ]

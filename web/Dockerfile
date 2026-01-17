@@ -1,50 +1,43 @@
-# --- BUILDER ---
-FROM node:22-alpine AS builder
-WORKDIR /usr/src/app
-RUN apk add --no-cache libc6-compat
-
-# Captura variáveis de ambiente necessárias no build (para o Next.js "assar" no código)
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# ---------- base ----------
+FROM node:22-alpine AS base
+WORKDIR /app
 ENV NODE_ENV=production
 
-COPY package*.json ./
-RUN npm ci
+# ---------- deps ----------
+FROM base AS deps
 
-COPY . .
+# Copia manifests do monorepo
+COPY package.json package-lock.json ./
+COPY web/package.json ./web/package.json
 
-# Desabilita telemetria durante o build (opcional, mas recomendado)
-ENV NEXT_TELEMETRY_DISABLED=1
+# Instala apenas deps do workspace web
+# --ignore-scripts evita husky/preinstall
+RUN npm ci --ignore-scripts --workspace=web --include=dev
 
-RUN npm run build
 
-# --- RUNNER ---
-FROM node:22-alpine AS runner
-WORKDIR /usr/src/app
+# ---------- build ----------
+FROM base AS build
 
+# node_modules do root + workspace
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/web/node_modules ./web/node_modules
+
+# Código
+COPY web ./web
+COPY package.json package-lock.json ./
+
+# Build A PARTIR DA RAIZ (crítico para monorepo)
+RUN npm run build --workspace=web
+
+# ---------- runtime ----------
+FROM node:22-alpine AS runtime
+WORKDIR /app
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
-# Cria um grupo e usuário do sistema para não rodar como root (Segurança)
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /usr/src/app/public ./public
-
-# Cria a pasta .next e ajusta permissões
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Copia a saída "standalone" com as permissões do usuário criado
-# Se essa linha falhar, veja o aviso importante abaixo!
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /usr/src/app/.next/static ./.next/static
-
-# Muda para o usuário seguro
-USER nextjs
+# Standalone output
+COPY --from=build /app/web/.next/standalone ./
+COPY --from=build /app/web/.next/static ./web/.next/static
+COPY --from=build /app/web/public ./web/public
 
 EXPOSE 3000
-
-CMD ["node", "server.js"]
+CMD ["node", "web/server.js"]

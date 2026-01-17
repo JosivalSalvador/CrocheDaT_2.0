@@ -1,50 +1,56 @@
-# --- Estágio 1: Build ---
-FROM node:22-alpine AS builder
+# ---------- base ----------
+FROM node:22-alpine AS base
 
-# Adicionado openssl (importante para o Prisma no Alpine)
+WORKDIR /app
+
+# Prisma precisa disso no Alpine
 RUN apk add --no-cache libc6-compat openssl
 
-WORKDIR /usr/src/app
+# ---------- deps ----------
+FROM base AS deps
 
-# O ARG e ENV aqui são opcionais se você usar o truque do "dummy" abaixo,
-# mas mal não faz deixar.
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# Copiamos SOMENTE manifests (cache máximo)
+COPY package.json package-lock.json ./
+COPY server/package.json ./server/
 
-COPY package*.json ./
-COPY prisma ./prisma/
-COPY prisma.config.ts ./ 
+# Instala apenas dependências do workspace server
+ENV HUSKY=0
+RUN npm ci --ignore-scripts --workspace=server
 
-# Instala tudo (incluindo devDependencies para rodar o build)
-RUN npm ci
+# ---------- build ----------
+FROM base AS build
 
-COPY . .
+ENV NODE_ENV=production
 
-# Gera o client do Prisma sem precisar do banco real
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+# Dependências resolvidas
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/server/node_modules ./server/node_modules
 
-# Compila o TypeScript
+# Código-fonte do server
+COPY server ./server
+
+WORKDIR /app/server
+
+# Prisma + build TS
+RUN npx prisma generate
 RUN npm run build
 
-# --- Estágio 2: Execução (Runner) ---
-FROM node:22-alpine AS runner
+# ---------- runtime ----------
+FROM node:22-alpine AS runtime
 
-WORKDIR /usr/src/app
+WORKDIR /app/server
 
-# Adicionado openssl aqui também para o binário de execução
-RUN apk add --no-cache libc6-compat openssl
+ENV NODE_ENV=production
+ENV PORT=3333
 
-# Copia apenas o necessário do estágio anterior
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/prisma ./prisma
-# O prisma.config.ts geralmente não é necessário na execução se já foi compilado, 
-# mas se seu código lê ele em tempo de execução, mantenha.
-COPY --from=builder /usr/src/app/prisma.config.ts ./
+COPY --from=build /app/node_modules /app/node_modules
+
+# Só o necessário em runtime
+COPY --from=build /app/server/package.json ./
+COPY --from=build /app/server/node_modules ./node_modules
+COPY --from=build /app/server/prisma ./prisma
+COPY --from=build /app/server/dist ./dist
 
 EXPOSE 3333
 
-# Usei a sintaxe de array para garantir que o processo receba sinais de stop corretamente
-# ATENÇÃO: Confirme se o seu build gera "dist/src/server.js" ou apenas "dist/server.js"
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/server.js"]
+CMD ["node", "dist/src/server.js"]

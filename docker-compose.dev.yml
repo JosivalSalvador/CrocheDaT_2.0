@@ -11,7 +11,6 @@ services:
     volumes:
       - pgdata_dev:/var/lib/postgresql/data
     healthcheck:
-      # Agora hardcoded com 'user' e 'db' para ter certeza absoluta que vai funcionar
       test: ["CMD-SHELL", "pg_isready -U user -d db"]
       interval: 5s
       timeout: 5s
@@ -22,10 +21,7 @@ services:
     image: postgres:18-alpine
     container_name: fastify_pg_test
     env_file:
-      - ./server/.env
-    environment:
-      # O banco de teste continua sendo ecommerce_test
-      POSTGRES_DB: ecommerce_test
+      - ./server/.env.test
     ports:
       - "5433:5432"
     tmpfs:
@@ -35,53 +31,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  # --- BACKEND DEV (Fastify) ---
-  api:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    container_name: fastify_api_dev
-    env_file:
-      - ./server/.env
-    environment:
-      NODE_ENV: development
-      # --- CORREÇÃO FINAL ---
-      # Aqui nós ignoramos o que está no seu .env e forçamos a conexão correta
-      # Usuário: user | Senha: pass | Host: postgres | Banco: db
-      DATABASE_URL: postgresql://user:pass@postgres:5432/db?schema=public
-      
-      # Usuário: user | Senha: pass | Host: postgres_test | Banco: ecommerce_test
-      DATABASE_TEST_URL: postgresql://user:pass@postgres_test:5432/ecommerce_test?schema=public
-    
-    command: sh -c "npx prisma generate && npm run dev"
-    ports:
-      - "3333:3333"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
-
-  # --- FRONTEND DEV (Next.js) ---
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile.dev
-    container_name: next_web_dev
-    env_file:
-      - ./web/.env
-    environment:
-      NODE_ENV: development
-      WATCHPACK_POLLING: "true"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    volumes:
-      - ./web:/usr/src/app
-      - /usr/src/app/node_modules
 
 volumes:
   pgdata_dev:

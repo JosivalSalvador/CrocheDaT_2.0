@@ -1,12 +1,25 @@
 {
   "name": "crochedat_2",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
+  "packageManager": "npm@10.9.2",
+  "private": true,
+  "workspaces": [
+    "web",
+    "server"
+  ],
+ "scripts": {
     "prepare": "husky install",
-    "lint": "cd web && npm run lint && cd ../server && npm run lint",
-    "type-check": "cd web && npm run type-check && cd ../server && npm run type-check",
-    "build": "cd web && npm run build && cd ../server && npm run build"
+    "dev": "turbo run dev",
+    "dev:web": "npm run dev --workspace=web",
+    "dev:server": "npm run dev --workspace=server",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "db:gen": "cd server && npx prisma generate",
+    "db:migrate": "cd server && npx prisma migrate dev",
+    "db:studio": "cd server && npx prisma studio",
+    "db:seed": "cd server && npx prisma db seed",
+    "test": "turbo run test"
   },
   "repository": {
     "type": "git",
@@ -21,6 +34,7 @@
   "homepage": "https://github.com/JosivalSalvador/CrocheDaT_2.0#readme",
   "description": "",
   "devDependencies": {
-    "husky": "^8.0.0"
+    "husky": "^8.0.0",
+    "turbo": "latest"
   }
 }

@@ -8,7 +8,7 @@ const getBaseUrl = () => {
   if (typeof window === "undefined") {
     // Estamos no SERVIDOR (Docker/Next.js SSR)
     // Usa a URL interna do container (ex: http://fastify_api_prod:3333)
-    return process.env.API_INTERNAL_URL || "http://fastify_api_prod:3333";
+    return process.env.API_INTERNAL_URL || "http://api:3333";
   }
   // Estamos no NAVEGADOR (Cliente)
   // Usa a URL pública (ex: http://localhost:3333)
