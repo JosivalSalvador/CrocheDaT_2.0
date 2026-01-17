@@ -37,8 +37,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:${{ github.sha }}
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
