@@ -59,6 +59,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test?schema=public
 
       - name: Lint
         run: npm run lint

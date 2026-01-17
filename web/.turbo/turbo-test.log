@@ -11,21 +11,21 @@
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
-[2m   Start at [22m07:44:42
-[2m   Duration [22m874ms
+[2m   Start at [22m13:04:16
+[2m   Duration [22m928ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22mapp/produtos/components/dashboard-resumo.test.tsx[2m 0/1[22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (1)[39m
-[2m   Start at [22m07:44:42
-[2m   Duration [22m1.18s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m app/produtos/components/dashboard-resumo.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
-   [32m✓[39m mostra estado de loading[32m 56[2mms[22m[39m
+[2m   Start at [22m13:04:16
+[2m   Duration [22m1.23s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m app/produtos/components/dashboard-resumo.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 75[2mms[22m[39m
+   [32m✓[39m mostra estado de loading[32m 73[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
-[2m   Start at [22m 07:44:42
-[2m   Duration [22m 1.32s[2m (transform 94ms, setup 118ms, import 215ms, tests 58ms, environment 742ms)[22m
+[2m   Start at [22m 13:04:16
+[2m   Duration [22m 1.34s[2m (transform 85ms, setup 144ms, import 169ms, tests 75ms, environment 781ms)[22m
 
 [?25h[1G[0K⠙[1G[0K
