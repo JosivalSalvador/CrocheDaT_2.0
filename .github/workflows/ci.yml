@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: './server/package-lock.json'
+          cache-dependency-path: './package-lock.json'
 
       # 1. CRIAR .ENV (PRIMEIRO DE TUDO)
       # Precisamos criar tanto o .env (para o prisma generate ler)
@@ -93,7 +93,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: './web/package-lock.json'
+          cache-dependency-path: './package-lock.json'
 
       - name: Install Deps
         run: npm ci --prefer-offline --no-audit
