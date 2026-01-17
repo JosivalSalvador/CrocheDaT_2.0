@@ -1,6 +1,6 @@
 # CrocheDaT 2.0 - Monorepo
 
-Este repositório centraliza o código-fonte da plataforma CrocheDaT, estruturada como um monorepo que agrega o backend (API), frontend (Web) e configurações de infraestrutura. A arquitetura visa a separação de responsabilidades mantendo um fluxo de desenvolvimento unificado via Docker e Scripts NPM.
+Este repositório centraliza o código-fonte da plataforma CrocheDaT, estruturada como um monorepo que agrega o backend (API), frontend (Web) e configurações de infraestrutura. A arquitetura visa a separação de responsabilidades mantendo um fluxo de desenvolvimento unificado via Docker e Scripts NPM!.
 
 ## Arquitetura do Sistema
 
