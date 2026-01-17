@@ -105,7 +105,7 @@ jobs:
         run: npm run type-check
 
       - name: Run Tests
-        run: npm run test:run
+        run: npm run test
 
   # ====================================================
   # 3. VERIFICAÇÃO DE BUILD DOCKER (PRODUÇÃO)
