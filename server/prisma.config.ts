@@ -1,11 +1,9 @@
-import 'dotenv/config'
 import { defineConfig } from 'prisma/config'
 
-// 1. Extração e Validação Explícita (Guard Clause)
-const databaseUrl = process.env['DATABASE_URL']
+const DATABASE_URL = process.env.DATABASE_URL
 
-if (!databaseUrl) {
-  throw new Error("ERRO CRÍTICO: A variável de ambiente 'DATABASE_URL' não está definida no .env")
+if (!DATABASE_URL) {
+  throw new Error('DATABASE_URL não definida')
 }
 
 export default defineConfig({
@@ -15,6 +13,6 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
-    url: databaseUrl,
+    url: DATABASE_URL,
   },
 })

@@ -1,48 +1,58 @@
 services:
-  # ---------- DATABASE ----------
-  postgres:
+  # -------------------------
+  # BANCO DE DADOS (Postgres)
+  # -------------------------
+  db:
     image: postgres:18-alpine
-    container_name: crochedat_pg
+    container_name: croche-db
     restart: unless-stopped
     env_file:
       - ./server/.env.prod
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d db"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - croche-net
 
-  # ---------- API ----------
+  # -------------------------
+  # API / SERVER
+  # -------------------------
   api:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
-    container_name: crochedat_api
+    image: josivaljunior/croche-api:latest
+    container_name: croche-api
     restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
     env_file:
       - ./server/.env.prod
-    depends_on:
-      postgres:
-        condition: service_healthy
     ports:
       - "3333:3333"
+    networks:
+      - croche-net
 
-  # ---------- WEB ----------
+  # -------------------------
+  # WEB / FRONTEND
+  # -------------------------
   web:
-    build:
-      context: .
-      dockerfile: web/Dockerfile
-    container_name: crochedat_web
+    image: josivaljunior/croche-web:latest
+    container_name: croche-web
     restart: unless-stopped
+    depends_on:
+      - api
     env_file:
       - ./web/.env.prod
-    depends_on:
-      api:
-        condition: service_started
     ports:
       - "3000:3000"
+    networks:
+      - croche-net
 
 volumes:
-  pgdata:
+  postgres_data:
+
+networks:
+  croche-net:
