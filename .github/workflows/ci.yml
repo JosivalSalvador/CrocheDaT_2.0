@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   # ====================================================
-  # 1. VERIFICAÇÃO DE QUALIDADE (SERVER)
+  # 1. SERVER – QUALIDADE E TESTES
   # ====================================================
   server-check:
     name: Server (Lint, Types, Tests)
@@ -20,6 +20,7 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+
     services:
       postgres:
         image: postgres:18-alpine
@@ -42,41 +43,34 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      # 1. CRIAR .ENV (PRIMEIRO DE TUDO)
-      # Precisamos criar tanto o .env (para o prisma generate ler)
-      # quanto o .env.test (para o script de teste ler)
-      - name: Create .env files
+      - name: Create env files
         run: |
           echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test?schema=public" > .env
           echo "JWT_SECRET=ci-secret" >> .env
           echo "NODE_ENV=test" >> .env
-          # Copia o .env para .env.test para garantir que ambos existam
           cp .env .env.test
 
-      # 2. INSTALAR DEPENDÊNCIAS
-      - name: Install Deps
-        run: npm ci --ignore-scripts --prefer-offline --no-audit
+      - name: Install deps
+        run: npm ci --ignore-scripts --no-audit
 
-      # 3. GERAR CLIENT PRISMA (AGORA VAI FUNCIONAR)
-      # Agora ele vai achar o DATABASE_URL no .env criado acima
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Run Lint
+      - name: Lint
         run: npm run lint
 
-      - name: Run Type Check
+      - name: Type check
         run: npm run type-check
 
-      - name: Run Tests
+      - name: Tests
         run: npm run test
 
   # ====================================================
-  # 2. VERIFICAÇÃO DE QUALIDADE (WEB)
+  # 2. WEB – QUALIDADE E TESTES
   # ====================================================
   web-check:
     name: Web (Lint, Types, Tests)
@@ -84,78 +78,74 @@ jobs:
     defaults:
       run:
         working-directory: ./web
-    
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install Deps
-        run: npm ci --ignore-scripts --prefer-offline --no-audit
+      - name: Install deps
+        run: npm ci --ignore-scripts --no-audit
 
-      - name: Run Lint
+      - name: Lint
         run: npm run lint
 
-      - name: Run Type Check
+      - name: Type check
         run: npm run type-check
 
-      - name: Run Tests
+      - name: Tests
         run: npm run test
 
   # ====================================================
-  # 3. VERIFICAÇÃO DE BUILD DOCKER (PRODUÇÃO)
+  # 3. BUILD DE PRODUÇÃO (DOCKERFILES)
   # ====================================================
   docker-build-check:
-    name: Verify Prod Docker Build
+    name: Verify Production Docker Builds
     runs-on: ubuntu-latest
     needs: [server-check, web-check]
-    
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create Dummy Envs for Compose
+      - name: Build server image
         run: |
-          echo "POSTGRES_USER=user" > ./server/.env
-          echo "POSTGRES_PASSWORD=pass" >> ./server/.env
-          echo "POSTGRES_DB=db" >> ./server/.env
-          echo "DATABASE_URL=postgres://dummy" >> ./server/.env
-          echo "JWT_SECRET=dummy" >> ./server/.env
-          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > ./web/.env
-          echo "API_INTERNAL_URL=http://localhost:3333" >> ./web/.env
+          docker build \
+            -f server/Dockerfile \
+            -t crochedat-server:ci .
 
-      - name: Build Production Images
-        run: docker compose -f docker-compose.yml build
+      - name: Build web image
+        run: |
+          docker build \
+            -f web/Dockerfile \
+            --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
+            -t crochedat-web:ci .
 
   # ====================================================
-  # 4. ABRIR PULL REQUEST (DEV -> MAIN)
+  # 4. AUTO PR DEV → MAIN
   # ====================================================
   auto-pr:
     name: Open PR to Main
     runs-on: ubuntu-latest
     needs: [docker-build-check]
     if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
-    
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for existing PR
+      - name: Check existing PR
         id: check_pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           count=$(gh pr list --base main --head dev --json id --jq '. | length')
-          if [ "$count" -gt 0 ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+          echo "exists=$([ "$count" -gt 0 ] && echo true || echo false)" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request
+      - name: Create PR
         if: steps.check_pr.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -163,5 +153,5 @@ jobs:
           gh pr create \
             --base main \
             --head dev \
-            --title "🚀 Release: Merge dev to main" \
-            --body "Automated PR created by CI pipeline after passing all tests and build checks."
+            --title "Release: Merge dev to main" \
+            --body "Automated PR after CI passed (tests + prod docker builds)."
