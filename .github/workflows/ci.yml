@@ -126,6 +126,7 @@ jobs:
           echo "DATABASE_URL=postgres://dummy" >> ./server/.env
           echo "JWT_SECRET=dummy" >> ./server/.env
           echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > ./web/.env
+          echo "API_INTERNAL_URL=http://localhost:3333" >> ./web/.env
 
       - name: Build Production Images
         run: docker compose -f docker-compose.yml build
