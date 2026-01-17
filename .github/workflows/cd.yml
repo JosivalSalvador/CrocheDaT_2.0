@@ -34,6 +34,7 @@ jobs:
           context: .
           file: server/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:${{ github.sha }}
@@ -69,6 +70,7 @@ jobs:
           context: .
           file: web/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-web:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-web:${{ github.sha }}
