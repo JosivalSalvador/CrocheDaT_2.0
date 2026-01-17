@@ -18,7 +18,6 @@ COPY package.json ./
 WORKDIR /app/server
 
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public"
-ENV JWT_SECRET="dummy"
 
 RUN npm run build
 

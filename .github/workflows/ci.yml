@@ -123,6 +123,7 @@ jobs:
           docker build \
             -f web/Dockerfile \
             --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
+            --build-arg API_INTERNAL_URL=http://localhost:3333 \
             -t crochedat-web:ci .
 
   # ====================================================
