@@ -5,6 +5,7 @@ import rateLimit from '@fastify/rate-limit'
 import fastifySwagger from '@fastify/swagger'
 import apiReference from '@scalar/fastify-api-reference'
 import fastifyJwt from '@fastify/jwt'
+import fastifyCookie from '@fastify/cookie' // <--- Import mantido
 import {
   validatorCompiler,
   serializerCompiler,
@@ -17,7 +18,6 @@ import { healthRoutes } from './routes/health.routes.js'
 import { errorHandler } from './lib/error-handler.js'
 import { env } from './validateEnv/index.js'
 
-// AQUI ESTÁ A MUDANÇA DO LOGGER
 export const app = fastify({
   logger:
     env.NODE_ENV === 'development'
@@ -25,13 +25,13 @@ export const app = fastify({
           transport: {
             target: 'pino-pretty',
             options: {
-              translateTime: 'HH:MM:ss Z', // Formata a hora bonitinho
-              ignore: 'pid,hostname', // Remove poluição visual no terminal
+              translateTime: 'HH:MM:ss Z',
+              ignore: 'pid,hostname',
               colorize: true,
             },
           },
         }
-      : true, // Em produção, usa JSON padrão (melhor para performance)
+      : true,
 }).withTypeProvider<ZodTypeProvider>()
 
 // --- COMPILADORES ZOD ---
@@ -40,7 +40,7 @@ app.setSerializerCompiler(serializerCompiler)
 
 // --- SEGURANÇA (INFRA) ---
 
-// 1. Helmet: Adiciona headers de segurança HTTP
+// 1. Helmet
 app.register(helmet, {
   contentSecurityPolicy: {
     directives: {
@@ -53,10 +53,10 @@ app.register(helmet, {
   },
 })
 
-// 2. Rate Limit: Protege contra abuso/DDoS
+// 2. Rate Limit
 app.register(rateLimit, {
-  max: 100, // Máximo de 100 requisições
-  timeWindow: '1 minute', // Por minuto, por IP
+  max: 100,
+  timeWindow: '1 minute',
   errorResponseBuilder: (request, context) => {
     return {
       statusCode: 429,
@@ -66,14 +66,40 @@ app.register(rateLimit, {
   },
 })
 
-// 3. CORS: Controla quem pode acessar a API
-app.register(cors, {
-  origin: '*', // DEV: '*', PROD: 'https://seu-site.com'
+// 3. Cookie (MOVIDO PARA CÁ)
+// Tem que vir antes do CORS e das Rotas para funcionar corretamente
+app.register(fastifyCookie, {
+  secret: env.JWT_SECRET, // (Opcional) Usa o mesmo segredo para assinar cookies se precisar no futuro
+  hook: 'onRequest', // Garante que o parse acontece cedo
 })
 
-// 4. JWT: Autenticação
+// 4. CORS (AJUSTADO PARA COOKIES)
+app.register(cors, {
+  // Em Dev, permitimos localhost. Em Prod, coloque a URL do seu Front (ex: https://meusite.com)
+  origin: (origin, cb) => {
+    // Permite requisições sem origin (como Postman ou Mobile Apps) e localhost
+    if (!origin || origin.startsWith('http://localhost')) {
+      cb(null, true)
+      return
+    }
+    // Bloqueia outros (Segurança)
+    // cb(new Error("Not allowed"), false) // Descomente em prod para ser restritivo
+    cb(null, true) // Por enquanto em dev, libera geral
+  },
+  credentials: true, // <--- OBRIGATÓRIO: Permite que o navegador envie/receba cookies
+})
+
+// 5. JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  // Opcional: configura o cookie automático do fastify-jwt, mas estamos fazendo manual no controller
+  sign: {
+    expiresIn: '10m', // Token de acesso morre em 10 minutos
+  },
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
 })
 
 // --- DOCUMENTAÇÃO ---

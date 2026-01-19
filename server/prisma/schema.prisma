@@ -13,43 +13,45 @@ datasource db {
   
 }
 
-model Product {
-  id             String   @id @default(uuid()) @db.Char(36) // UUID fixo de 36 chars
-  name           String   @db.VarChar(100)
-  description    String   @db.Text
-  material       String   @db.VarChar(100)
-  productionTime String   @db.VarChar(50)
-  price          Decimal  @db.Decimal(10, 2)
-  photos         Json     // Incrível para guardar array de URLs sem tabela extra
-  
-  categoryId     String   @db.Char(36)
-  category       Category @relation(fields: [categoryId], references: [id])
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@index([name]) // Otimização de busca
-  @@map("products") // Boas práticas: nome da tabela em minúsculo/plural
+enum Role {
+  ADMIN
+  SUPPORTER
+  USER
 }
 
-model Category {
-  id       String    @id @default(uuid()) @db.Char(36)
-  name     String    @db.VarChar(50)
-  products Product[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@map("categories")
+// 2. Tipos de Token
+enum TokenType {
+  REFRESH_TOKEN
+  PASSWORD_RESET
+  EMAIL_VERIFY
 }
 
 model User {
-  id       String @id @default(uuid()) @db.Char(36)
-  name     String
-  email    String @unique
-  password String // Aqui guardaremos o Hash, nunca a senha real
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String   // Nome técnico: guarda o hash
+  role          Role     @default(USER)
   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // Mapeamento: CamelCase no código JS, snake_case no Banco (Boas práticas SQL)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  tokens        Token[] 
 
   @@map("users")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType 
+  createdAt DateTime  @default(now()) @map("created_at")
+  
+  // Opcional: data para expirar o token no banco
+  expiresAt DateTime? @map("expires_at")
+
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tokens")
 }
