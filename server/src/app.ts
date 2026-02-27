@@ -5,7 +5,7 @@ import rateLimit from '@fastify/rate-limit'
 import fastifySwagger from '@fastify/swagger'
 import apiReference from '@scalar/fastify-api-reference'
 import fastifyJwt from '@fastify/jwt'
-import fastifyCookie from '@fastify/cookie' // <--- Import mantido
+import fastifyCookie from '@fastify/cookie'
 import {
   validatorCompiler,
   serializerCompiler,
@@ -13,8 +13,9 @@ import {
   jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
 
-import { routes } from './routes/index.js'
-import { healthRoutes } from './routes/health.routes.js'
+// AJUSTE 1: Caminho corrigido para bater com sua pasta 'router'
+import { routes } from './router/index.js'
+import { healthRoutes } from './router/health.routes.js'
 import { errorHandler } from './lib/error-handler.js'
 import { env } from './validateEnv/index.js'
 
@@ -66,40 +67,35 @@ app.register(rateLimit, {
   },
 })
 
-// 3. Cookie (MOVIDO PARA CÁ)
-// Tem que vir antes do CORS e das Rotas para funcionar corretamente
+// 3. Cookie (ANTES DO CORS E ROTAS)
 app.register(fastifyCookie, {
-  secret: env.JWT_SECRET, // (Opcional) Usa o mesmo segredo para assinar cookies se precisar no futuro
-  hook: 'onRequest', // Garante que o parse acontece cedo
+  secret: env.JWT_SECRET,
+  hook: 'onRequest',
 })
 
-// 4. CORS (AJUSTADO PARA COOKIES)
+// 4. CORS
 app.register(cors, {
-  // Em Dev, permitimos localhost. Em Prod, coloque a URL do seu Front (ex: https://meusite.com)
   origin: (origin, cb) => {
-    // Permite requisições sem origin (como Postman ou Mobile Apps) e localhost
+    // Permite localhost e chamadas sem origin (mobile/postman)
     if (!origin || origin.startsWith('http://localhost')) {
       cb(null, true)
       return
     }
-    // Bloqueia outros (Segurança)
-    // cb(new Error("Not allowed"), false) // Descomente em prod para ser restritivo
-    cb(null, true) // Por enquanto em dev, libera geral
+    // Em prod, aqui entra a validação do domínio real
+    cb(null, true)
   },
-  credentials: true, // <--- OBRIGATÓRIO: Permite que o navegador envie/receba cookies
+  credentials: true, // OBRIGATÓRIO para os cookies funcionarem
 })
 
 // 5. JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
-  // Opcional: configura o cookie automático do fastify-jwt, mas estamos fazendo manual no controller
   sign: {
-    expiresIn: '10m', // Token de acesso morre em 10 minutos
+    expiresIn: '10m',
   },
-  cookie: {
-    cookieName: 'refreshToken',
-    signed: false,
-  },
+  // AJUSTE 2: Removi a configuração de 'cookie' daqui.
+  // Motivo: O cookie 'refreshToken' carrega um UUID, não um JWT.
+  // Se deixarmos isso aqui, o plugin tenta ler o UUID como JWT e falha.
 })
 
 // --- DOCUMENTAÇÃO ---
@@ -107,7 +103,7 @@ app.register(fastifySwagger, {
   openapi: {
     info: {
       title: 'Crochê da T API',
-      description: 'Base de API Profissional Node.js',
+      description: 'API Profissional Node.js',
       version: '1.0.0',
     },
     components: {
@@ -133,7 +129,7 @@ app.register(apiReference, {
 
 // --- ROTAS ---
 app.register(healthRoutes)
-app.register(routes)
+app.register(routes) // Registrando as rotas da V1
 
 // --- ERROR HANDLER ---
 app.setErrorHandler(errorHandler)

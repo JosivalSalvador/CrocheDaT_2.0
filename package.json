@@ -1,7 +1,7 @@
 {
   "name": "crochedat_2",
   "version": "1.0.0",
-  "packageManager": "npm@10.9.2",
+  "packageManager": "npm@11.7.0",
   "private": true,
   "workspaces": [
     "web",
