@@ -1,51 +1,39 @@
-import bcrypt from 'bcryptjs'
+import { hash } from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
-import { prisma } from '../../lib/prisma.js' // [cite: 8]
-import { AppError } from '../../errors/app-error.js' // [cite: 5]
-import type { LoginInput, RegisterUserInput } from './users.schema.js'
+import { prisma } from '../../lib/prisma.js'
+import { AppError } from '../../errors/app-error.js'
+import type { RegisterUserInput } from './users.types.js'
 
+/**
+ * Cria um novo usuário no sistema
+ */
 export async function registerUser(input: RegisterUserInput) {
+  const { name, email, password } = input
+
   const userExists = await prisma.user.findUnique({
-    where: { email: input.email },
+    where: { email },
   })
 
   if (userExists) {
-    throw new AppError('User already exists', StatusCodes.CONFLICT)
+    throw new AppError('E-mail already exists.', StatusCodes.CONFLICT)
   }
 
-  // Criptografa a senha antes de salvar
-  const passwordHash = await bcrypt.hash(input.password, 6)
+  const passwordHash = await hash(password, 10)
 
   const user = await prisma.user.create({
     data: {
-      name: input.name,
-      email: input.email,
-      password: passwordHash,
+      name,
+      email,
+      password_hash: passwordHash,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
     },
   })
 
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-  }
-}
-
-export async function authenticateUser(input: LoginInput) {
-  const user = await prisma.user.findUnique({
-    where: { email: input.email },
-  })
-
-  if (!user) {
-    throw new AppError('Invalid credentials', StatusCodes.UNAUTHORIZED)
-  }
-
-  // Compara a senha enviada com o hash do banco
-  const doesPasswordMatch = await bcrypt.compare(input.password, user.password)
-
-  if (!doesPasswordMatch) {
-    throw new AppError('Invalid credentials', StatusCodes.UNAUTHORIZED)
-  }
-
-  return user
+  return { user }
 }

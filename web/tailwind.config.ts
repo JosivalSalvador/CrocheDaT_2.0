@@ -1,23 +1,30 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
-
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
-
 import svgToDataUri from "mini-svg-data-uri";
 
 const config: Config = {
+  // 1. Verifique se os caminhos batem com sua estrutura de pastas
   content: [
-    "./src/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
+    "./hooks/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
   ],
-  darkMode: "class", // Define que o modo escuro é ativado pela classe 'dark'
+  darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      // 2. AQUI O AJUSTE: Registrando o '100' na escala oficial do seu projeto
+      spacing: {
+        "100": "25rem", // 25rem = 400px
+      },
+      maxWidth: {
+        "100": "25rem",
+      },
+    },
   },
   plugins: [
     plugin(function ({ addBase, matchUtilities, theme }) {
-      // 1. Gera variáveis CSS globais de cores
       const allColors = flattenColorPalette(theme("colors"));
       const newVars = Object.fromEntries(
         Object.entries(allColors).map(([key, val]) => [
@@ -27,7 +34,6 @@ const config: Config = {
       );
       addBase({ ":root": newVars });
 
-      // 2. Cria os utilitários de Grid (bg-grid, bg-dot, etc)
       matchUtilities(
         {
           "bg-grid": (value: string) => ({

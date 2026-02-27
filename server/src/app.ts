@@ -5,6 +5,7 @@ import rateLimit from '@fastify/rate-limit'
 import fastifySwagger from '@fastify/swagger'
 import apiReference from '@scalar/fastify-api-reference'
 import fastifyJwt from '@fastify/jwt'
+import fastifyCookie from '@fastify/cookie'
 import {
   validatorCompiler,
   serializerCompiler,
@@ -12,12 +13,12 @@ import {
   jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
 
-import { routes } from './routes/index.js'
-import { healthRoutes } from './routes/health.routes.js'
+// AJUSTE 1: Caminho corrigido para bater com sua pasta 'router'
+import { routes } from './router/index.js'
+import { healthRoutes } from './router/health.routes.js'
 import { errorHandler } from './lib/error-handler.js'
 import { env } from './validateEnv/index.js'
 
-// AQUI ESTÁ A MUDANÇA DO LOGGER
 export const app = fastify({
   logger:
     env.NODE_ENV === 'development'
@@ -25,13 +26,13 @@ export const app = fastify({
           transport: {
             target: 'pino-pretty',
             options: {
-              translateTime: 'HH:MM:ss Z', // Formata a hora bonitinho
-              ignore: 'pid,hostname', // Remove poluição visual no terminal
+              translateTime: 'HH:MM:ss Z',
+              ignore: 'pid,hostname',
               colorize: true,
             },
           },
         }
-      : true, // Em produção, usa JSON padrão (melhor para performance)
+      : true,
 }).withTypeProvider<ZodTypeProvider>()
 
 // --- COMPILADORES ZOD ---
@@ -40,7 +41,7 @@ app.setSerializerCompiler(serializerCompiler)
 
 // --- SEGURANÇA (INFRA) ---
 
-// 1. Helmet: Adiciona headers de segurança HTTP
+// 1. Helmet
 app.register(helmet, {
   contentSecurityPolicy: {
     directives: {
@@ -53,10 +54,10 @@ app.register(helmet, {
   },
 })
 
-// 2. Rate Limit: Protege contra abuso/DDoS
+// 2. Rate Limit
 app.register(rateLimit, {
-  max: 100, // Máximo de 100 requisições
-  timeWindow: '1 minute', // Por minuto, por IP
+  max: 100,
+  timeWindow: '1 minute',
   errorResponseBuilder: (request, context) => {
     return {
       statusCode: 429,
@@ -66,14 +67,35 @@ app.register(rateLimit, {
   },
 })
 
-// 3. CORS: Controla quem pode acessar a API
-app.register(cors, {
-  origin: '*', // DEV: '*', PROD: 'https://seu-site.com'
+// 3. Cookie (ANTES DO CORS E ROTAS)
+app.register(fastifyCookie, {
+  secret: env.JWT_SECRET,
+  hook: 'onRequest',
 })
 
-// 4. JWT: Autenticação
+// 4. CORS
+app.register(cors, {
+  origin: (origin, cb) => {
+    // Permite localhost e chamadas sem origin (mobile/postman)
+    if (!origin || origin.startsWith('http://localhost')) {
+      cb(null, true)
+      return
+    }
+    // Em prod, aqui entra a validação do domínio real
+    cb(null, true)
+  },
+  credentials: true, // OBRIGATÓRIO para os cookies funcionarem
+})
+
+// 5. JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  sign: {
+    expiresIn: '10m',
+  },
+  // AJUSTE 2: Removi a configuração de 'cookie' daqui.
+  // Motivo: O cookie 'refreshToken' carrega um UUID, não um JWT.
+  // Se deixarmos isso aqui, o plugin tenta ler o UUID como JWT e falha.
 })
 
 // --- DOCUMENTAÇÃO ---
@@ -81,7 +103,7 @@ app.register(fastifySwagger, {
   openapi: {
     info: {
       title: 'Crochê da T API',
-      description: 'Base de API Profissional Node.js',
+      description: 'API Profissional Node.js',
       version: '1.0.0',
     },
     components: {
@@ -107,7 +129,7 @@ app.register(apiReference, {
 
 // --- ROTAS ---
 app.register(healthRoutes)
-app.register(routes)
+app.register(routes) // Registrando as rotas da V1
 
 // --- ERROR HANDLER ---
 app.setErrorHandler(errorHandler)

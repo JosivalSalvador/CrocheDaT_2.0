@@ -6,12 +6,13 @@ export default defineConfig({
     globals: true,
     // Define que estamos testando um ambiente Node.js
     environment: 'node',
-    // Indica onde estão os arquivos de teste
-    include: ['src/**/*.test.ts'],
+    // --- AQUI ESTÁ A CORREÇÃO ---
+    // Adicionei 'src/**/*.spec.ts' para ele ler os arquivos que criamos
+    include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
     // Ignora pastas de build
     exclude: ['node_modules', 'dist'],
 
-    // Tempo limite para cada teste (útil se o banco demorar um pouco)
+    // Tempo limite para cada teste
     testTimeout: 10000,
   },
 })
