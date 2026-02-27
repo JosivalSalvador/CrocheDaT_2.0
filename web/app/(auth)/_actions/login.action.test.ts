@@ -60,7 +60,7 @@ describe("loginAction", () => {
     const result = await loginAction(initialState, invalidInput);
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe("Dados inválidos");
+    expect(result.message).toBe("Por favor, corrija os erros no formulário.");
   });
 
   /* ===========================
@@ -153,6 +153,6 @@ describe("loginAction", () => {
     const result = await loginAction(initialState, validInput);
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe("Erro crítico de autenticação");
+    expect(result.message).toBe("Credenciais inválidas ou erro no servidor");
   });
 });
