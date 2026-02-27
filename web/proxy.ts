@@ -5,8 +5,9 @@ const AUTH_COOKIE_NAME = "auth_session";
 
 /**
  * Lógica de Proxy/Middleware para interceptação de rotas e proteção de acesso.
+ * AJUSTE: O nome da função foi alterado para 'proxy' para coincidir com o arquivo 'proxy.ts'
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const sessionCookie = request.cookies.get(AUTH_COOKIE_NAME)?.value;
@@ -14,12 +15,10 @@ export async function middleware(request: NextRequest) {
   let user = null;
   if (sessionCookie) {
     try {
-      // Usamos decodeURIComponent para lidar com caracteres especiais do JSON stringificado
       const decoded = decodeURIComponent(sessionCookie);
       const session = JSON.parse(decoded);
       user = session.user;
     } catch {
-      // Se o parse falhar, tratamos como usuário não logado
       user = null;
     }
   }
@@ -62,14 +61,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for:
-     * - api (API routes internas do Next)
-     * - _next/static (arquivos estáticos)
-     * - _next/image (otimização de imagens)
-     * - favicon.ico, public files (imagens da pasta public)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
