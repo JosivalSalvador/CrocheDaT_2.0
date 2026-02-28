@@ -35,36 +35,24 @@ migrations/
 [1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/home/marcosbala070/Documentos/crochedaT_2/server[39m
 
 [?2026h
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m206ms
+[2m   Start at [22m14:53:22
+[2m   Duration [22m204ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
-
-[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (4)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m613ms
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/2[22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (10)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m924ms
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m14:53:22
+[2m   Duration [22m608ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
@@ -75,66 +63,32 @@ migrations/
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m[1m[32m1 passed[39m[22m[90m (10)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m1.13s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/tokens/tests/refresh.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 618[2mms[22m[39m
-       [33m[2m✓[22m[39m should refresh token with rotation [33m 556[2mms[22m[39m
+[2m   Start at [22m14:53:22
+[2m   Duration [22m909ms
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/tokens/tests/refresh.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 279[2mms[22m[39m
 
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 1/4[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 3/4[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/2[22m
 
 [2m Test Files [22m[1m[32m1 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m5 passed[39m[22m[90m (10)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m1.34s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[2m      Tests [22m[1m[32m7 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m14:53:22
+[2m   Duration [22m1.01s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/auth/tests/sessions.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 341[2mms[22m[39m
+
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 2/4[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/2[22m
-
-[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m6 passed[39m[22m[90m (10)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m1.44s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[90mstdout[2m | src/resources/auth/tests/sessions.service.spec.ts[2m > [22m[2mSessions Service (Integration)[2m > [22m[2msignOut[2m > [22m[2mshould not throw error if token does not exist (idempotency)
-[22m[39mprisma:error 
-Invalid `.delete()` invocation in
-/home/marcosbala070/Documentos/crochedaT_2/server/src/resources/auth/sessions.service.ts:58:6
-
-  55 export async function signOut(refreshTokenId: string) {
-  56   // Solução de mercado: Deletamos o token e tratamos a idempotência
-  57   await prisma.token
-→ 58     .delete(
-An operation failed because it depends on one or more records that were required but not found. No record was found for a delete.
-
- [32m✓[39m src/resources/auth/tests/sessions.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 859[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to authenticate and save refresh token in DB [33m 674[2mms[22m[39m
-
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/2[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m8 passed[39m[22m[90m (12)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m1.84s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 1/2[22m
 
 [2m Test Files [22m[1m[32m2 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m9 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m1.94s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772239791114,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40889","remoteAddress":"::ffff:127.0.0.1","remotePort":36028},"msg":"incoming request"}
+[2m      Tests [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m14:53:22
+[2m   Duration [22m1.21s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772304803520,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40167","remoteAddress":"::ffff:127.0.0.1","remotePort":41658},"msg":"incoming request"}
 
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
@@ -143,73 +97,62 @@ An operation failed because it depends on one or more records that were required
 
 [2m Test Files [22m[1m[32m2 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m[1m[32m10 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m2.24s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/users/tests/users.service.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1565[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to register a new user [33m 1228[2mms[22m[39m
-       [33m[2m✓[22m[39m should not register user with duplicate email [33m 333[2mms[22m[39m
-{"level":30,"time":1772239791350,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:43611","remoteAddress":"::ffff:127.0.0.1","remotePort":42184},"msg":"incoming request"}
-{"level":30,"time":1772239791430,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:40325","remoteAddress":"::ffff:127.0.0.1","remotePort":58488},"msg":"incoming request"}
-{"level":30,"time":1772239791464,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":111.91660000011325,"msg":"request completed"}
-{"level":30,"time":1772239791480,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:41655","remoteAddress":"::ffff:127.0.0.1","remotePort":60512},"msg":"incoming request"}
-{"level":30,"time":1772239791516,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":36.2442899979651,"msg":"request completed"}
+[2m   Start at [22m14:53:22
+[2m   Duration [22m1.31s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/users/tests/users.service.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 678[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to register a new user [33m 527[2mms[22m[39m
+{"level":30,"time":1772304803636,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:39413","remoteAddress":"::ffff:127.0.0.1","remotePort":54256},"msg":"incoming request"}
+{"level":30,"time":1772304803637,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:46637","remoteAddress":"::ffff:127.0.0.1","remotePort":36118},"msg":"incoming request"}
+{"level":30,"time":1772304803679,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":41.252968998625875,"msg":"request completed"}
+{"level":30,"time":1772304803682,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":45.10200700163841,"msg":"request completed"}
+{"level":30,"time":1772304803685,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:42505","remoteAddress":"::ffff:127.0.0.1","remotePort":56360},"msg":"incoming request"}
+{"level":30,"time":1772304803691,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:43685","remoteAddress":"::ffff:127.0.0.1","remotePort":41034},"msg":"incoming request"}
+{"level":30,"time":1772304803696,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":204},"responseTime":4.713910000398755,"msg":"request completed"}
 
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 1/4[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 1/2[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
 
 [2m Test Files [22m[1m[32m3 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m[1m[32m11 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m2.44s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772239791540,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":107.79249999672174,"msg":"request completed"}
-{"level":30,"time":1772239791552,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:35157","remoteAddress":"::ffff:127.0.0.1","remotePort":58328},"msg":"incoming request"}
-{"level":30,"time":1772239791560,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:44869","remoteAddress":"::ffff:127.0.0.1","remotePort":45084},"msg":"incoming request"}
-{"level":30,"time":1772239791570,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":204},"responseTime":9.894399002194405,"msg":"request completed"}
-{"level":30,"time":1772239791579,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:43303","remoteAddress":"::ffff:127.0.0.1","remotePort":58270},"msg":"incoming request"}
-{"level":30,"time":1772239791580,"pid":384566,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":204},"responseTime":0.920744001865387,"msg":"request completed"}
-{"level":30,"time":1772239791582,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":29.84220600128174,"msg":"request completed"}
-{"level":30,"time":1772239791586,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:44437","remoteAddress":"::ffff:127.0.0.1","remotePort":57354},"msg":"incoming request"}
- [32m✓[39m src/resources/auth/tests/sessions.controller.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 652[2mms[22m[39m
-       [33m[2m✓[22m[39m should clear refreshToken cookie and delete token from database [33m 499[2mms[22m[39m
-{"level":30,"time":1772239791601,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":15.554213996976614,"msg":"request completed"}
-{"level":30,"time":1772239791607,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:45069","remoteAddress":"::ffff:127.0.0.1","remotePort":59430},"msg":"incoming request"}
-{"level":30,"time":1772239791610,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":401},"responseTime":2.052319999784231,"msg":"request completed"}
-{"level":30,"time":1772239791615,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:36539","remoteAddress":"::ffff:127.0.0.1","remotePort":58824},"msg":"incoming request"}
-{"level":30,"time":1772239791616,"pid":384560,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":401},"responseTime":1.2535299994051456,"msg":"request completed"}
- [32m✓[39m src/resources/tokens/tests/refresh.controller.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 687[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to refresh token using cookie (and rotate it) [33m 456[2mms[22m[39m
-
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-
-[2m Test Files [22m[1m[32m5 passed[39m[22m[90m (6)[39m
-[2m      Tests [22m[1m[32m16 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m2.54s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772239791705,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":587.5778379999101,"msg":"request completed"}
-{"level":30,"time":1772239791719,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:43653","remoteAddress":"::ffff:127.0.0.1","remotePort":52108},"msg":"incoming request"}
-{"level":30,"time":1772239791890,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":170.98205499723554,"msg":"request completed"}
-{"level":30,"time":1772239791892,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:39539","remoteAddress":"::ffff:127.0.0.1","remotePort":44664},"msg":"incoming request"}
-{"level":30,"time":1772239791895,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":2.979125000536442,"msg":"request completed"}
-{"level":30,"time":1772239791897,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:39981","remoteAddress":"::ffff:127.0.0.1","remotePort":48106},"msg":"incoming request"}
-{"level":30,"time":1772239791898,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":400},"responseTime":1.1909970007836819,"msg":"request completed"}
-{"level":30,"time":1772239791901,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:39817","remoteAddress":"::ffff:127.0.0.1","remotePort":59078},"msg":"incoming request"}
-{"level":30,"time":1772239791902,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":400},"responseTime":1.2014899998903275,"msg":"request completed"}
-{"level":30,"time":1772239791904,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:44597","remoteAddress":"::ffff:127.0.0.1","remotePort":44352},"msg":"incoming request"}
+[2m   Start at [22m14:53:22
+[2m   Duration [22m1.41s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772304803702,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:40837","remoteAddress":"::ffff:127.0.0.1","remotePort":52938},"msg":"incoming request"}
+{"level":30,"time":1772304803702,"pid":140952,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":204},"responseTime":0.6141959987580776,"msg":"request completed"}
+{"level":30,"time":1772304803704,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":18.29117999970913,"msg":"request completed"}
+ [32m✓[39m src/resources/auth/tests/sessions.controller.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 266[2mms[22m[39m
+{"level":30,"time":1772304803720,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:44309","remoteAddress":"::ffff:127.0.0.1","remotePort":59928},"msg":"incoming request"}
+{"level":30,"time":1772304803735,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":15.297456000000238,"msg":"request completed"}
+{"level":30,"time":1772304803737,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:34869","remoteAddress":"::ffff:127.0.0.1","remotePort":49392},"msg":"incoming request"}
+{"level":30,"time":1772304803744,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":7.157530000433326,"msg":"request completed"}
+{"level":30,"time":1772304803747,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:46365","remoteAddress":"::ffff:127.0.0.1","remotePort":54700},"msg":"incoming request"}
+{"level":30,"time":1772304803748,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":401},"responseTime":0.9103449992835522,"msg":"request completed"}
+{"level":30,"time":1772304803751,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:44769","remoteAddress":"::ffff:127.0.0.1","remotePort":54000},"msg":"incoming request"}
+{"level":30,"time":1772304803751,"pid":140946,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":401},"responseTime":0.6549100000411272,"msg":"request completed"}
+{"level":30,"time":1772304803754,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":233.3615930005908,"msg":"request completed"}
+ [32m✓[39m src/resources/tokens/tests/refresh.controller.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 315[2mms[22m[39m
+{"level":30,"time":1772304803761,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40363","remoteAddress":"::ffff:127.0.0.1","remotePort":57340},"msg":"incoming request"}
+{"level":30,"time":1772304803869,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":201},"responseTime":107.51308799907565,"msg":"request completed"}
+{"level":30,"time":1772304803872,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:42017","remoteAddress":"::ffff:127.0.0.1","remotePort":51888},"msg":"incoming request"}
+{"level":30,"time":1772304803875,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":409},"responseTime":3.0079709999263287,"msg":"request completed"}
+{"level":30,"time":1772304803877,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:36583","remoteAddress":"::ffff:127.0.0.1","remotePort":53666},"msg":"incoming request"}
+{"level":30,"time":1772304803878,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":400},"responseTime":1.0419350005686283,"msg":"request completed"}
+{"level":30,"time":1772304803880,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:35217","remoteAddress":"::ffff:127.0.0.1","remotePort":42000},"msg":"incoming request"}
+{"level":30,"time":1772304803881,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":400},"responseTime":1.150891000404954,"msg":"request completed"}
+{"level":30,"time":1772304803884,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41741","remoteAddress":"::ffff:127.0.0.1","remotePort":60496},"msg":"incoming request"}
 
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
 
 [2m Test Files [22m[1m[32m5 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m[1m[32m18 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m20:49:49
-[2m   Duration [22m2.94s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772239792015,"pid":384558,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":110.58545400202274,"msg":"request completed"}
- [32m✓[39m src/resources/users/tests/users.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1085[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to register a new user [33m 637[2mms[22m[39m
+[2m   Start at [22m14:53:22
+[2m   Duration [22m1.71s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772304803990,"pid":140939,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":106.11398600041866,"msg":"request completed"}
+ [32m✓[39m src/resources/users/tests/users.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 545[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
 [2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m 20:49:49
-[2m   Duration [22m 2.97s[2m (transform 1.23s, setup 0ms, import 6.02s, tests 5.47s, environment 1ms)[22m
+[2m   Start at [22m 14:53:22
+[2m   Duration [22m 1.81s[2m (transform 972ms, setup 0ms, import 4.00s, tests 2.42s, environment 1ms)[22m
 
 [?25h[1G[0K⠙[1G[0K

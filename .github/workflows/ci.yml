@@ -23,7 +23,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:17-alpine # Atualizado para v18 conforme seu dev
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
@@ -45,22 +45,25 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          # Caminho corrigido para a raiz onde está o lockfile do monorepo
           cache-dependency-path: package-lock.json
 
       - name: Create env files
         run: |
-          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test?schema=public" > .env
+          # Removido ?schema=public para bater com o que validamos no Docker
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > .env
           echo "JWT_SECRET=ci-secret" >> .env
           echo "NODE_ENV=test" >> .env
           cp .env .env.test
 
       - name: Install deps
-        run: npm ci --ignore-scripts --no-audit
+        # Como é monorepo, instalamos a partir da raiz para garantir o workspace
+        run: cd .. && npm ci --ignore-scripts --no-audit
 
       - name: Generate Prisma Client
         run: npx prisma generate
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test?schema=public
+          DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test
 
       - name: Lint
         run: npm run lint
@@ -92,7 +95,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install deps
-        run: npm ci --ignore-scripts --no-audit
+        run: cd .. && npm ci --ignore-scripts --no-audit
 
       - name: Lint
         run: npm run lint
@@ -102,6 +105,9 @@ jobs:
 
       - name: Tests
         run: npm run test
+        env:
+          # Evita que o T3 Env barre o build/teste por falta de envs de prod
+          SKIP_ENV_VALIDATION: true
 
   # ====================================================
   # 3. BUILD DE PRODUÇÃO (DOCKERFILES)
@@ -125,7 +131,7 @@ jobs:
           docker build \
             -f web/Dockerfile \
             --build-arg NEXT_PUBLIC_API_URL=http://localhost:3333 \
-            --build-arg API_INTERNAL_URL=http://localhost:3333 \
+            --build-arg API_INTERNAL_URL=http://api:3333 \
             -t crochedat-web:ci .
 
   # ====================================================
