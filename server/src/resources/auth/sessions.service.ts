@@ -55,7 +55,7 @@ export async function authenticateUser(input: LoginInput) {
 export async function signOut(refreshTokenId: string) {
   // Solução de mercado: Deletamos o token e tratamos a idempotência
   await prisma.token
-    .delete({
+    .deleteMany({
       where: {
         id: refreshTokenId,
       },

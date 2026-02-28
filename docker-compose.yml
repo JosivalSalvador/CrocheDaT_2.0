@@ -1,45 +1,51 @@
 services:
-  # -------------------------
-  # BANCO DE DADOS (Postgres)
-  # -------------------------
-  db:
+  # O banco que você validou como "fastify_pg_dev"
+  postgres:
     image: postgres:18-alpine
-    container_name: croche-db
+    container_name: fastify_pg_dev
     restart: unless-stopped
-    env_file:
-      - ./server/.env.prod
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=db
+    ports:
+      - "5432:5432" # Libera para o Studio da sua máquina
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata_dev:/var/lib/postgresql # O caminho que você validou
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d db"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
     networks:
-      - croche-net
+      - croche-network
 
-  # -------------------------
-  # API / SERVER
-  # -------------------------
+  # A sua API (croche-server-prod)
   api:
-    image: josivaljunior/croche-api:latest
-    container_name: croche-api
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: api
     restart: unless-stopped
     depends_on:
-      db:
+      postgres: # Espera o serviço 'postgres' ficar saudável
         condition: service_healthy
     env_file:
       - ./server/.env.prod
     ports:
       - "3333:3333"
     networks:
-      - croche-net
+      - croche-network
 
-  # -------------------------
-  # WEB / FRONTEND
-  # -------------------------
+  # O seu Web (croche-web-prod)
   web:
-    image: josivaljunior/croche-web:latest
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        # Passando exatamente os args do seu comando 'docker build'
+        - NEXT_PUBLIC_API_URL=http://localhost:3333
+        - API_INTERNAL_URL=http://api:3333
     container_name: croche-web
     restart: unless-stopped
     depends_on:
@@ -49,10 +55,12 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - croche-net
+      - croche-network
 
 volumes:
-  postgres_data:
+  pgdata_dev:
 
 networks:
-  croche-net:
+  croche-network:
+    name: croche-network
+    driver: bridge
