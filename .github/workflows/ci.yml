@@ -12,15 +12,18 @@ permissions:
 
 jobs:
   # ====================================================
-  # 1. QUALIDADE E TESTES (Monorepo)
+  # 1. SERVER – QUALIDADE E TESTES
   # ====================================================
-  quality-check:
-    name: Lint, Type-check & Tests
+  server-check:
+    name: Server (Lint, Types, Tests)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
 
     services:
       postgres:
-        image: postgres:18-alpine # Igual ao seu dev/prod
+        image: postgres:18-alpine # Atualizado para v18 conforme seu dev
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
@@ -28,6 +31,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
@@ -40,40 +44,78 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: npm
+          # Caminho corrigido para a raiz onde está o lockfile do monorepo
           cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm ci # Instala tudo via Workspaces na raiz
-
-      - name: Create server test env
+      - name: Create env files
         run: |
-          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > server/.env.test
-          echo "JWT_SECRET=ci-secret" >> server/.env.test
-          echo "NODE_ENV=test" >> server/.env.test
+          # Removido ?schema=public para bater com o que validamos no Docker
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_test" > .env
+          echo "JWT_SECRET=ci-secret" >> .env
+          echo "NODE_ENV=test" >> .env
+          cp .env .env.test
+
+      - name: Install deps
+        # Como é monorepo, instalamos a partir da raiz para garantir o workspace
+        run: cd .. && npm ci --ignore-scripts --no-audit
 
       - name: Generate Prisma Client
-        run: npm run db:gen # Roda o script da raiz que aponta pro server
-
-      - name: Run Lint
-        run: npx turbo run lint
-
-      - name: Run Type-check
-        run: npx turbo run type-check
-
-      - name: Run Tests
-        run: npx turbo run test
+        run: npx prisma generate
         env:
-          # Para o Web não quebrar na validação do T3 Env durante os testes
-          SKIP_ENV_VALIDATION: true 
+          DATABASE_URL: postgresql://user:password@localhost:5432/ecommerce_test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Tests
+        run: npm run test
 
   # ====================================================
-  # 2. VERIFICAÇÃO DE DOCKER BUILD
+  # 2. WEB – QUALIDADE E TESTES
+  # ====================================================
+  web-check:
+    name: Web (Lint, Types, Tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install deps
+        run: cd .. && npm ci --ignore-scripts --no-audit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Tests
+        run: npm run test
+        env:
+          # Evita que o T3 Env barre o build/teste por falta de envs de prod
+          SKIP_ENV_VALIDATION: true
+
+  # ====================================================
+  # 3. BUILD DE PRODUÇÃO (DOCKERFILES)
   # ====================================================
   docker-build-check:
     name: Verify Production Docker Builds
     runs-on: ubuntu-latest
-    needs: [quality-check]
+    needs: [server-check, web-check]
 
     steps:
       - uses: actions/checkout@v4
@@ -93,7 +135,7 @@ jobs:
             -t crochedat-web:ci .
 
   # ====================================================
-  # 3. AUTO PR DEV → MAIN
+  # 4. AUTO PR DEV → MAIN
   # ====================================================
   auto-pr:
     name: Open PR to Main
@@ -121,4 +163,4 @@ jobs:
             --base main \
             --head dev \
             --title "Release: Merge dev to main" \
-            --body "Automated PR after CI passed."
+            --body "Automated PR after CI passed (tests + prod docker builds)."
