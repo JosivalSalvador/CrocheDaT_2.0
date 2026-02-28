@@ -2,7 +2,7 @@ name: CD (Build & Publish)
 
 on:
   push:
-    branches: [main]
+    branches: [main] # Só roda quando o PR do dev é aprovado e mergeado na main
 
 jobs:
   # ---------------------------------------------------
@@ -29,15 +29,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push API
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6 # Versão mais atual
         with:
           context: .
           file: server/Dockerfile
           push: true
+          # Garante compatibilidade com diversos servidores
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-api:${{ github.sha }}
+          # Cache inteligente do GitHub Actions para builds mais rápidos
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -65,7 +67,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Web
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6 # Versão mais atual
         with:
           context: .
           file: web/Dockerfile
@@ -74,11 +76,11 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-web:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/croche-web:${{ github.sha }}
-
-          # 100% automático via Secrets
+          
+          # Aqui entram as URLs reais do seu domínio de produção
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.WEB_PUBLIC_API_URL }}
             API_INTERNAL_URL=${{ secrets.WEB_INTERNAL_API_URL }}
-
+          
           cache-from: type=gha
           cache-to: type=gha,mode=max
