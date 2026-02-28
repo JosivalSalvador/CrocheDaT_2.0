@@ -3,24 +3,29 @@ import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
+// Configuração da fonte como variável CSS
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap", // Melhora a performance de carregamento da fonte
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Crochê da T | Gerenciamento",
-  description: "Sistema de gerenciamento de encomendas e peças.",
+  title: {
+    default: "Crochê da T | Gerenciamento",
+    template: "%s | Crochê da T", // Permite páginas internas mudarem o título (ex: Dashboard | Crochê da T)
+  },
+  description: "Sistema de gerenciamento de encomendas e peças de crochê.",
   icons: {
-    icon: "/favicon.ico", // Garante que o navegador ache o ícone
+    icon: "/favicon.ico",
   },
 };
 
-// No Next.js 16, configurações de viewport são separadas da metadata
 export const viewport: Viewport = {
   themeColor: "#000000",
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1, // Evita zoom indesejado em inputs no iOS
 };
 
 export default function RootLayout({
@@ -29,14 +34,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className="dark" suppressHydrationWarning>
+    // 'dark' fixa pois seu design é focado nisso.
+    // lang 'pt-BR' corrigido (o padrão oficial usa o R maiúsculo)
+    <html
+      lang="pt-BR"
+      className={`dark ${inter.variable}`}
+      suppressHydrationWarning
+    >
       <body
         className={` ${inter.className} bg-background text-foreground selection:bg-primary/30 selection:text-primary min-h-screen antialiased`}
       >
         <Providers>
-          {/* O layout raíz só entrega os Providers e o children. 
-              Toda a estética de Grid ou Spotlight deve ficar nas páginas ou nos layouts de grupo. */}
-          {children}
+          {/* Main para garantir acessibilidade e estrutura semântica */}
+          <main>{children}</main>
         </Providers>
       </body>
     </html>

@@ -1,14 +1,17 @@
-// web/app/(auth)/types.ts
 import { z } from "zod";
-import { AuthResponse } from "@/lib/types"; // Importa a "verdade" global
+import { AuthResponse } from "@/lib/types";
 
-// Re-exporta o AuthResponse com o nome de LoginResponse para manter o padrão do seu código
+// Re-exporta para manter a semântica de "Login" dentro deste módulo
 export type LoginResponse = AuthResponse;
 
 // --- LOGIN ---
 export const loginSchema = z.object({
-  email: z.email("Formato de e-mail inválido").min(1, "O e-mail é obrigatório"),
-  password: z.string().min(1, "A senha é obrigatória"),
+  email: z
+    .string()
+    .min(1, { message: "O e-mail é obrigatório" })
+    .check(z.email({ message: "Formato de e-mail inválido" })),
+
+  password: z.string().min(1, { message: "A senha é obrigatória" }),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -18,30 +21,51 @@ export const registerSchema = z
   .object({
     name: z
       .string()
-      .min(1, "O nome é obrigatório")
-      .min(3, "O nome deve ter no mínimo 3 caracteres"),
+      .min(3, { message: "O nome deve ter no mínimo 3 caracteres" }),
+
     email: z
-      .email("Formato de e-mail inválido")
-      .min(1, "O e-mail é obrigatório"),
+      .string()
+      .min(1, { message: "O e-mail é obrigatório" })
+      .check(z.email({ message: "Formato de e-mail inválido" })),
+
     password: z
       .string()
-      .min(1, "A senha é obrigatória")
-      .min(6, "A senha deve ter no mínimo 6 caracteres"),
-    confirmPassword: z.string().min(1, "A confirmação de senha é obrigatória"),
+      .min(8, { message: "A senha deve ter pelo menos 8 caracteres" })
+      .regex(/[a-z]/, {
+        message: "A senha deve conter pelo menos uma letra minúscula",
+      })
+      .regex(/[A-Z]/, {
+        message: "A senha deve conter pelo menos uma letra maiúscula",
+      })
+      .regex(/[0-9]/, { message: "A senha deve conter pelo menos um número" })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "A senha deve conter pelo menos um caractere especial",
+      }),
+
+    confirmPassword: z
+      .string()
+      .min(1, { message: "A confirmação de senha é obrigatória" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
   });
 
+// Tipo usado no FORMULÁRIO (com confirmPassword)
 export type RegisterInput = z.infer<typeof registerSchema>;
 
+// Tipo usado no SERVICE (O que o Fastify realmente recebe)
+export type RegisterData = Omit<RegisterInput, "confirmPassword">;
+
+/**
+ * Sincronizado com users.controller.ts (Server)
+ */
 export interface RegisterResponse {
-  userId?: string;
-  message?: string;
+  userId: string;
+  message: string;
 }
 
-// --- UI STATE ---
+// --- UI STATE (Para Server Actions) ---
 export type AuthFormState = {
   success: boolean;
   message: string | null;

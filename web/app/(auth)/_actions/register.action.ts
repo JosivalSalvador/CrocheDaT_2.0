@@ -2,42 +2,44 @@
 
 import { redirect } from "next/navigation";
 import { authService } from "../_services/auth.service";
-import { RegisterInput, AuthFormState, registerSchema } from "../types";
+import { AuthFormState, registerSchema } from "../types";
 import { HttpError } from "@/lib/types";
 
 export async function registerAction(
   _prevState: AuthFormState,
-  data: RegisterInput,
+  formData: FormData,
 ): Promise<AuthFormState> {
-  // 1. Validação com Zod
-  const result = registerSchema.safeParse(data);
+  const rawData = Object.fromEntries(formData.entries());
+
+  const result = registerSchema.safeParse(rawData);
 
   if (!result.success) {
     return {
       success: false,
       message: "Por favor, corrija os erros no formulário.",
-      errors: result.error.flatten().fieldErrors as Record<string, string[]>,
+      errors: result.error.flatten().fieldErrors,
     };
   }
 
   try {
-    // 2. Chamada ao serviço
     await authService.register(result.data);
   } catch (error: unknown) {
-    // Ajuste para capturar o erro do seu httpClient customizado
+    // Agora validamos se é um erro da API (com status) ou um erro de sistema
     const isHttpError = (err: unknown): err is HttpError =>
-      !!err && typeof err === "object" && "message" in err;
+      !!err && typeof err === "object" && "message" in err && "status" in err;
 
-    const errorMessage = isHttpError(error)
-      ? error.message
-      : "Falha ao criar conta. Tente novamente.";
+    if (isHttpError(error)) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
 
+    // Erros genéricos caem aqui, satisfazendo o teste e protegendo o app
     return {
       success: false,
-      message: errorMessage,
+      message: "Falha ao criar conta. Tente novamente.",
     };
   }
-
-  // 3. Redirecionamento seguro (o parâmetro ?registered=true é ótimo para exibir um Toast)
   redirect("/login?registered=true");
 }

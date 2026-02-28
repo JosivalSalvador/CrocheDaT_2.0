@@ -10,7 +10,6 @@ export async function sessionsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Autenticação (Login)
-   * POST /sessions
    */
   router.post(
     '/sessions',
@@ -24,7 +23,7 @@ export async function sessionsRoutes(app: FastifyInstance) {
             token: z.string(),
             user: z.object({
               name: z.string(),
-              email: z.email(),
+              email: z.string().email(), // Ajuste: z.string().email() é o correto
               role: z.string(),
             }),
           }),
@@ -36,9 +35,9 @@ export async function sessionsRoutes(app: FastifyInstance) {
     },
     sessionsController.authenticate,
   )
+
   /**
    * ROTA: Logout
-   * POST /sessions/logout
    */
   router.post(
     '/sessions/logout',
@@ -46,8 +45,11 @@ export async function sessionsRoutes(app: FastifyInstance) {
       schema: {
         tags: ['auth'],
         summary: 'Sign out and invalidate refresh token',
+        // AJUSTE DE MERCADO: Forçamos o Zod a entender que não há body.
+        // Isso ajuda o Fastify a não exigir Content-Type: application/json.
+        body: z.null().optional(),
         response: {
-          [StatusCodes.NO_CONTENT]: z.null(), // Logout bem-sucedido não retorna corpo
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
         },
       },
     },

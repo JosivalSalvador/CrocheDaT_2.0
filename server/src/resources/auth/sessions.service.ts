@@ -4,7 +4,7 @@ import { TokenType } from '@prisma/client'
 import { prisma } from '../../lib/prisma.js'
 import { AppError } from '../../errors/app-error.js'
 import type { LoginInput } from './sessions.types.js'
-import { REFRESH_TOKEN_TTL_DAYS } from '../tokens/tokens.config.js' // ← ADICIONADO: política centralizada de tokens
+import { REFRESH_TOKEN_TTL_DAYS } from '../tokens/tokens.config.js'
 
 /**
  * Autentica um usuário existente e gera Refresh Token
@@ -12,28 +12,22 @@ import { REFRESH_TOKEN_TTL_DAYS } from '../tokens/tokens.config.js' // ← ADICI
 export async function authenticateUser(input: LoginInput) {
   const { email, password } = input
 
-  // 1. Busca usuário
   const user = await prisma.user.findUnique({
     where: { email },
   })
 
-  // 2. Validação
   if (!user) {
     throw new AppError('Invalid credentials.', StatusCodes.UNAUTHORIZED)
   }
 
-  // 3. Comparação de Hash
   const doesPasswordMatch = await compare(password, user.password_hash)
 
   if (!doesPasswordMatch) {
     throw new AppError('Invalid credentials.', StatusCodes.UNAUTHORIZED)
   }
 
-  // 4. Geração do Refresh Token
   const expirationDate = new Date()
-  expirationDate.setDate(
-    expirationDate.getDate() + REFRESH_TOKEN_TTL_DAYS, // ← ALTERADO: remove valor mágico
-  )
+  expirationDate.setDate(expirationDate.getDate() + REFRESH_TOKEN_TTL_DAYS)
 
   const refreshToken = await prisma.token.create({
     data: {
@@ -43,7 +37,6 @@ export async function authenticateUser(input: LoginInput) {
     },
   })
 
-  // 5. Retorno sanitizado + Refresh Token
   return {
     user: {
       id: user.id,
@@ -57,14 +50,21 @@ export async function authenticateUser(input: LoginInput) {
 
 /**
  * Remove a sessão (Logout)
+ * Recebe o UUID puro vindo do unsignCookie do controller
  */
 export async function signOut(refreshTokenId: string) {
-  // Deleta o token se ele existir. Se não existir, não faz nada (idempotência)
-  try {
-    await prisma.token.delete({
-      where: { id: refreshTokenId },
+  // Solução de mercado: Deletamos o token e tratamos a idempotência
+  await prisma.token
+    .delete({
+      where: {
+        id: refreshTokenId,
+      },
     })
-  } catch {
-    // Se o token já não existia, apenas ignoramos
-  }
+    .catch((error) => {
+      // P2025: Erro do Prisma para "Registro não encontrado"
+      // Se o token já não existe, o objetivo (logout) foi alcançado, então ignoramos.
+      if (error.code !== 'P2025') {
+        throw error
+      }
+    })
 }

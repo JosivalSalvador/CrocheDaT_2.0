@@ -1,13 +1,17 @@
 "use client";
 
-import { useActionState, startTransition } from "react";
+import { useActionState, useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 import { loginAction } from "../_actions/login.action";
 import { loginSchema, LoginInput, AuthFormState } from "../types";
-import { fadeIn } from "@/lib/animations/fade";
+
+// Componentes da sua UI (Shadcn)
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const initialState: AuthFormState = {
   success: false,
@@ -16,10 +20,11 @@ const initialState: AuthFormState = {
 };
 
 export function LoginForm() {
-  // 1. Estado da Server Action (BFF)
-  const [state, action, isPending] = useActionState(loginAction, initialState);
+  // useTransition controla o estado de carregamento da transição da Action
+  const [isPending, startTransition] = useTransition();
+  const [state, action] = useActionState(loginAction, initialState);
 
-  // 2. Validação do formulário no Cliente
+  // 1. Hook Form para validação client-side
   const {
     register,
     handleSubmit,
@@ -32,36 +37,47 @@ export function LoginForm() {
     },
   });
 
-  // 3. Submissão unindo Client + Server
+  // 2. Efeito para notificações do Sonner (sucesso ou erro global)
+  useEffect(() => {
+    if (state.success && state.message) {
+      toast.success(state.message);
+    } else if (!state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state.success, state.message]);
+
+  // 3. Submissão unindo RHF com Server Action
   const onSubmit = (data: LoginInput) => {
-    startTransition(() => {
-      action(data);
+    startTransition(async () => {
+      // Criamos o FormData para manter a compatibilidade com a Action
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+      await action(formData);
     });
   };
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
-      transition={{ duration: 0.5 }}
-      className="w-full space-y-6"
-    >
+    <div className="w-full space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Campo de E-mail */}
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            E-mail
-          </label>
-          <input
+          <Label htmlFor="email">E-mail</Label>
+          <Input
             {...register("email")}
             id="email"
             type="email"
             placeholder="exemplo@email.com"
-            className="border-input focus:ring-primary w-full rounded-md border bg-transparent p-2 transition-all outline-none focus:ring-2"
+            disabled={isPending}
+            className={
+              clientErrors.email
+                ? "border-destructive focus-visible:ring-destructive"
+                : ""
+            }
           />
           {clientErrors.email && (
-            <p className="text-xs font-medium text-red-500">
+            <p className="text-destructive text-xs font-medium">
               {clientErrors.email.message}
             </p>
           )}
@@ -69,41 +85,42 @@ export function LoginForm() {
 
         {/* Campo de Senha */}
         <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium">
-            Senha
-          </label>
-          <input
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Senha</Label>
+          </div>
+          <Input
             {...register("password")}
             id="password"
             type="password"
-            className="border-input focus:ring-primary w-full rounded-md border bg-transparent p-2 transition-all outline-none focus:ring-2"
+            disabled={isPending}
+            className={
+              clientErrors.password
+                ? "border-destructive focus-visible:ring-destructive"
+                : ""
+            }
           />
           {clientErrors.password && (
-            <p className="text-xs font-medium text-red-500">
+            <p className="text-destructive text-xs font-medium">
               {clientErrors.password.message}
             </p>
           )}
         </div>
 
-        {/* Feedback de Erro do Servidor (BFF) */}
-        {state?.message && !state.success && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-destructive/15 text-destructive border-destructive/20 rounded border p-3 text-sm"
-          >
-            {state.message}
-          </motion.div>
+        {/* Erros específicos vindo do Servidor (ex: conta bloqueada) */}
+        {state.errors?.email && (
+          <p className="text-destructive text-xs font-medium">
+            {state.errors.email[0]}
+          </p>
         )}
 
-        <button
+        <Button
           type="submit"
           disabled={isPending}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-md p-2 font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl font-semibold transition-all active:scale-[0.98]"
         >
           {isPending ? "Autenticando..." : "Entrar na conta"}
-        </button>
+        </Button>
       </form>
-    </motion.div>
+    </div>
   );
 }

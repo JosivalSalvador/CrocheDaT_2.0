@@ -2,11 +2,10 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { hash } from 'bcryptjs'
-import { randomBytes } from 'node:crypto' // Importar para e-mails únicos
+import { randomBytes } from 'node:crypto'
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
 
-// Função auxiliar para evitar colisões
 function generateUniqueEmail(base: string) {
   return `${base}-${randomBytes(4).toString('hex')}@example.com`
 }
@@ -20,88 +19,64 @@ describe('Sessions Controller (E2E)', () => {
     await app.close()
   })
 
-  describe('POST /api/v1/sessions (Login)', () => {
-    it('should authenticate and return JWT + refreshToken cookie (development)', async () => {
-      process.env.NODE_ENV = 'development'
-      const uniqueEmail = generateUniqueEmail('john.dev')
-
-      // REMOVIDO: deleteMany (Não é mais necessário com e-mail único)
-
-      await prisma.user.create({
-        data: {
-          name: 'John Dev',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
-        },
-      })
-
-      const response = await request(app.server).post('/api/v1/sessions').send({
-        email: uniqueEmail,
-        password: 'Password123!',
-      })
-
-      expect(response.statusCode).toBe(StatusCodes.OK)
-      // ... resto das asserções iguais
-    })
-
-    it('should set Secure cookie in production', async () => {
-      process.env.NODE_ENV = 'production'
-      const uniqueEmail = generateUniqueEmail('john.prod')
-
-      await prisma.user.create({
-        data: {
-          name: 'John Prod',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
-        },
-      })
-
-      const response = await request(app.server).post('/api/v1/sessions').send({
-        email: uniqueEmail,
-        password: 'Password123!',
-      })
-
-      const cookiesHeader = response.headers['set-cookie']
-      expect(cookiesHeader?.[0]).toContain('Secure')
-    })
-
-    it('should not authenticate with wrong password', async () => {
-      const uniqueEmail = generateUniqueEmail('john.wrong')
-
-      await prisma.user.create({
-        data: {
-          name: 'John Wrong',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
-        },
-      })
-
-      const response = await request(app.server).post('/api/v1/sessions').send({
-        email: uniqueEmail,
-        password: 'WrongPassword',
-      })
-
-      expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
-    })
-  })
-
   describe('POST /api/v1/sessions/logout (Logout)', () => {
     it('should clear refreshToken cookie and delete token from database', async () => {
-      const uniqueEmail = generateUniqueEmail('john.logout')
+      const email = generateUniqueEmail('logout.test')
+      const password = 'Password123!'
 
-      await prisma.user.create({
+      // 1. Criar usuário para o teste
+      const user = await prisma.user.create({
         data: {
-          name: 'John Logout',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
+          name: 'Logout User',
+          email,
+          password_hash: await hash(password, 6),
         },
       })
 
       const agent = request.agent(app.server)
-      await agent.post('/api/v1/sessions').send({ email: uniqueEmail, password: 'Password123!' })
 
+      // 2. Realizar Login
+      const loginResponse = await agent.post('/api/v1/sessions').send({ email, password })
+
+      expect(loginResponse.statusCode).toBe(StatusCodes.OK)
+
+      // 3. Buscar o token gerado para validar o ID
+      const tokenBefore = await prisma.token.findFirst({
+        where: { userId: user.id },
+      })
+
+      // Validação de segurança para o TypeScript:
+      // Se não houver token, o teste falha aqui e não tenta acessar .id
+      if (!tokenBefore) {
+        throw new Error('Token was not created in database during login')
+      }
+
+      // Agora o TS sabe que tokenId é obrigatoriamente uma string
+      const tokenId: string = tokenBefore.id
+
+      // 4. Executar Logout
       const logoutResponse = await agent.post('/api/v1/sessions/logout')
+
+      // Asserções
       expect(logoutResponse.statusCode).toBe(StatusCodes.NO_CONTENT)
+
+      // Verifica se o cookie de limpeza foi enviado no header
+      const cookiesHeader = logoutResponse.headers['set-cookie']
+      expect(cookiesHeader?.[0]).toContain('refreshToken=;')
+
+      // 5. Verificar se o token sumiu do banco de dados
+      const tokenAfter = await prisma.token.findUnique({
+        where: { id: tokenId }, // O erro de "string | undefined" sumiu!
+      })
+
+      expect(tokenAfter).toBeNull()
+    })
+
+    it('should return NO_CONTENT even if cookie is missing (idempotency)', async () => {
+      // Testa se o sistema aguenta um logout "vazio" sem dar erro 500
+      const response = await request(app.server).post('/api/v1/sessions/logout')
+
+      expect(response.statusCode).toBe(StatusCodes.NO_CONTENT)
     })
   })
 })

@@ -22,18 +22,23 @@ async function internalFetch(
   path: string,
   init?: RequestInit,
 ): Promise<Response> {
-  const url = path.startsWith("/") ? `${getBaseUrl()}${path}` : path;
+  const apiPath = path.startsWith("/api/v1")
+    ? path
+    : `/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
+  const url = `${getBaseUrl()}${apiPath}`;
+
   const headers = new Headers(init?.headers);
 
-  if (!headers.has("Content-Type")) {
+  // --- AJUSTE DE MERCADO 1: Content-Type condicional ---
+  // Se não houver body (ex: Logout), não enviamos Content-Type.
+  // Isso evita o erro FST_ERR_CTP_EMPTY_JSON_BODY no Fastify.
+  if (init?.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 
-  // AJUSTE 1: Nomenclatura corrigida para 'token' (conforme seu novo AuthResponse)
   if (typeof window === "undefined") {
     const session = await getSession();
     if (session?.token) {
-      // Antes era accessToken
       headers.set("Authorization", `Bearer ${session.token}`);
     }
   }
@@ -45,15 +50,14 @@ async function internalFetch(
     cache: init?.cache ?? "no-store",
   });
 
-  // LÓGICA BFF: Interceptor de Refresh Token
-  if (response.status === 401 && !path.includes("/token/refresh")) {
+  const refreshPath = "/api/v1/token/refresh";
+
+  if (response.status === 401 && !url.includes(refreshPath)) {
     const refreshToken = await getRefreshToken();
 
     if (refreshToken) {
       try {
-        // AJUSTE 2: Chamada de Refresh enviando o token no formato esperado pelo Fastify
-        // Nota: O header "Cookie" é crucial quando o Next.js (Server) fala com o Fastify
-        const refreshResponse = await fetch(`${getBaseUrl()}/token/refresh`, {
+        const refreshResponse = await fetch(`${getBaseUrl()}${refreshPath}`, {
           method: "PATCH",
           headers: {
             Cookie: `refreshToken=${refreshToken}`,
@@ -61,16 +65,13 @@ async function internalFetch(
         });
 
         if (refreshResponse.ok) {
-          // AJUSTE 3: Desestruturação corrigida para 'token'
           const { token: newAccessToken } = await refreshResponse.json();
-
           const setCookieHeader = refreshResponse.headers.get("set-cookie");
           const newRefreshTokenId =
             getCookieValue(setCookieHeader, "refreshToken") ?? refreshToken;
 
           const session = await getSession();
           if (session) {
-            // Atualiza a sessão com o novo token e mantém o usuário
             await setSession(newAccessToken, newRefreshTokenId, session.user);
           }
 
@@ -108,11 +109,22 @@ export async function httpClient<T>(
   init?: RequestInit,
 ): Promise<T> {
   const response = await internalFetch(path, init);
+
+  // --- AJUSTE DE MERCADO 2: Tratamento de No Content ---
+  // Respostas 204 não têm corpo. Tentar dar .json() causaria erro.
+  if (response.status === 204) {
+    return {} as T;
+  }
+
   return response.json() as Promise<T>;
 }
 
 export async function httpClientFull<T>(path: string, init?: RequestInit) {
   const response = await internalFetch(path, init);
-  const data = (await response.json()) as T;
+
+  // Mesma lógica aqui para o httpClientFull
+  const data =
+    response.status === 204 ? ({} as T) : ((await response.json()) as T);
+
   return { data, headers: response.headers };
 }
