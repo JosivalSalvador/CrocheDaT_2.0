@@ -1,4 +1,4 @@
-# CrocheDaT 2.0 - Arquitetura Monorepo
+# CrocheDaT 2.0 (Base) - Arquitetura Monorepo
 
 Este repositório armazena o código-fonte da plataforma Crochê da T (versão 2.0), utilizando uma arquitetura de Monorepo gerenciada pelo Turborepo. O projeto unifica o desenvolvimento da API (Server) e do Frontend (Web), garantindo consistência de código, tipagem e processos de deploy.
 
