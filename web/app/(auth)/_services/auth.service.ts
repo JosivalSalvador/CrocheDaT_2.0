@@ -1,7 +1,9 @@
+// web/app/(auth)/_services/auth.service.ts
+
 import { httpClient } from "@/lib/api/http-client";
 import {
   LoginInput,
-  RegisterInput,
+  RegisterData,
   LoginResponse,
   RegisterResponse,
 } from "../types";
@@ -9,7 +11,6 @@ import {
 export const authService = {
   /**
    * Autenticação via Fastify
-   * Retorna { token, user } e o servidor seta o refreshToken via Cookie
    */
   async login(data: LoginInput): Promise<LoginResponse> {
     return httpClient<LoginResponse>("/sessions", {
@@ -21,7 +22,7 @@ export const authService = {
   /**
    * Cadastro de novos usuários
    */
-  async register(data: RegisterInput): Promise<RegisterResponse> {
+  async register(data: RegisterData): Promise<RegisterResponse> {
     return httpClient<RegisterResponse>("/users", {
       method: "POST",
       body: JSON.stringify(data),
@@ -29,8 +30,18 @@ export const authService = {
   },
 
   /**
-   * Nota: O método getMe foi removido pois o endpoint /me
-   * ainda não está implementado no servidor.
-   * A validação da sessão deve ser feita via cookies/BFF.
+   * Logout no Servidor
+   * AJUSTE: Agora aceita o refreshToken vindo da Server Action
    */
+  async logout(refreshToken?: string): Promise<void> {
+    return httpClient("/sessions/logout", {
+      method: "POST",
+      headers: {
+        // SOLUÇÃO: Injetamos o cookie manualmente.
+        // Como a Server Action roda no Node, ela precisa desse "empurrão"
+        // para o backend enxergar quem está deslogando.
+        Cookie: refreshToken ? `refreshToken=${refreshToken}` : "",
+      },
+    });
+  },
 };

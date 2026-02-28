@@ -2,11 +2,10 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { hash } from 'bcryptjs'
-import { randomBytes } from 'node:crypto' // Import para unicidade
+import { randomBytes } from 'node:crypto'
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
 
-// Função para garantir que nenhum teste atropele o outro
 function generateUniqueEmail(base: string) {
   return `${base}-${randomBytes(4).toString('hex')}@example.com`
 }
@@ -22,34 +21,27 @@ describe('Refresh Token Controller (E2E)', () => {
 
   describe('PATCH /api/v1/token/refresh', () => {
     it('should be able to refresh token using cookie (and rotate it)', async () => {
-      process.env.NODE_ENV = 'development'
-      const uniqueEmail = generateUniqueEmail('john.refresh.ctrl')
-
-      // REMOVIDO: deleteMany
+      const email = generateUniqueEmail('refresh.ok')
+      const password = 'Password123!'
 
       await prisma.user.create({
         data: {
           name: 'John Doe',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
+          email,
+          password_hash: await hash(password, 6),
         },
       })
 
-      const loginResponse = await request(app.server).post('/api/v1/sessions').send({
-        email: uniqueEmail,
-        password: 'Password123!',
-      })
+      const agent = request.agent(app.server)
 
+      // 1. Login para obter o cookie assinado
+      const loginResponse = await agent.post('/api/v1/sessions').send({ email, password })
+
+      expect(loginResponse.statusCode).toBe(StatusCodes.OK)
       const loginCookies = loginResponse.headers['set-cookie']
 
-      if (!Array.isArray(loginCookies) || loginCookies.length === 0) {
-        throw new Error('Login failed to return cookies')
-      }
-
-      const refreshResponse = await request(app.server)
-        .patch('/api/v1/token/refresh')
-        .set('Cookie', loginCookies)
-        .send()
+      // 2. Refresh utilizando o cookie do agent
+      const refreshResponse = await agent.patch('/api/v1/token/refresh').send()
 
       expect(refreshResponse.statusCode).toBe(StatusCodes.OK)
       expect(refreshResponse.body.token).toEqual(expect.any(String))
@@ -57,48 +49,56 @@ describe('Refresh Token Controller (E2E)', () => {
       const refreshCookies = refreshResponse.headers['set-cookie']
       expect(refreshCookies).toBeDefined()
       expect(refreshCookies![0]).toContain('refreshToken=')
-      // Verifica rotação (cookie novo diferente do antigo)
-      expect(refreshCookies![0]).not.toEqual(loginCookies[0])
+
+      // Verifica se houve rotação (cookie novo diferente do antigo)
+      expect(refreshCookies![0]).not.toEqual(loginCookies![0])
     })
 
-    it('should set Secure cookie in production', async () => {
-      process.env.NODE_ENV = 'production'
-      const uniqueEmail = generateUniqueEmail('john.refresh.prod')
+    it('should set Secure cookie when in production mode', async () => {
+      const email = generateUniqueEmail('refresh.secure')
+      const password = 'Password123!'
 
       await prisma.user.create({
         data: {
-          name: 'John Prod',
-          email: uniqueEmail,
-          password_hash: await hash('Password123!', 6),
+          name: 'John Secure',
+          email,
+          password_hash: await hash(password, 6),
         },
       })
 
-      const loginResponse = await request(app.server).post('/api/v1/sessions').send({
-        email: uniqueEmail,
-        password: 'Password123!',
-      })
+      const agent = request.agent(app.server)
 
-      const loginCookies = loginResponse.headers['set-cookie']
+      // Realiza o login em ambiente normal
+      await agent.post('/api/v1/sessions').send({ email, password })
 
-      const refreshResponse = await request(app.server)
-        .patch('/api/v1/token/refresh')
-        .set('Cookie', loginCookies!)
-        .send()
+      // Simula produção apenas para checar o header do cookie
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+
+      const refreshResponse = await agent.patch('/api/v1/token/refresh').send()
 
       const refreshCookies = refreshResponse.headers['set-cookie']
+
+      // Restauramos antes das asserções para evitar efeitos colaterais
+      process.env.NODE_ENV = originalEnv
+
+      // Verificamos se o atributo Secure foi enviado no header
+      expect(refreshCookies).toBeDefined()
       expect(refreshCookies![0]).toContain('Secure')
     })
 
     it('should not be able to refresh without cookie', async () => {
+      // Usamos o request direto (sem agent) para garantir que não há cookies
       const response = await request(app.server).patch('/api/v1/token/refresh').send()
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
+      expect(response.body.message).toMatch(/missing/i)
     })
 
     it('should not be able to refresh with invalid/fake cookie', async () => {
       const response = await request(app.server)
         .patch('/api/v1/token/refresh')
-        .set('Cookie', ['refreshToken=fake-uuid-token; Path=/; HttpOnly'])
+        .set('Cookie', ['refreshToken=s:invalid.signature']) // Formato de cookie assinado inválido
         .send()
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)

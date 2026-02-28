@@ -1,19 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { loginAction } from "./login.action";
-import { authService } from "../_services/auth.service";
 import { setSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
-import type { LoginInput, AuthFormState } from "../types";
-import type { User } from "@/lib/types";
+import { httpClientFull } from "@/lib/api/http-client";
+import type { AuthFormState } from "../types";
+import type { User, HttpError } from "@/lib/types";
 
-/* ===========================
-   Mocks
-=========================== */
+// --- MOCKS ---
 
-vi.mock("../_services/auth.service", () => ({
-  authService: {
-    login: vi.fn(),
-  },
+vi.mock("@/lib/api/http-client", () => ({
+  httpClientFull: vi.fn(),
 }));
 
 vi.mock("@/lib/auth/session", () => ({
@@ -24,135 +20,124 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
 
-/* ===========================
-   Test Suite
-=========================== */
-
 describe("loginAction", () => {
-  const mockedLogin = vi.mocked(authService.login);
+  const mockedHttpClientFull = vi.mocked(httpClientFull);
   const mockedSetSession = vi.mocked(setSession);
   const mockedRedirect = vi.mocked(redirect);
 
   const initialState: AuthFormState = {
     success: false,
-    message: "",
-  };
-
-  const validInput: LoginInput = {
-    email: "john@example.com",
-    password: "Password123!",
+    message: null,
+    errors: {},
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Mock do redirect para lançar o erro esperado pelo Next.js
+    mockedRedirect.mockImplementation(() => {
+      throw new Error("NEXT_REDIRECT");
+    });
   });
 
-  /* ===========================
-     Validação Zod
-  =========================== */
+  it("should return validation errors when Zod validation fails", async () => {
+    const formData = new FormData();
+    formData.append("email", "email-invalido");
+    formData.append("password", ""); // Curto demais
 
-  it("should return validation error when schema fails", async () => {
-    const invalidInput = {
-      email: "invalid",
-      password: "",
-    } as LoginInput;
-
-    const result = await loginAction(initialState, invalidInput);
+    const result = await loginAction(initialState, formData);
 
     expect(result.success).toBe(false);
     expect(result.message).toBe("Por favor, corrija os erros no formulário.");
+    expect(result.errors).toHaveProperty("email");
+    expect(result.errors).toHaveProperty("password");
+    expect(mockedHttpClientFull).not.toHaveBeenCalled();
   });
 
-  /* ===========================
-     ADMIN redirect
-  =========================== */
-
-  it("should login ADMIN and redirect to admin dashboard", async () => {
+  it("should successfully log in and redirect based on user role", async () => {
     const mockUser: User = {
-      id: "1",
+      id: "u1",
       name: "Admin",
-      email: "admin@example.com",
+      email: "admin@test.com",
       role: "ADMIN",
     };
 
-    mockedLogin.mockResolvedValue({
-      token: "access-token",
-      refreshToken: "refresh-token",
-      user: mockUser,
-    });
+    const formData = new FormData();
+    formData.append("email", "admin@test.com");
+    formData.append("password", "123456");
 
-    mockedRedirect.mockImplementation(() => {
-      throw new Error("NEXT_REDIRECT");
-    });
-
-    await expect(loginAction(initialState, validInput)).rejects.toThrow(
-      "NEXT_REDIRECT",
+    // Criamos uma instância real de Headers como o httpClientFull faz
+    const mockResponseHeaders = new Headers();
+    mockResponseHeaders.append(
+      "set-cookie",
+      "refreshToken=secret-token-123; Path=/; HttpOnly",
     );
+
+    mockedHttpClientFull.mockResolvedValue({
+      data: {
+        token: "access-token-xyz",
+        user: mockUser,
+      },
+      headers: mockResponseHeaders,
+    });
+
+    // Como o redirect interrompe a execução, usamos try/catch ou o matcher rejects
+    try {
+      await loginAction(initialState, formData);
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+        // Fluxo esperado
+      } else {
+        throw error;
+      }
+    }
 
     expect(mockedSetSession).toHaveBeenCalledWith(
-      "access-token",
-      "refresh-token",
+      "access-token-xyz",
+      "secret-token-123",
       mockUser,
     );
-
-    expect(mockedRedirect).toHaveBeenCalledWith("/admin/dashboard");
+    expect(mockedRedirect).toHaveBeenCalledWith("/dashboard");
   });
 
-  /* ===========================
-     USER redirect
-  =========================== */
+  it("should return error if refreshToken is not present in response headers", async () => {
+    const formData = new FormData();
+    formData.append("email", "test@test.com");
+    formData.append("password", "123456");
 
-  it("should login USER and redirect to /home", async () => {
-    const mockUser: User = {
-      id: "2",
-      name: "User",
-      email: "user@example.com",
-      role: "USER",
+    const emptyHeaders = new Headers();
+
+    mockedHttpClientFull.mockResolvedValue({
+      data: {
+        token: "token",
+        user: { id: "1", role: "USER", name: "User", email: "u@u.com" },
+      },
+      headers: emptyHeaders,
+    });
+
+    const result = await loginAction(initialState, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.message).toBe(
+      "Sessão não pôde ser estabelecida (Refresh Token ausente).",
+    );
+  });
+
+  it("should handle HttpError thrown by httpClientFull correctly", async () => {
+    const formData = new FormData();
+    formData.append("email", "wrong@test.com");
+    formData.append("password", "wrongpass");
+
+    const errorToThrow: HttpError = {
+      status: 401,
+      message: "Credenciais inválidas de fato",
     };
 
-    mockedLogin.mockResolvedValue({
-      token: "access-token",
-      refreshToken: "refresh-token",
-      user: mockUser,
-    });
+    mockedHttpClientFull.mockRejectedValue(errorToThrow);
 
-    mockedRedirect.mockImplementation(() => {
-      throw new Error("NEXT_REDIRECT");
-    });
-
-    await expect(loginAction(initialState, validInput)).rejects.toThrow(
-      "NEXT_REDIRECT",
-    );
-
-    expect(mockedRedirect).toHaveBeenCalledWith("/home");
-  });
-
-  /* ===========================
-     HttpError
-  =========================== */
-
-  it("should return HttpError message when login fails with HttpError", async () => {
-    mockedLogin.mockRejectedValue({
-      status: 401,
-      message: "Credenciais inválidas",
-    });
-
-    const result = await loginAction(initialState, validInput);
+    const result = await loginAction(initialState, formData);
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe("Credenciais inválidas");
-  });
-
-  /* ===========================
-     Unknown error
-  =========================== */
-
-  it("should return generic error when login throws unknown error", async () => {
-    mockedLogin.mockRejectedValue("unexpected");
-
-    const result = await loginAction(initialState, validInput);
-
-    expect(result.success).toBe(false);
-    expect(result.message).toBe("Credenciais inválidas ou erro no servidor");
+    expect(result.message).toBe("Credenciais inválidas de fato");
   });
 });

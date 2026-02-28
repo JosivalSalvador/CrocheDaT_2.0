@@ -10,7 +10,7 @@ export async function refreshRoutes(app: FastifyInstance) {
   /**
    * ROTA: Refresh Token
    * PATCH /token/refresh
-   * Recebe o cookie 'refreshToken', valida e retorna um novo JWT.
+   * O Fastify lerá automaticamente o cookie 'refreshToken' assinado.
    */
   router.patch(
     '/token/refresh',
@@ -18,10 +18,10 @@ export async function refreshRoutes(app: FastifyInstance) {
       schema: {
         tags: ['auth'],
         summary: 'Refresh User Token',
-        description: 'Receives the HttpOnly Cookie with Refresh Token and returns a new JWT Access Token.',
+        description: 'Troca o Refresh Token (via HttpOnly Cookie) por um novo Access Token (JWT).',
         response: {
           [StatusCodes.OK]: z.object({
-            token: z.string(),
+            token: z.string().describe('Novo JWT Access Token'),
           }),
           [StatusCodes.UNAUTHORIZED]: z.object({
             message: z.string(),

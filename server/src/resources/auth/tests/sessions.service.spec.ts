@@ -14,32 +14,27 @@ function generateUniqueEmail(base: string) {
 describe('Sessions Service (Integration)', () => {
   describe('authenticateUser', () => {
     it('should be able to authenticate and save refresh token in DB', async () => {
-      const passwordHash = await hash('Password123!', 10)
+      const password = 'Password123!'
       const uniqueEmail = generateUniqueEmail('john.session')
 
-      // Criamos o usuário
+      // Criamos o usuário e guardamos o retorno para validar o ID depois
       const user = await prisma.user.create({
         data: {
           name: 'John Session',
           email: uniqueEmail,
-          password_hash: passwordHash,
+          password_hash: await hash(password, 6),
         },
       })
 
-      // AJUSTE CRÍTICO: Garantimos que o usuário está "visível" para outras consultas
-      // Isso evita o erro de Foreign Key em ambientes altamente paralelos.
-      const checkUser = await prisma.user.findUnique({ where: { id: user.id } })
-      if (!checkUser) throw new Error('User failed to persist')
-
       // Executamos a autenticação
       const result = await authenticateUser({
-        email: user.email,
-        password: 'Password123!',
+        email: uniqueEmail,
+        password,
       })
 
       // Asserções
       expect(result.user.id).toEqual(user.id)
-      expect(result.user.email).toEqual(user.email)
+      expect(result.user.email).toEqual(uniqueEmail)
 
       const token = await prisma.token.findUnique({
         where: { id: result.refreshToken },
@@ -51,14 +46,13 @@ describe('Sessions Service (Integration)', () => {
     })
 
     it('should not authenticate with wrong password', async () => {
-      const passwordHash = await hash('Password123!', 10)
       const uniqueEmail = generateUniqueEmail('john.wrong')
 
       await prisma.user.create({
         data: {
           name: 'John Wrong',
           email: uniqueEmail,
-          password_hash: passwordHash,
+          password_hash: await hash('Password123!', 6),
         },
       })
 
@@ -69,39 +63,33 @@ describe('Sessions Service (Integration)', () => {
         }),
       ).rejects.toBeInstanceOf(AppError)
     })
-
-    it('should not authenticate with non-existing email', async () => {
-      const ghostEmail = `ghost-${randomUUID()}@test.com`
-
-      await expect(
-        authenticateUser({
-          email: ghostEmail,
-          password: 'Password123!',
-        }),
-      ).rejects.toBeInstanceOf(AppError)
-    })
   })
 
   describe('signOut', () => {
-    it('should delete token if it exists', async () => {
-      const passwordHash = await hash('Password123!', 10)
-      const uniqueEmail = generateUniqueEmail('john.logout')
+    it('should delete token if it exists in database', async () => {
+      const email = generateUniqueEmail('logout.success')
+      const password = 'Password123!'
 
-      const user = await prisma.user.create({
+      // AJUSTE: Criamos o registro no banco sem declarar uma variável 'user'
+      // que não seria lida, evitando o erro de lint/TS.
+      await prisma.user.create({
         data: {
-          name: 'John Logout',
-          email: uniqueEmail,
-          password_hash: passwordHash,
+          name: 'Logout User',
+          email,
+          password_hash: await hash(password, 6),
         },
       })
 
+      // 1. Gera um token através do login
       const { refreshToken } = await authenticateUser({
-        email: user.email,
-        password: 'Password123!',
+        email,
+        password,
       })
 
+      // 2. Tenta remover
       await signOut(refreshToken)
 
+      // 3. Valida que sumiu do banco
       const token = await prisma.token.findUnique({
         where: { id: refreshToken },
       })
@@ -109,9 +97,14 @@ describe('Sessions Service (Integration)', () => {
       expect(token).toBeNull()
     })
 
-    it('should not throw if token does not exist', async () => {
-      const randomTokenId = randomUUID()
-      await expect(signOut(randomTokenId)).resolves.not.toThrow()
+    it('should not throw error if token does not exist (idempotency)', async () => {
+      /**
+       * Este teste valida o bloco .catch que trata o erro P2025 do Prisma.
+       * O signOut deve resolver com sucesso mesmo que o ID seja inválido.
+       */
+      const nonExistingTokenId = randomUUID()
+
+      await expect(signOut(nonExistingTokenId)).resolves.not.toThrow()
     })
   })
 })

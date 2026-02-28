@@ -1,26 +1,24 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { StatusCodes } from 'http-status-codes'
 import * as refreshService from './refresh.service.js'
-import { REFRESH_TOKEN_TTL_DAYS } from './tokens.config.js' // ← Import necessário
+import { REFRESH_TOKEN_TTL_DAYS } from './tokens.config.js'
 
-/**
- * Refresh Token (Troca o cookie antigo por um novo + novo JWT)
- */
 export async function refresh(request: FastifyRequest, reply: FastifyReply) {
-  // 1. Tenta ler o cookie 'refreshToken'
-  const oldRefreshTokenId = request.cookies.refreshToken
+  // 1. Tenta ler e desassinar o cookie
+  const cookie = request.unsignCookie(request.cookies.refreshToken || '')
+  const oldRefreshTokenId = cookie.value
 
-  // 2. Se não veio cookie, bloqueia na porta
-  if (!oldRefreshTokenId) {
+  // 2. Se o cookie não existe ou a assinatura for inválida
+  if (!oldRefreshTokenId || !cookie.valid) {
     return reply.status(StatusCodes.UNAUTHORIZED).send({
-      message: 'Refresh token missing.',
+      message: 'Refresh token missing or invalid.',
     })
   }
 
-  // 3. Chama o Service para Rotacionar (Apaga o velho, cria o novo)
+  // 3. Chama o Service para Rotacionar
   const { refreshToken, user } = await refreshService.refreshUserToken(oldRefreshTokenId)
 
-  // 4. Gera um NOVO JWT (Access Token)
+  // 4. Gera um NOVO JWT
   const token = await reply.jwtSign(
     { role: user.role },
     {
@@ -31,17 +29,18 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
     },
   )
 
-  // 5. Devolve tudo renovado (Cookie novo sobrescreve o antigo)
+  // 5. Devolve renovado (com o signed: true para manter o padrão)
   return reply
     .setCookie('refreshToken', refreshToken, {
       path: '/',
-      secure: process.env.NODE_ENV === 'production' && String(process.env.NODE_ENV) !== 'test',
-      sameSite: 'strict', // ← Alinhado com o Login
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       httpOnly: true,
-      maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60, // ← Converte dias em segundos
+      signed: true, // ← Mantém o padrão de segurança que definimos
+      maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
     })
     .status(StatusCodes.OK)
     .send({
-      token, // O frontend pega esse token novo e volta a ser feliz
+      token,
     })
 }

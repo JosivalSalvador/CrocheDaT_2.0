@@ -8,8 +8,12 @@ import {
 } from "vitest";
 import { authService } from "./auth.service";
 import { httpClient } from "@/lib/api/http-client";
-import type { AuthResponse, User } from "@/lib/types";
-import type { LoginInput, RegisterInput } from "../types";
+import {
+  LoginInput,
+  RegisterData,
+  LoginResponse,
+  RegisterResponse,
+} from "../types";
 
 vi.mock("@/lib/api/http-client", () => ({
   httpClient: vi.fn(),
@@ -23,23 +27,21 @@ describe("authService", () => {
   });
 
   describe("login", () => {
-    it("should call httpClient with correct payload and return AuthResponse", async () => {
+    it("should call httpClient and return AuthResponse", async () => {
       const input: LoginInput = {
         email: "john@example.com",
         password: "Password123!",
       };
 
-      const mockUser: User = {
-        id: "1",
-        name: "John",
-        email: "john@example.com",
-        role: "USER",
-      };
-
-      const mockResponse: AuthResponse = {
-        user: mockUser,
+      // Ajustado para bater com AuthResponse (que compõe LoginResponse)
+      const mockResponse: LoginResponse = {
         token: "fake-access-token",
-        refreshToken: "fake-refresh-token",
+        user: {
+          id: "1",
+          name: "John",
+          email: "john@example.com",
+          role: "USER",
+        },
       };
 
       mockedHttpClient.mockResolvedValue(mockResponse);
@@ -56,21 +58,57 @@ describe("authService", () => {
   });
 
   describe("register", () => {
-    it("should call httpClient with correct payload", async () => {
-      const input: RegisterInput = {
+    it("should call httpClient with RegisterData and return RegisterResponse", async () => {
+      const input: RegisterData = {
         name: "John Doe",
         email: "john@example.com",
         password: "Password123!",
-        confirmPassword: "Password123!",
       };
 
-      mockedHttpClient.mockResolvedValue(undefined);
+      // Ajustado para bater exatamente com a interface RegisterResponse
+      const mockResponse: RegisterResponse = {
+        userId: "user-123",
+        message: "User created",
+      };
 
-      await authService.register(input);
+      mockedHttpClient.mockResolvedValue(mockResponse);
+
+      const result = await authService.register(input);
 
       expect(mockedHttpClient).toHaveBeenCalledWith("/users", {
         method: "POST",
         body: JSON.stringify(input),
+      });
+
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe("logout", () => {
+    it("should inject refreshToken in Cookie header when provided", async () => {
+      const fakeToken = "signed-refresh-token";
+      mockedHttpClient.mockResolvedValue(undefined);
+
+      await authService.logout(fakeToken);
+
+      expect(mockedHttpClient).toHaveBeenCalledWith("/sessions/logout", {
+        method: "POST",
+        headers: {
+          Cookie: `refreshToken=${fakeToken}`,
+        },
+      });
+    });
+
+    it("should send empty Cookie header when no token is provided", async () => {
+      mockedHttpClient.mockResolvedValue(undefined);
+
+      await authService.logout();
+
+      expect(mockedHttpClient).toHaveBeenCalledWith("/sessions/logout", {
+        method: "POST",
+        headers: {
+          Cookie: "",
+        },
       });
     });
   });
