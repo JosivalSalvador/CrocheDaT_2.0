@@ -44,432 +44,606 @@ migrations/
 [1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/home/marcosbala070/Documentos/crochedaT_2/server[39m
 
 [?2026h
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
 [2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m207ms
+[2m   Start at [22m16:29:30
+[2m   Duration [22m611ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.controller.spec.ts[2m 0/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
 
 [2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (1)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m408ms
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/carts/tests/carts.controller.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
-
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m827ms
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.controller.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
 
-[2m Test Files [22m[1m[32m0 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (5)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m941ms
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (0)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m958ms
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m [queued][22m
 
-[2m Test Files [22m[1m[32m0 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m0 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (20)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m1.05s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/carts/tests/carts.service.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
-
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m1.47s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 1/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
 
-[2m Test Files [22m[1m[32m0 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m1 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m1.54s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/tokens/tests/refresh.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 696[2mms[22m[39m
-       [33m[2m✓[22m[39m should refresh token with rotation [33m 581[2mms[22m[39m
-
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m1.77s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 4/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
 
-[2m Test Files [22m[1m[32m1 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m4 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m1.65s
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m0 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m1.98s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 1/4[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
+
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m1 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m2.59s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 2/4[22m
-[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m 1/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 4/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
-
-[2m Test Files [22m[1m[32m1 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m6 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m1.85s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/auth/tests/sessions.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 967[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to authenticate and save refresh token in DB [33m 777[2mms[22m[39m
-
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 4/4[22m
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 4/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m8 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m1.95s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 4/4[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
 
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m8 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m2.26s
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m2 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m2.69s
 [?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 4/4[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.service.spec.ts[2m 3/4[22m
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
+
+[2m Test Files [22m[1m[32m0 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m3 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m2.90s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/auth/tests/sessions.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1384[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to authenticate and save refresh token in DB [33m 1146[2mms[22m[39m
+
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 0/11[22m
+
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m4 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m3.41s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 0/6[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 1/11[22m
 
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m9 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (21)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m2.36s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/chats/tests/chats.controller.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
-
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m5 passed[39m[22m[90m (21)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m3.81s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 0/9[22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.controller.spec.ts[2m 1/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 0/6[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 1/11[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m9 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (31)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m2.67s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 0/9[22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.controller.spec.ts[2m 1/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 1/11[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m9 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (36)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m2.77s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 0/9[22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.service.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 2/11[22m
 
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m10 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (42)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m2.97s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430551232,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:38941","remoteAddress":"::ffff:127.0.0.1","remotePort":47778},"msg":"incoming request"}
- [2m[90m↓[39m[22m src/resources/chats/tests/chats.service.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m6 passed[39m[22m[90m (32)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m3.91s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483374947,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41011","remoteAddress":"::ffff:127.0.0.1","remotePort":57722},"msg":"incoming request"}
+{"level":30,"time":1772483375096,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:45537","remoteAddress":"::ffff:127.0.0.1","remotePort":32968},"msg":"incoming request"}
 
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 1/9[22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.service.spec.ts[2m 1/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 2/11[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m11 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (43)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.07s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 6/9[22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.service.spec.ts[2m 1/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 2/11[22m
-
-[2m Test Files [22m[1m[32m2 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m16 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (43)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.28s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/categories/tests/categories.service.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 602[2mms[22m[39m
-       [33m[2m✓[22m[39m should create a new category with a valid name [33m 395[2mms[22m[39m
-
-[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.service.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 0/6[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 3/11[22m
 
-[2m Test Files [22m[1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m20 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (43)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.49s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430551767,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:46331","remoteAddress":"::ffff:127.0.0.1","remotePort":35282},"msg":"incoming request"}
- [2m[90m↓[39m[22m src/resources/products/tests/products.controller.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
-{"level":30,"time":1772430551813,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:43663","remoteAddress":"::ffff:127.0.0.1","remotePort":55294},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m7 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m4.31s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 0/6[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 4/11[22m
+
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m8 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m4.41s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483375354,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"GET","url":"/api/v1/categories","host":"127.0.0.1:44917","remoteAddress":"::ffff:127.0.0.1","remotePort":32978},"msg":"incoming request"}
+{"level":30,"time":1772483375408,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":51.710167000070214,"msg":"request completed"}
+{"level":30,"time":1772483375406,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:39835","remoteAddress":"::ffff:127.0.0.1","remotePort":49462},"msg":"incoming request"}
 
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 3/6[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 4/11[22m
 
-[2m Test Files [22m[1m[32m3 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m21 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (44)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.59s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430551957,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":141.515980001539,"msg":"request completed"}
-{"level":30,"time":1772430551960,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":190.81123999878764,"msg":"request completed"}
-{"level":30,"time":1772430551981,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:35985","remoteAddress":"::ffff:127.0.0.1","remotePort":54812},"msg":"incoming request"}
-{"level":30,"time":1772430551987,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:32799","remoteAddress":"::ffff:127.0.0.1","remotePort":55304},"msg":"incoming request"}
-{"level":30,"time":1772430551999,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":204},"responseTime":12.156483996659517,"msg":"request completed"}
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m12 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m4.61s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483375441,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"GET","url":"/api/v1/categories/f6d941c7-9b9c-4946-9d31-c2f409ff7c0a","host":"127.0.0.1:35667","remoteAddress":"::ffff:127.0.0.1","remotePort":53254},"msg":"incoming request"}
+{"level":30,"time":1772483375465,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:35135","remoteAddress":"::ffff:127.0.0.1","remotePort":52472},"msg":"incoming request"}
+{"level":30,"time":1772483375472,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":30.583077000454068,"msg":"request completed"}
+{"level":30,"time":1772483375487,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:34021","remoteAddress":"::ffff:127.0.0.1","remotePort":50736},"msg":"incoming request"}
+
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 0/2[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 5/6[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 4/11[22m
+
+[2m Test Files [22m[1m[32m1 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m14 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m4.71s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/products/tests/products.service.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 937[2mms[22m[39m
+{"level":30,"time":1772483375628,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":219.39674200117588,"msg":"request completed"}
+{"level":30,"time":1772483375629,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":160.6352219991386,"msg":"request completed"}
+{"level":30,"time":1772483375650,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:36013","remoteAddress":"::ffff:127.0.0.1","remotePort":41790},"msg":"incoming request"}
+{"level":30,"time":1772483375658,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:41885","remoteAddress":"::ffff:127.0.0.1","remotePort":59038},"msg":"incoming request"}
+{"level":30,"time":1772483375669,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":204},"responseTime":10.569931000471115,"msg":"request completed"}
 
 [1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 1/2[22m
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 6/6[22m
 [1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 4/11[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 5/11[22m
 
-[2m Test Files [22m[1m[32m3 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m22 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (44)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.79s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430552015,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:45495","remoteAddress":"::ffff:127.0.0.1","remotePort":41690},"msg":"incoming request"}
-{"level":30,"time":1772430552017,"pid":304344,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":204},"responseTime":1.448479000478983,"msg":"request completed"}
- [32m✓[39m src/resources/auth/tests/sessions.controller.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 983[2mms[22m[39m
-       [33m[2m✓[22m[39m should clear refreshToken cookie and delete token from database [33m 768[2mms[22m[39m
-{"level":30,"time":1772430552038,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":56.57030600309372,"msg":"request completed"}
-{"level":30,"time":1772430552086,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:46025","remoteAddress":"::ffff:127.0.0.1","remotePort":41992},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m2 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m18 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m4.91s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483375685,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions/logout","host":"127.0.0.1:43449","remoteAddress":"::ffff:127.0.0.1","remotePort":45618},"msg":"incoming request"}
+{"level":30,"time":1772483375687,"pid":91755,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":204},"responseTime":1.6910909991711378,"msg":"request completed"}
+ [32m✓[39m src/resources/auth/tests/sessions.controller.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 965[2mms[22m[39m
+       [33m[2m✓[22m[39m should clear refreshToken cookie and delete token from database [33m 651[2mms[22m[39m
+{"level":30,"time":1772483375705,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":54.014691000804305,"msg":"request completed"}
+{"level":30,"time":1772483375767,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:34151","remoteAddress":"::ffff:127.0.0.1","remotePort":60994},"msg":"incoming request"}
+{"level":30,"time":1772483375812,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":44.55096099898219,"msg":"request completed"}
+{"level":30,"time":1772483375819,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:38509","remoteAddress":"::ffff:127.0.0.1","remotePort":54966},"msg":"incoming request"}
+{"level":30,"time":1772483375844,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":23.543112000450492,"msg":"request completed"}
+{"level":30,"time":1772483375853,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:43371","remoteAddress":"::ffff:127.0.0.1","remotePort":40348},"msg":"incoming request"}
+{"level":30,"time":1772483375858,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":401},"responseTime":3.433153999969363,"msg":"request completed"}
+{"level":30,"time":1772483375877,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:38223","remoteAddress":"::ffff:127.0.0.1","remotePort":39430},"msg":"incoming request"}
+{"level":30,"time":1772483375882,"pid":91748,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":401},"responseTime":5.081630999222398,"msg":"request completed"}
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m [queued][22m
-[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 0/1[22m
-[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 1/4[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 2/2[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.service.spec.ts[2m 6/6[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 2/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 4/11[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 5/11[22m
 
-[2m Test Files [22m[1m[32m4 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m24 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (45)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m3.89s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/products/tests/products.service.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
-{"level":30,"time":1772430552130,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":43.33646100014448,"msg":"request completed"}
-{"level":30,"time":1772430552137,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:32983","remoteAddress":"::ffff:127.0.0.1","remotePort":38276},"msg":"incoming request"}
-{"level":30,"time":1772430552167,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":28.80928099900484,"msg":"request completed"}
-{"level":30,"time":1772430552174,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:44965","remoteAddress":"::ffff:127.0.0.1","remotePort":37874},"msg":"incoming request"}
-{"level":30,"time":1772430552177,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":401},"responseTime":2.768623001873493,"msg":"request completed"}
-{"level":30,"time":1772430552184,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"PATCH","url":"/api/v1/token/refresh","host":"127.0.0.1:37131","remoteAddress":"::ffff:127.0.0.1","remotePort":50548},"msg":"incoming request"}
-{"level":30,"time":1772430552186,"pid":304338,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":401},"responseTime":1.7174400016665459,"msg":"request completed"}
- [32m✓[39m src/resources/tokens/tests/refresh.controller.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1177[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to refresh token using cookie (and rotate it) [33m 848[2mms[22m[39m
-{"level":30,"time":1772430552195,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":960.3303059972823,"msg":"request completed"}
-{"level":30,"time":1772430552207,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:34479","remoteAddress":"::ffff:127.0.0.1","remotePort":39712},"msg":"incoming request"}
-{"level":30,"time":1772430552485,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":277.6072060018778,"msg":"request completed"}
-{"level":30,"time":1772430552493,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"GET","url":"/api/v1/users/me","host":"127.0.0.1:32875","remoteAddress":"::ffff:127.0.0.1","remotePort":36576},"msg":"incoming request"}
-{"level":30,"time":1772430552506,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":13.423842001706362,"msg":"request completed"}
+[2m Test Files [22m[1m[32m3 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m21 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m5.11s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/tokens/tests/refresh.controller.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1191[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to refresh token using cookie (and rotate it) [33m 813[2mms[22m[39m
+{"level":30,"time":1772483375905,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":952.8460159990937,"msg":"request completed"}
+{"level":30,"time":1772483375956,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:34855","remoteAddress":"::ffff:127.0.0.1","remotePort":60134},"msg":"incoming request"}
+{"level":30,"time":1772483376005,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":201},"responseTime":901.6964490003884,"msg":"request completed"}
+{"level":30,"time":1772483376021,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:36735","remoteAddress":"::ffff:127.0.0.1","remotePort":48658},"msg":"incoming request"}
+{"level":30,"time":1772483376040,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":201},"responseTime":552.6594230011106,"msg":"request completed"}
+{"level":30,"time":1772483376047,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:43285","remoteAddress":"::ffff:127.0.0.1","remotePort":34352},"msg":"incoming request"}
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/auth/tests/sessions.controller.spec.ts[2m 2/2[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 4/4[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 5/11[22m
+
+[2m Test Files [22m[1m[32m4 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m23 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m5.32s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.controller.spec.ts[2m 4/4[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 5/11[22m
+
+[2m Test Files [22m[1m[32m4 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m23 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m5.52s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483376428,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":471.9805560000241,"msg":"request completed"}
+{"level":30,"time":1772483376440,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:36519","remoteAddress":"::ffff:127.0.0.1","remotePort":49552},"msg":"incoming request"}
+{"level":30,"time":1772483376461,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":201},"responseTime":20.871959999203682,"msg":"request completed"}
+{"level":30,"time":1772483376469,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/products","host":"127.0.0.1:41203","remoteAddress":"::ffff:127.0.0.1","remotePort":55682},"msg":"incoming request"}
+{"level":30,"time":1772483376472,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":450.74715900048614,"msg":"request completed"}
+{"level":30,"time":1772483376483,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"GET","url":"/api/v1/users/me","host":"127.0.0.1:41531","remoteAddress":"::ffff:127.0.0.1","remotePort":40296},"msg":"incoming request"}
+{"level":30,"time":1772483376498,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":200},"responseTime":14.085748000070453,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 0/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m [queued][22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 1/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 5/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m29 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m4.29s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430552516,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:32863","remoteAddress":"::ffff:127.0.0.1","remotePort":49764},"msg":"incoming request"}
-{"level":30,"time":1772430552528,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","req":{"method":"GET","url":"/api/v1/categories","host":"127.0.0.1:36769","remoteAddress":"::ffff:127.0.0.1","remotePort":60478},"msg":"incoming request"}
-{"level":30,"time":1772430552565,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-1","res":{"statusCode":200},"responseTime":35.40786999836564,"msg":"request completed"}
-{"level":30,"time":1772430552583,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","req":{"method":"GET","url":"/api/v1/categories/bf344471-4fa9-4e4e-a06f-c5108b41a336","host":"127.0.0.1:35517","remoteAddress":"::ffff:127.0.0.1","remotePort":57116},"msg":"incoming request"}
-{"level":30,"time":1772430552598,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-2","res":{"statusCode":200},"responseTime":14.86777999997139,"msg":"request completed"}
-{"level":30,"time":1772430552606,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:45295","remoteAddress":"::ffff:127.0.0.1","remotePort":36174},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m4 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m[1m[32m24 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m5.72s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483376517,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:37409","remoteAddress":"::ffff:127.0.0.1","remotePort":36368},"msg":"incoming request"}
+{"level":30,"time":1772483376535,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":486.9266130011529,"msg":"request completed"}
+{"level":30,"time":1772483376542,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:43727","remoteAddress":"::ffff:127.0.0.1","remotePort":37370},"msg":"incoming request"}
+ [2m[90m↓[39m[22m src/resources/carts/tests/carts.controller.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+{"level":30,"time":1772483376548,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":403},"responseTime":5.413273999467492,"msg":"request completed"}
+{"level":30,"time":1772483376558,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:34597","remoteAddress":"::ffff:127.0.0.1","remotePort":60248},"msg":"incoming request"}
+{"level":30,"time":1772483376559,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":201},"responseTime":89.10781699977815,"msg":"request completed"}
+{"level":30,"time":1772483376587,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40953","remoteAddress":"::ffff:127.0.0.1","remotePort":40924},"msg":"incoming request"}
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.controller.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 0/9[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 1/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 6/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m31 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m4.49s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430552780,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":201},"responseTime":264.26599599793553,"msg":"request completed"}
-{"level":30,"time":1772430552785,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:37211","remoteAddress":"::ffff:127.0.0.1","remotePort":46586},"msg":"incoming request"}
-{"level":30,"time":1772430552901,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-3","res":{"statusCode":201},"responseTime":294.87008300051093,"msg":"request completed"}
-{"level":30,"time":1772430552905,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:36179","remoteAddress":"::ffff:127.0.0.1","remotePort":52502},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m4 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m27 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (56)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m5.95s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483376980,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":201},"responseTime":462.503618998453,"msg":"request completed"}
+{"level":30,"time":1772483376986,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:40419","remoteAddress":"::ffff:127.0.0.1","remotePort":36792},"msg":"incoming request"}
+{"level":30,"time":1772483376996,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":437.9312340002507,"msg":"request completed"}
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.controller.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 1/9[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 6/11[22m
+
+[2m Test Files [22m[1m[32m4 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m28 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (56)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.15s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483377014,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:39405","remoteAddress":"::ffff:127.0.0.1","remotePort":49070},"msg":"incoming request"}
+{"level":30,"time":1772483377094,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":201},"responseTime":506.1221409998834,"msg":"request completed"}
+{"level":30,"time":1772483377112,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:40747","remoteAddress":"::ffff:127.0.0.1","remotePort":55426},"msg":"incoming request"}
+
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.service.spec.ts[2m 5/9[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 0/4[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 6/11[22m
+
+[2m Test Files [22m[1m[32m4 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m32 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (56)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.35s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/carts/tests/carts.service.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+ [32m✓[39m src/resources/categories/tests/categories.service.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 596[2mms[22m[39m
+       [33m[2m✓[22m[39m should create a new category with a valid name [33m 399[2mms[22m[39m
+
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m 1/1[22m
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 1/5[22m
+[1m[33m ❯ [39m[22msrc/resources/tokens/tests/refresh.service.spec.ts[2m 1/4[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 1/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m33 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m4.69s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430552987,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":200},"responseTime":201.5019810013473,"msg":"request completed"}
-{"level":30,"time":1772430552989,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"DELETE","url":"/api/v1/users/me","host":"127.0.0.1:43261","remoteAddress":"::ffff:127.0.0.1","remotePort":34710},"msg":"incoming request"}
-{"level":30,"time":1772430552998,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":204},"responseTime":8.54262700304389,"msg":"request completed"}
-{"level":30,"time":1772430553001,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:45109","remoteAddress":"::ffff:127.0.0.1","remotePort":52436},"msg":"incoming request"}
-{"level":30,"time":1772430553062,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-4","res":{"statusCode":200},"responseTime":156.87142799794674,"msg":"request completed"}
-{"level":30,"time":1772430553066,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:37601","remoteAddress":"::ffff:127.0.0.1","remotePort":41502},"msg":"incoming request"}
-{"level":30,"time":1772430553069,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":403},"responseTime":3.3975149989128113,"msg":"request completed"}
+[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m38 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (57)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.46s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/tokens/tests/refresh.service.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 566[2mms[22m[39m
+       [33m[2m✓[22m[39m should refresh token with rotation [33m 473[2mms[22m[39m
+{"level":30,"time":1772483377471,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":200},"responseTime":456.16051799990237,"msg":"request completed"}
+{"level":30,"time":1772483377473,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-5","res":{"statusCode":200},"responseTime":485.2233560010791,"msg":"request completed"}
+{"level":30,"time":1772483377480,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"DELETE","url":"/api/v1/users/me","host":"127.0.0.1:46359","remoteAddress":"::ffff:127.0.0.1","remotePort":54324},"msg":"incoming request"}
+{"level":30,"time":1772483377483,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:34125","remoteAddress":"::ffff:127.0.0.1","remotePort":39682},"msg":"incoming request"}
+{"level":30,"time":1772483377495,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","res":{"statusCode":201},"responseTime":11.586512999609113,"msg":"request completed"}
+{"level":30,"time":1772483377505,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","req":{"method":"PATCH","url":"/api/v1/categories/bc3734e1-86d7-4883-a707-f5d76177aeb4","host":"127.0.0.1:41393","remoteAddress":"::ffff:127.0.0.1","remotePort":59108},"msg":"incoming request"}
+{"level":30,"time":1772483377513,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":204},"responseTime":32.739776998758316,"msg":"request completed"}
+{"level":30,"time":1772483377513,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":200},"responseTime":401.3308039996773,"msg":"request completed"}
 
+[1m[33m ❯ [39m[22msrc/resources/carts/tests/carts.service.spec.ts[2m 1/1[22m
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 1/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m35 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m4.79s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430553074,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:34941","remoteAddress":"::ffff:127.0.0.1","remotePort":43618},"msg":"incoming request"}
-{"level":30,"time":1772430553126,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":201},"responseTime":125.36360699683428,"msg":"request completed"}
-{"level":30,"time":1772430553129,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:45449","remoteAddress":"::ffff:127.0.0.1","remotePort":37998},"msg":"incoming request"}
-{"level":30,"time":1772430553191,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-6","res":{"statusCode":201},"responseTime":116.78286200016737,"msg":"request completed"}
-{"level":30,"time":1772430553197,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:35171","remoteAddress":"::ffff:127.0.0.1","remotePort":44768},"msg":"incoming request"}
-
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 3/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
-[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
-
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m35 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m4.99s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430553240,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","res":{"statusCode":200},"responseTime":111.49784800037742,"msg":"request completed"}
-{"level":30,"time":1772430553243,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","req":{"method":"GET","url":"/api/v1/users","host":"127.0.0.1:37805","remoteAddress":"::ffff:127.0.0.1","remotePort":35372},"msg":"incoming request"}
-{"level":30,"time":1772430553244,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","res":{"statusCode":403},"responseTime":1.2733459994196892,"msg":"request completed"}
-{"level":30,"time":1772430553247,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:39989","remoteAddress":"::ffff:127.0.0.1","remotePort":43332},"msg":"incoming request"}
-{"level":30,"time":1772430553309,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":200},"responseTime":111.20787699893117,"msg":"request completed"}
-{"level":30,"time":1772430553311,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:33831","remoteAddress":"::ffff:127.0.0.1","remotePort":58538},"msg":"incoming request"}
-{"level":30,"time":1772430553315,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","res":{"statusCode":201},"responseTime":4.188314002007246,"msg":"request completed"}
-{"level":30,"time":1772430553319,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","req":{"method":"PATCH","url":"/api/v1/categories/b930a640-81eb-420a-9be4-b314c29db57d","host":"127.0.0.1:35527","remoteAddress":"::ffff:127.0.0.1","remotePort":40868},"msg":"incoming request"}
-{"level":30,"time":1772430553326,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","res":{"statusCode":200},"responseTime":7.715218998491764,"msg":"request completed"}
-{"level":30,"time":1772430553330,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","req":{"method":"DELETE","url":"/api/v1/categories/b930a640-81eb-420a-9be4-b314c29db57d","host":"127.0.0.1:43867","remoteAddress":"::ffff:127.0.0.1","remotePort":56148},"msg":"incoming request"}
-{"level":30,"time":1772430553336,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","res":{"statusCode":204},"responseTime":6.002336002886295,"msg":"request completed"}
-{"level":30,"time":1772430553338,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","req":{"method":"GET","url":"/api/v1/categories/b930a640-81eb-420a-9be4-b314c29db57d","host":"127.0.0.1:44709","remoteAddress":"::ffff:127.0.0.1","remotePort":50726},"msg":"incoming request"}
-{"level":30,"time":1772430553341,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","res":{"statusCode":404},"responseTime":2.717330999672413,"msg":"request completed"}
+[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m42 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (57)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.66s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483377519,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:39613","remoteAddress":"::ffff:127.0.0.1","remotePort":42696},"msg":"incoming request"}
+{"level":30,"time":1772483377526,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:37057","remoteAddress":"::ffff:127.0.0.1","remotePort":53082},"msg":"incoming request"}
+{"level":30,"time":1772483377529,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","res":{"statusCode":200},"responseTime":23.30527999997139,"msg":"request completed"}
+{"level":30,"time":1772483377531,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":201},"responseTime":11.252772001549602,"msg":"request completed"}
+{"level":30,"time":1772483377537,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","req":{"method":"DELETE","url":"/api/v1/categories/bc3734e1-86d7-4883-a707-f5d76177aeb4","host":"127.0.0.1:38249","remoteAddress":"::ffff:127.0.0.1","remotePort":58748},"msg":"incoming request"}
+{"level":30,"time":1772483377552,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","res":{"statusCode":204},"responseTime":13.805942000821233,"msg":"request completed"}
+{"level":30,"time":1772483377558,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","req":{"method":"POST","url":"/api/v1/products/bd6c9b31-e911-4da0-95ad-07f5e27502a5/images","host":"127.0.0.1:45217","remoteAddress":"::ffff:127.0.0.1","remotePort":38376},"msg":"incoming request"}
+{"level":30,"time":1772483377559,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","req":{"method":"GET","url":"/api/v1/categories/bc3734e1-86d7-4883-a707-f5d76177aeb4","host":"127.0.0.1:40397","remoteAddress":"::ffff:127.0.0.1","remotePort":58744},"msg":"incoming request"}
+{"level":30,"time":1772483377570,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","res":{"statusCode":404},"responseTime":10.15451200120151,"msg":"request completed"}
+{"level":30,"time":1772483377572,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","res":{"statusCode":201},"responseTime":14.294377001002431,"msg":"request completed"}
+{"level":30,"time":1772483377579,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:36285","remoteAddress":"::ffff:127.0.0.1","remotePort":33134},"msg":"incoming request"}
+{"level":30,"time":1772483377583,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:45755","remoteAddress":"::ffff:127.0.0.1","remotePort":33182},"msg":"incoming request"}
 
 [1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.controller.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
+
+[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m44 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (57)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.86s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/chats/tests/chats.controller.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/chats/tests/chats.service.spec.ts[2m [queued][22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
+
+[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m44 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (58)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m6.96s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [2m[90m↓[39m[22m src/resources/chats/tests/chats.service.spec.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+{"level":30,"time":1772483377916,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","res":{"statusCode":201},"responseTime":332.55153699964285,"msg":"request completed"}
+{"level":30,"time":1772483377922,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:32945","remoteAddress":"::ffff:127.0.0.1","remotePort":54528},"msg":"incoming request"}
+{"level":30,"time":1772483377985,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-7","res":{"statusCode":201},"responseTime":459.1061269994825,"msg":"request completed"}
+{"level":30,"time":1772483377991,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:46615","remoteAddress":"::ffff:127.0.0.1","remotePort":55936},"msg":"incoming request"}
+{"level":30,"time":1772483378039,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","res":{"statusCode":201},"responseTime":459.91432500071824,"msg":"request completed"}
+{"level":30,"time":1772483378052,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:43409","remoteAddress":"::ffff:127.0.0.1","remotePort":55256},"msg":"incoming request"}
+{"level":30,"time":1772483378222,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","res":{"statusCode":200},"responseTime":299.48878199979663,"msg":"request completed"}
+{"level":30,"time":1772483378227,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:41453","remoteAddress":"::ffff:127.0.0.1","remotePort":58752},"msg":"incoming request"}
+{"level":30,"time":1772483378234,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","res":{"statusCode":201},"responseTime":7.258155001327395,"msg":"request completed"}
+{"level":30,"time":1772483378238,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:33205","remoteAddress":"::ffff:127.0.0.1","remotePort":40990},"msg":"incoming request"}
+{"level":30,"time":1772483378247,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","res":{"statusCode":201},"responseTime":8.23446499928832,"msg":"request completed"}
+{"level":30,"time":1772483378268,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","req":{"method":"PATCH","url":"/api/v1/products/0c92cf23-f5d7-4a0c-965b-01589a7e4214","host":"127.0.0.1:35695","remoteAddress":"::ffff:127.0.0.1","remotePort":47258},"msg":"incoming request"}
+{"level":30,"time":1772483378303,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","res":{"statusCode":200},"responseTime":34.79757500067353,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 2/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
+
+[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m45 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m7.46s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483378308,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:33367","remoteAddress":"::ffff:127.0.0.1","remotePort":49418},"msg":"incoming request"}
+{"level":30,"time":1772483378380,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-8","res":{"statusCode":200},"responseTime":389.02453500032425,"msg":"request completed"}
+{"level":30,"time":1772483378387,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","req":{"method":"GET","url":"/api/v1/users","host":"127.0.0.1:37341","remoteAddress":"::ffff:127.0.0.1","remotePort":51832},"msg":"incoming request"}
+{"level":30,"time":1772483378389,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-9","res":{"statusCode":403},"responseTime":2.671993998810649,"msg":"request completed"}
+{"level":30,"time":1772483378396,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:41853","remoteAddress":"::ffff:127.0.0.1","remotePort":33800},"msg":"incoming request"}
+{"level":30,"time":1772483378426,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","res":{"statusCode":200},"responseTime":373.42464100010693,"msg":"request completed"}
+{"level":30,"time":1772483378430,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:39339","remoteAddress":"::ffff:127.0.0.1","remotePort":35788},"msg":"incoming request"}
+{"level":30,"time":1772483378434,"pid":91742,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","res":{"statusCode":400},"responseTime":3.688121000304818,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 5/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 3/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 3/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 7/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m37 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m5.09s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430553344,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:35415","remoteAddress":"::ffff:127.0.0.1","remotePort":41372},"msg":"incoming request"}
-{"level":30,"time":1772430553370,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","res":{"statusCode":201},"responseTime":123.26543400064111,"msg":"request completed"}
-{"level":30,"time":1772430553376,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:40635","remoteAddress":"::ffff:127.0.0.1","remotePort":58558},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m47 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m7.66s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/categories/tests/categories.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3650[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to list categories without authentication [33m 433[2mms[22m[39m
+       [33m[2m✓[22m[39m should return 403 when a regular user tries to create a category [33m 1076[2mms[22m[39m
+       [33m[2m✓[22m[39m should allow an admin to create, update and delete a category [33m 1020[2mms[22m[39m
+       [33m[2m✓[22m[39m should return 400 when creating a category with an invalid name [33m 861[2mms[22m[39m
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 3/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 3/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 8/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m38 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m5.19s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772430553489,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","res":{"statusCode":201},"responseTime":145.1994660012424,"msg":"request completed"}
-{"level":30,"time":1772430553493,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:36625","remoteAddress":"::ffff:127.0.0.1","remotePort":32996},"msg":"incoming request"}
-{"level":30,"time":1772430553497,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","res":{"statusCode":200},"responseTime":120.71035400032997,"msg":"request completed"}
-{"level":30,"time":1772430553499,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","req":{"method":"GET","url":"/api/v1/users","host":"127.0.0.1:38959","remoteAddress":"::ffff:127.0.0.1","remotePort":37498},"msg":"incoming request"}
-{"level":30,"time":1772430553506,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","res":{"statusCode":200},"responseTime":6.883976001292467,"msg":"request completed"}
-{"level":30,"time":1772430553509,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:33927","remoteAddress":"::ffff:127.0.0.1","remotePort":47394},"msg":"incoming request"}
-{"level":30,"time":1772430553608,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","res":{"statusCode":200},"responseTime":115.15937500074506,"msg":"request completed"}
-{"level":30,"time":1772430553609,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:39305","remoteAddress":"::ffff:127.0.0.1","remotePort":51612},"msg":"incoming request"}
-{"level":30,"time":1772430553611,"pid":304416,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","res":{"statusCode":400},"responseTime":1.4888449981808662,"msg":"request completed"}
+[2m Test Files [22m[1m[32m7 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m48 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m7.76s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483378588,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","res":{"statusCode":201},"responseTime":278.93135200068355,"msg":"request completed"}
+{"level":30,"time":1772483378591,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:42709","remoteAddress":"::ffff:127.0.0.1","remotePort":54842},"msg":"incoming request"}
+{"level":30,"time":1772483378703,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-a","res":{"statusCode":201},"responseTime":306.55892200022936,"msg":"request completed"}
+{"level":30,"time":1772483378712,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:34249","remoteAddress":"::ffff:127.0.0.1","remotePort":47476},"msg":"incoming request"}
 
-[1m[33m ❯ [39m[22msrc/resources/categories/tests/categories.controller.spec.ts[2m 5/5[22m
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 8/11[22m
+
+[2m Test Files [22m[1m[32m7 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m48 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m7.96s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483378867,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","res":{"statusCode":200},"responseTime":275.57592800073326,"msg":"request completed"}
+{"level":30,"time":1772483378870,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","req":{"method":"DELETE","url":"/api/v1/products/00000000-0000-0000-0000-000000000000","host":"127.0.0.1:32967","remoteAddress":"::ffff:127.0.0.1","remotePort":35176},"msg":"incoming request"}
+{"level":30,"time":1772483378873,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","res":{"statusCode":403},"responseTime":2.31831599958241,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 3/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 8/11[22m
+
+[2m Test Files [22m[1m[32m7 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m49 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m8.06s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483378879,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40497","remoteAddress":"::ffff:127.0.0.1","remotePort":37742},"msg":"incoming request"}
+{"level":30,"time":1772483378976,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-b","res":{"statusCode":200},"responseTime":263.40179100073874,"msg":"request completed"}
+{"level":30,"time":1772483378980,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","req":{"method":"GET","url":"/api/v1/users","host":"127.0.0.1:45825","remoteAddress":"::ffff:127.0.0.1","remotePort":50550},"msg":"incoming request"}
+{"level":30,"time":1772483378995,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-c","res":{"statusCode":200},"responseTime":15.533702000975609,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 4/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 4/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 8/11[22m
 
-[2m Test Files [22m[1m[32m5 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m40 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m5.39s
-[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/categories/tests/categories.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1436[2mms[22m[39m
-       [33m[2m✓[22m[39m should return 403 when a regular user tries to create a category [33m 471[2mms[22m[39m
-{"level":30,"time":1772430553624,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","res":{"statusCode":201},"responseTime":115.69277399778366,"msg":"request completed"}
-{"level":30,"time":1772430553628,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:44963","remoteAddress":"::ffff:127.0.0.1","remotePort":36704},"msg":"incoming request"}
-{"level":30,"time":1772430553738,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","res":{"statusCode":200},"responseTime":109.91405900195241,"msg":"request completed"}
-{"level":30,"time":1772430553739,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:37097","remoteAddress":"::ffff:127.0.0.1","remotePort":55498},"msg":"incoming request"}
-{"level":30,"time":1772430553853,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","res":{"statusCode":201},"responseTime":113.29910599812865,"msg":"request completed"}
-{"level":30,"time":1772430553854,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:45831","remoteAddress":"::ffff:127.0.0.1","remotePort":33166},"msg":"incoming request"}
+[2m Test Files [22m[1m[32m7 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m50 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m8.16s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483379007,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:40119","remoteAddress":"::ffff:127.0.0.1","remotePort":57070},"msg":"incoming request"}
+{"level":30,"time":1772483379134,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","res":{"statusCode":201},"responseTime":255.1267720013857,"msg":"request completed"}
+{"level":30,"time":1772483379140,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-i","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:44329","remoteAddress":"::ffff:127.0.0.1","remotePort":55762},"msg":"incoming request"}
+{"level":30,"time":1772483379271,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-d","res":{"statusCode":201},"responseTime":263.32683699950576,"msg":"request completed"}
+{"level":30,"time":1772483379278,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:38191","remoteAddress":"::ffff:127.0.0.1","remotePort":49392},"msg":"incoming request"}
 
+[1m[33m ❯ [39m[22msrc/resources/products/tests/products.controller.spec.ts[2m 4/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 4/5[22m
 [1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 10/11[22m
 
-[2m Test Files [22m[1m[32m6 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m[1m[32m42 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (50)[39m
-[2m   Start at [22m01:49:08
-[2m   Duration [22m5.69s
-[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/users/tests/users.service.spec.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 4730[2mms[22m[39m
-       [33m[2m✓[22m[39m should hash password and create a new user [33m 1427[2mms[22m[39m
-       [33m[2m✓[22m[39m should throw error if email already exists [33m 420[2mms[22m[39m
-       [33m[2m✓[22m[39m should return user details without sensitive data [33m 656[2mms[22m[39m
-       [33m[2m✓[22m[39m should update name and email correctly [33m 434[2mms[22m[39m
-       [33m[2m✓[22m[39m should throw CONFLICT when updating to an email that is already taken [33m 552[2mms[22m[39m
-       [33m[2m✓[22m[39m should update password with valid old password [33m 498[2mms[22m[39m
-{"level":30,"time":1772430553965,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","res":{"statusCode":200},"responseTime":110.77517199888825,"msg":"request completed"}
-{"level":30,"time":1772430553966,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","req":{"method":"PATCH","url":"/api/v1/users/fbc3e0e9-100f-4097-9d7d-7bc017407711/role","host":"127.0.0.1:33115","remoteAddress":"::ffff:127.0.0.1","remotePort":37364},"msg":"incoming request"}
-{"level":30,"time":1772430553971,"pid":304325,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","res":{"statusCode":200},"responseTime":5.362647999078035,"msg":"request completed"}
- [32m✓[39m src/resources/users/tests/users.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2974[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to get profile [33m 1318[2mms[22m[39m
-       [33m[2m✓[22m[39m should be able to delete account and clear cookies [33m 488[2mms[22m[39m
-       [33m[2m✓[22m[39m should allow admin to change a user role [33m 465[2mms[22m[39m
+[2m Test Files [22m[1m[32m7 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m52 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m8.47s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483379382,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-i","res":{"statusCode":200},"responseTime":242.22880099900067,"msg":"request completed"}
+{"level":30,"time":1772483379385,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-j","req":{"method":"POST","url":"/api/v1/categories","host":"127.0.0.1:41371","remoteAddress":"::ffff:127.0.0.1","remotePort":42514},"msg":"incoming request"}
+{"level":30,"time":1772483379392,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-j","res":{"statusCode":201},"responseTime":6.384960999712348,"msg":"request completed"}
+{"level":30,"time":1772483379406,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-k","req":{"method":"DELETE","url":"/api/v1/products/images/8c843b2e-05b3-43fe-ba32-ca389bf0df3e","host":"127.0.0.1:40301","remoteAddress":"::ffff:127.0.0.1","remotePort":58526},"msg":"incoming request"}
+{"level":30,"time":1772483379412,"pid":91736,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-k","res":{"statusCode":204},"responseTime":6.641060998663306,"msg":"request completed"}
+ [32m✓[39m src/resources/products/tests/products.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 4717[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to create a product as admin [33m 1658[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to add an image to an existing product [33m 1010[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to update product and change its category [33m 730[2mms[22m[39m
+       [33m[2m✓[22m[39m should return 403 when a non-admin tries to delete a product [33m 570[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to remove a specific image [33m 540[2mms[22m[39m
+{"level":30,"time":1772483379520,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-e","res":{"statusCode":200},"responseTime":241.71056799963117,"msg":"request completed"}
+{"level":30,"time":1772483379522,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","req":{"method":"POST","url":"/api/v1/users","host":"127.0.0.1:37857","remoteAddress":"::ffff:127.0.0.1","remotePort":60150},"msg":"incoming request"}
 
-[2m Test Files [22m [1m[32m8 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (14)[39m
-[2m      Tests [22m [1m[32m44 passed[39m[22m[2m | [22m[90m6 todo[39m[90m (50)[39m
-[2m   Start at [22m 01:49:08
-[2m   Duration [22m 5.78s[2m (transform 2.49s, setup 0ms, import 12.27s, tests 13.57s, environment 6ms)[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 4/5[22m
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.service.spec.ts[2m 11/11[22m
+
+[2m Test Files [22m[1m[32m8 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m54 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m8.77s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/users/tests/users.service.spec.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 7035[2mms[22m[39m
+       [33m[2m✓[22m[39m should hash password and create a new user [33m 1706[2mms[22m[39m
+       [33m[2m✓[22m[39m should throw error if email already exists [33m 392[2mms[22m[39m
+       [33m[2m✓[22m[39m should return user details without sensitive data [33m 461[2mms[22m[39m
+       [33m[2m✓[22m[39m should update name and email correctly [33m 456[2mms[22m[39m
+       [33m[2m✓[22m[39m should throw CONFLICT when updating to an email that is already taken [33m 978[2mms[22m[39m
+       [33m[2m✓[22m[39m should ignore undefined fields and maintain existing values [33m 564[2mms[22m[39m
+       [33m[2m✓[22m[39m should update password with valid old password [33m 1429[2mms[22m[39m
+       [33m[2m✓[22m[39m should throw BAD_REQUEST for incorrect old password [33m 507[2mms[22m[39m
+{"level":30,"time":1772483379756,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-f","res":{"statusCode":201},"responseTime":233.19981699995697,"msg":"request completed"}
+{"level":30,"time":1772483379758,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","req":{"method":"POST","url":"/api/v1/sessions","host":"127.0.0.1:39357","remoteAddress":"::ffff:127.0.0.1","remotePort":49644},"msg":"incoming request"}
+
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 4/5[22m
+
+[2m Test Files [22m[1m[32m9 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m54 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m8.97s
+[?2026l[?2026h[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K{"level":30,"time":1772483379993,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-g","res":{"statusCode":200},"responseTime":235.2562789991498,"msg":"request completed"}
+{"level":30,"time":1772483379996,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","req":{"method":"PATCH","url":"/api/v1/users/1255f50f-15bc-4ce6-8074-c3354c3c31c1/role","host":"127.0.0.1:34583","remoteAddress":"::ffff:127.0.0.1","remotePort":35014},"msg":"incoming request"}
+{"level":30,"time":1772483380005,"pid":91735,"hostname":"marcosbala070-340XAA-350XAA-550XAA","reqId":"req-h","res":{"statusCode":200},"responseTime":9.10801300033927,"msg":"request completed"}
+
+[1m[33m ❯ [39m[22msrc/resources/users/tests/users.controller.spec.ts[2m 5/5[22m
+
+[2m Test Files [22m[1m[32m9 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m[1m[32m55 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (59)[39m
+[2m   Start at [22m16:29:30
+[2m   Duration [22m9.17s
+[?2026l[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K[1A[K [32m✓[39m src/resources/users/tests/users.controller.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 5216[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to get profile [33m 1457[2mms[22m[39m
+       [33m[2m✓[22m[39m should be able to delete account and clear cookies [33m 1007[2mms[22m[39m
+       [33m[2m✓[22m[39m should return 403 when non-admin tries to list users [33m 873[2mms[22m[39m
+       [33m[2m✓[22m[39m should return 200 when admin lists users [33m 610[2mms[22m[39m
+       [33m[2m✓[22m[39m should allow admin to change a user role [33m 1004[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (14)[39m
+[2m      Tests [22m [1m[32m55 passed[39m[22m[2m | [22m[90m4 todo[39m[90m (59)[39m
+[2m   Start at [22m 16:29:30
+[2m   Duration [22m 9.26s[2m (transform 3.82s, setup 0ms, import 19.18s, tests 26.26s, environment 19ms)[22m
 
 [?25h[1G[0K⠙[1G[0K
