@@ -38,6 +38,11 @@ model User {
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   tokens        Token[] 
+  
+  // --- Novas relações adicionadas abaixo ---
+  carts         Cart[]
+  chats         Chat[]
+  messages      Message[] 
 
   @@map("users")
 }
@@ -54,4 +59,115 @@ model Token {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens")
+}
+
+
+
+
+
+
+// --- ENUMS ADICIONAIS ---
+
+enum CartStatus {
+  ACTIVE
+  FINISHED
+  ABANDONED
+}
+
+// --- NOVOS MODELOS ---
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             String         @id @default(uuid())
+  name           String
+  description    String
+  material       String
+  productionTime Int            @map("production_time")
+  price          Decimal        @db.Decimal(10, 2)
+  
+  categoryId     String         @map("category_id")
+  category       Category       @relation(fields: [categoryId], references: [id])
+  
+  images         ProductImage[]
+  cartItems      CartItem[]
+
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  name      String
+  url       String
+  
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  status    CartStatus @default(ACTIVE)
+  
+  userId    String     @map("user_id")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  items     CartItem[]
+
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  quantity  Int     @default(1)
+  
+  cartId    String  @map("cart_id")
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  
+  productId String  @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("cart_items")
+}
+
+model Chat {
+  id        String    @id @default(uuid())
+  isOpen    Boolean   @default(true) @map("is_open")
+  
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  messages  Message[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("chats")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  chatId    String   @map("chat_id")
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  
+  senderId  String   @map("sender_id")
+  sender    User     @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
 }

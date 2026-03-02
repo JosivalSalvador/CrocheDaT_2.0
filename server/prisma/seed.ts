@@ -1,9 +1,8 @@
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, Role, TokenType } from '@prisma/client'
+import { PrismaClient, Role, TokenType, CartStatus } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
-// Setup do Adapter (Prisma 7)
 const connectionString = process.env.DATABASE_URL
 if (!connectionString) throw new Error('DATABASE_URL is required')
 
@@ -12,88 +11,122 @@ const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.info('Iniciando Seed de Respeito...')
+  console.info('Iniciando Seed do Ecossistema Crochê...')
   const start = Date.now()
 
-  // 1. Limpeza
+  // 1. Limpeza de dados
+  // O onDelete: Cascade no Schema cuidará das tabelas dependentes
   await prisma.user.deleteMany()
+  await prisma.category.deleteMany()
   console.info('Banco de dados limpo.')
 
-  // 2. Hash padrão
-  const passwordHash = await hash('123456', 6)
+  // 2. Credenciais padrão
+  const DEFAULT_PASSWORD = 'password123'
+  const passwordHash = await hash(DEFAULT_PASSWORD, 10)
 
-  // 3. Criar Personas
-  // Mantemos o "admin" em variável pois usaremos o ID dele para criar o token abaixo
+  // 3. Categorias
+  console.info('Criando categorias...')
+  const categories = await Promise.all([
+    prisma.category.create({ data: { name: 'Tapetes' } }),
+    prisma.category.create({ data: { name: 'Amigurumis' } }),
+    prisma.category.create({ data: { name: 'Sousplats' } }),
+  ])
+
+  // 4. Personas (Admin, Suporte e Cliente)
+  console.info('Criando usuários...')
   const admin = await prisma.user.create({
     data: {
-      name: 'Master Admin',
+      name: 'Admin Sistema',
       email: 'admin@crochedat.com',
       password_hash: passwordHash,
       role: Role.ADMIN,
     },
   })
 
-  // Removemos a atribuição de variável aqui para não dar erro de "unused variable"
-  await prisma.user.create({
+  const supporter = await prisma.user.create({
     data: {
-      name: 'Suporte Técnico',
+      name: 'Suporte Maria',
       email: 'support@crochedat.com',
       password_hash: passwordHash,
       role: Role.SUPPORTER,
     },
   })
 
-  await prisma.user.create({
+  const client = await prisma.user.create({
     data: {
-      name: 'Cliente Comum',
+      name: 'Cliente Exemplo',
       email: 'user@crochedat.com',
       password_hash: passwordHash,
       role: Role.USER,
     },
   })
 
-  console.info('Personas criadas: Admin, Support e User.')
-
-  // 4. Massa de Dados
-  console.info('Gerando massa de dados (20 usuários aleatórios)...')
-  const randomUsersPromises = Array.from({ length: 20 }).map((_, i) => {
-    const userNumber = i + 1
-    return prisma.user.create({
-      data: {
-        name: `User Teste ${userNumber}`,
-        email: `teste${userNumber}@crochedat.com`,
-        password_hash: passwordHash,
-        role: Role.USER,
+  // 5. Produtos e Imagens (Nested Writes)
+  console.info('Populando catálogo de produtos...')
+  const product1 = await prisma.product.create({
+    data: {
+      name: 'Tapete Oval Russo',
+      description: 'Tapete luxuoso com detalhes em relevo.',
+      material: 'Barbante Fio 6 - 100% Algodão',
+      productionTime: 5,
+      price: 120.5,
+      categoryId: categories[0].id,
+      images: {
+        create: [
+          { name: 'Principal', url: 'https://link.com/tapete1.jpg' },
+          { name: 'Detalhe', url: 'https://link.com/tapete1-zoom.jpg' },
+        ],
       },
-    })
+    },
   })
 
-  await Promise.all(randomUsersPromises)
+  // 6. Simulação de Carrinho e Chat
+  console.info('Criando interações iniciais...')
+  await prisma.cart.create({
+    data: {
+      userId: client.id,
+      status: CartStatus.ACTIVE,
+      items: {
+        create: [{ productId: product1.id, quantity: 1 }],
+      },
+    },
+  })
 
-  // 5. Popular Tabela de Tokens (Usando o ID do admin capturado acima)
+  await prisma.chat.create({
+    data: {
+      userId: client.id,
+      isOpen: true,
+      messages: {
+        create: [
+          { content: 'Olá, qual o prazo de entrega?', senderId: client.id },
+          { content: 'Olá! O prazo é de 5 dias úteis.', senderId: supporter.id },
+        ],
+      },
+    },
+  })
+
+  // 7. Token de Sessão
   await prisma.token.create({
     data: {
       type: TokenType.REFRESH_TOKEN,
       userId: admin.id,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 dias
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     },
   })
 
   const end = Date.now()
   console.info(`Seed finalizado em ${end - start}ms`)
-  console.info(`Resumo:`)
-  console.info(`   - Admin: admin@crochedat.com (123456)`)
-  console.info(`   - Support: support@crochedat.com (123456)`)
-  console.info(`   - User: user@crochedat.com (123456)`)
-  console.info(`   - +20 usuários genéricos criados.`)
+  console.info('Admin: admin@crochedat.com | Senha: ' + DEFAULT_PASSWORD)
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect()
+    await pool.end()
   })
   .catch(async (e) => {
-    console.error('Erro Fatal no Seed:', e)
+    console.error('Erro no Seed:', e)
     await prisma.$disconnect()
+    await pool.end()
     process.exit(1)
   })

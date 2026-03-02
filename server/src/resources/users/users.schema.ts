@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Role } from '@prisma/client'
 
 // =========================
 // Email
@@ -42,4 +43,35 @@ export const registerUserSchema = z.object({
 
   email: emailSchema,
   password: passwordSchema,
+})
+
+// ==========================================
+// Schema para Atualizar Perfil (User/Admin)
+// ==========================================
+export const updateUserSchema = z.object({
+  name: z
+    .string()
+    .transform((value) => value.trim())
+    .refine((value) => value.length >= 3, {
+      message: 'Nome deve ter no mínimo 3 caracteres',
+    })
+    .optional(),
+  email: emailSchema.optional(),
+})
+
+// ==========================================
+// Schema para Atualizar Cargo (Exclusivo Admin)
+// ==========================================
+export const updateRoleSchema = z.object({
+  role: z.enum(Role, {
+    error: 'Cargo inválido. Escolha entre ADMIN, SUPPORTER ou USER.',
+  }),
+})
+
+// ==========================================
+// Schema para Alterar Senha
+// ==========================================
+export const updatePasswordSchema = z.object({
+  oldPassword: z.string().min(1, { message: 'Senha antiga é obrigatória' }),
+  newPassword: passwordSchema, // Reutiliza sua regra forte de senha
 })

@@ -23,7 +23,7 @@ export async function sessionsRoutes(app: FastifyInstance) {
             token: z.string(),
             user: z.object({
               name: z.string(),
-              email: z.string().email(), // Ajuste: z.string().email() é o correto
+              email: z.email(),
               role: z.string(),
             }),
           }),
