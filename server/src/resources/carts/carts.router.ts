@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import * as cartsController from './carts.controller.js'
 import { addToCartSchema, updateCartItemSchema, cartItemParamsSchema } from './carts.schema.js'
+import { verifyUserRole } from '../../middlewares/verify-user-role.js'
 
 export async function cartsRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
@@ -16,7 +17,7 @@ export async function cartsRoutes(app: FastifyInstance) {
   router.post(
     '/carts',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('USER')],
       schema: {
         tags: ['carts'],
         summary: 'Add a product to the cart',
@@ -39,7 +40,7 @@ export async function cartsRoutes(app: FastifyInstance) {
   router.get(
     '/carts/me',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('USER')],
       schema: {
         tags: ['carts'],
         summary: 'Get current user active cart',
@@ -60,7 +61,7 @@ export async function cartsRoutes(app: FastifyInstance) {
   router.patch(
     '/carts/item/:itemId',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('USER')],
       schema: {
         tags: ['carts'],
         summary: 'Update item quantity in cart',
@@ -84,7 +85,7 @@ export async function cartsRoutes(app: FastifyInstance) {
   router.delete(
     '/carts/item/:itemId',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('USER')],
       schema: {
         tags: ['carts'],
         summary: 'Remove an item from the cart',
@@ -107,7 +108,7 @@ export async function cartsRoutes(app: FastifyInstance) {
   router.delete(
     '/carts/me',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('USER')],
       schema: {
         tags: ['carts'],
         summary: 'Clear all items from active cart',
@@ -119,5 +120,28 @@ export async function cartsRoutes(app: FastifyInstance) {
       },
     },
     cartsController.clearMyCart,
+  )
+
+  /**
+   * ROTA: Buscar detalhes de um carrinho específico (Admin/Suporte)
+   * GET /carts/:itemId
+   */
+  router.get(
+    '/carts/:itemId',
+    {
+      // Aqui a mágica acontece: Verifica o Token E se é da "equipe"
+      onRequest: [verifyJwt, verifyUserRole('ADMIN', 'SUPPORTER')],
+      schema: {
+        tags: ['carts'],
+        summary: 'Get specific cart details (Admin/Support only)',
+        params: cartItemParamsSchema,
+        response: {
+          [StatusCodes.OK]: z.object({
+            cart: z.any(),
+          }),
+        },
+      },
+    },
+    cartsController.getCartDetail,
   )
 }

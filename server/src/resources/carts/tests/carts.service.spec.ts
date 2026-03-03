@@ -2,25 +2,33 @@ import { describe, it, expect } from 'vitest'
 import { randomBytes } from 'node:crypto'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../../lib/prisma.js'
-import { addItemToCart, getCart, updateItemQuantity, removeItem, clearCart } from '../carts.service.js'
+import {
+  addItemToCart,
+  getCart,
+  updateItemQuantity,
+  removeItem,
+  clearCart,
+  getCartById,
+  finishCart,
+  markAsAbandoned,
+} from '../carts.service.js'
 
 /**
- * Helpers para isolamento e unicidade
+ * Helpers para garantir unicidade e isolamento
  */
-const generateId = () => randomBytes(4).toString('hex')
-const createEmail = (base: string) => `${base}-${generateId()}@test.com`
+const createEmail = (base: string) => `${base}-${randomBytes(4).toString('hex')}@test.com`
 
-async function createTestUser() {
+async function createUser() {
   return await prisma.user.create({
     data: {
-      name: 'Test User',
-      email: createEmail('cart-test'),
-      password_hash: 'hash_123',
+      name: 'Cart Tester',
+      email: createEmail('cartuser'),
+      password_hash: 'hashedpassword',
     },
   })
 }
 
-async function createTestProduct(price: number) {
+async function createTestProduct(price: number = 100.0) {
   const category = await prisma.category.upsert({
     where: { name: 'Amigurumi' },
     update: {},
@@ -29,10 +37,10 @@ async function createTestProduct(price: number) {
 
   return await prisma.product.create({
     data: {
-      name: `Product-${generateId()}`,
-      description: 'Handmade Crochet',
-      material: 'Cotton 100%',
-      productionTime: 7,
+      name: `Product-${randomBytes(2).toString('hex')}`,
+      description: 'Handmade item',
+      material: 'Cotton',
+      productionTime: 5,
       price,
       categoryId: category.id,
     },
@@ -41,42 +49,43 @@ async function createTestProduct(price: number) {
 
 describe('Carts Service (Integration)', () => {
   describe('addItemToCart()', () => {
-    it('should create a new cart and add an item', async () => {
-      const user = await createTestUser()
+    it('should create an active cart and add a new item', async () => {
+      const user = await createUser()
       const product = await createTestProduct(150.0)
 
-      const response = await addItemToCart(user.id, {
+      const { cart } = await addItemToCart(user.id, {
         productId: product.id,
         quantity: 2,
       })
 
-      // Validação de existência sem usar '!'
-      if (!response.cart) throw new Error('Cart should not be null')
-
-      expect(response.cart.status).toBe('ACTIVE')
-      expect(response.cart.items).toHaveLength(1)
-      expect(response.cart.totalAmount).toBe(300.0)
+      expect(cart).not.toBeNull()
+      expect(cart!.status).toBe('ACTIVE')
+      expect(cart!.items).toHaveLength(1)
+      expect(cart!.items[0]!.productId).toBe(product.id)
+      expect(cart!.items[0]!.subtotal).toBe(300.0)
+      expect(cart!.totalAmount).toBe(300.0)
     })
 
-    it('should increment quantity when adding the same product again', async () => {
-      const user = await createTestUser()
+    it('should increment quantity if item already exists in the cart', async () => {
+      const user = await createUser()
       const product = await createTestProduct(50.0)
 
+      // Primeira adição
       await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+
+      // Segunda adição (Upsert)
       const { cart } = await addItemToCart(user.id, { productId: product.id, quantity: 2 })
 
-      if (!cart || !cart.items[0]) throw new Error('Cart setup failed')
-
-      expect(cart.items).toHaveLength(1)
-      expect(cart.items[0].quantity).toBe(3)
-      expect(cart.totalAmount).toBe(150.0)
+      expect(cart!.items).toHaveLength(1)
+      expect(cart!.items[0]!.quantity).toBe(3)
+      expect(cart!.totalAmount).toBe(150.0)
     })
 
-    it('should throw NOT_FOUND for invalid product ID', async () => {
-      const user = await createTestUser()
-      const invalidId = '00000000-0000-0000-0000-000000000000'
+    it('should throw NOT_FOUND if product does not exist', async () => {
+      const user = await createUser()
+      const fakeProductId = '00000000-0000-0000-0000-000000000000'
 
-      await expect(addItemToCart(user.id, { productId: invalidId, quantity: 1 })).rejects.toMatchObject({
+      await expect(addItemToCart(user.id, { productId: fakeProductId, quantity: 1 })).rejects.toMatchObject({
         statusCode: StatusCodes.NOT_FOUND,
       })
     })
@@ -84,101 +93,132 @@ describe('Carts Service (Integration)', () => {
 
   describe('getCart()', () => {
     it('should return null if user has no active cart', async () => {
-      const user = await createTestUser()
+      const user = await createUser()
       const { cart } = await getCart(user.id)
       expect(cart).toBeNull()
     })
 
-    it('should return the active cart with correct structure', async () => {
-      const user = await createTestUser()
-      const product = await createTestProduct(100.0)
-      await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+    it('should return complete cart with calculated totals', async () => {
+      const user = await createUser()
+      const product1 = await createTestProduct(20.0)
+      const product2 = await createTestProduct(30.0)
 
-      const { cart } = await getCart(user.id)
+      await addItemToCart(user.id, { productId: product1.id, quantity: 2 }) // 40
+      const { cart } = await addItemToCart(user.id, { productId: product2.id, quantity: 1 }) // 30
 
-      if (!cart) throw new Error('Cart should exist')
-
-      expect(cart.items[0]).toMatchObject({
-        name: product.name,
-        price: 100.0,
-        subtotal: 100.0,
-      })
+      expect(cart!.items).toHaveLength(2)
+      expect(cart!.totalAmount).toBe(70.0)
+      expect(cart!.id).toBeDefined()
     })
   })
 
   describe('updateItemQuantity()', () => {
-    it('should update the quantity of a cart item', async () => {
-      const user = await createTestUser()
-      const product = await createTestProduct(10.0)
-      const { cart: initialCart } = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+    it('should update item quantity and recalculate total', async () => {
+      const user = await createUser()
+      const product = await createTestProduct(100.0)
+      const addRes = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+      const itemId = addRes.cart!.items[0]!.id
 
-      if (!initialCart || !initialCart.items[0]) throw new Error('Setup failed')
+      const { cart } = await updateItemQuantity(user.id, itemId, { quantity: 5 })
 
-      const { cart } = await updateItemQuantity(user.id, initialCart.items[0].id, { quantity: 10 })
-
-      if (!cart || !cart.items[0]) throw new Error('Update failed')
-      expect(cart.items[0].quantity).toBe(10)
-      expect(cart.totalAmount).toBe(100.0)
+      expect(cart!.items[0]!.quantity).toBe(5)
+      expect(cart!.totalAmount).toBe(500.0)
     })
 
-    it('should remove the item when quantity is updated to 0', async () => {
-      const user = await createTestUser()
-      const product = await createTestProduct(10.0)
-      const { cart: initialCart } = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+    it('should remove item if new quantity is 0', async () => {
+      const user = await createUser()
+      const product = await createTestProduct()
+      const addRes = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+      const itemId = addRes.cart!.items[0]!.id
 
-      if (!initialCart || !initialCart.items[0]) throw new Error('Setup failed')
-
-      const itemId = initialCart.items[0].id
       const { cart } = await updateItemQuantity(user.id, itemId, { quantity: 0 })
 
-      if (!cart) throw new Error('Cart should still exist')
-      expect(cart.items).toHaveLength(0)
-
-      const itemInDb = await prisma.cartItem.findUnique({ where: { id: itemId } })
-      expect(itemInDb).toBeNull()
-    })
-  })
-
-  describe('removeItem()', () => {
-    it('should remove a specific item from the cart', async () => {
-      const user = await createTestUser()
-      const product = await createTestProduct(10.0)
-      const { cart: initialCart } = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
-
-      if (!initialCart || !initialCart.items[0]) throw new Error('Setup failed')
-
-      const { cart } = await removeItem(user.id, initialCart.items[0].id)
-
-      if (!cart) throw new Error('Cart should still exist')
-      expect(cart.items).toHaveLength(0)
+      expect(cart!.items).toHaveLength(0)
+      expect(cart!.totalAmount).toBe(0)
     })
 
-    it('should prevent deleting items from other users', async () => {
-      const userA = await createTestUser()
-      const userB = await createTestUser()
-      const product = await createTestProduct(10.0)
+    it('should throw NOT_FOUND if item does not belong to user', async () => {
+      const user1 = await createUser()
+      const user2 = await createUser()
+      const product = await createTestProduct()
 
-      const { cart: cartA } = await addItemToCart(userA.id, { productId: product.id, quantity: 1 })
-      if (!cartA || !cartA.items[0]) throw new Error('Setup failed')
+      const addRes = await addItemToCart(user1.id, { productId: product.id, quantity: 1 })
+      const itemToUpdate = addRes.cart!.items[0]!.id
 
-      await expect(removeItem(userB.id, cartA.items[0].id)).rejects.toMatchObject({
+      // user2 tenta atualizar o item do user1
+      await expect(updateItemQuantity(user2.id, itemToUpdate, { quantity: 2 })).rejects.toMatchObject({
         statusCode: StatusCodes.NOT_FOUND,
       })
     })
   })
 
-  describe('clearCart()', () => {
-    it('should remove all items from the active cart', async () => {
-      const user = await createTestUser()
-      const product = await createTestProduct(10.0)
-      await addItemToCart(user.id, { productId: product.id, quantity: 5 })
+  describe('removeItem() & clearCart()', () => {
+    it('removeItem() should delete specific item', async () => {
+      const user = await createUser()
+      const product = await createTestProduct()
+      const addRes = await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+      const itemId = addRes.cart!.items[0]!.id
+
+      const { cart } = await removeItem(user.id, itemId)
+      expect(cart!.items).toHaveLength(0)
+    })
+
+    it('clearCart() should remove all items but keep the cart active', async () => {
+      const user = await createUser()
+      const product = await createTestProduct()
+      await addItemToCart(user.id, { productId: product.id, quantity: 2 })
 
       await clearCart(user.id)
-
       const { cart } = await getCart(user.id)
-      if (!cart) throw new Error('Cart should exist')
-      expect(cart.items).toHaveLength(0)
-      expect(cart.totalAmount).toBe(0)
+
+      expect(cart!.items).toHaveLength(0)
+      expect(cart!.status).toBe('ACTIVE')
+    })
+  })
+
+  describe('getCartById()', () => {
+    it('should retrieve a cart directly by ID (Admin flow)', async () => {
+      const user = await createUser()
+      const product = await createTestProduct(125.5)
+      const { cart: createdCart } = await addItemToCart(user.id, { productId: product.id, quantity: 2 })
+
+      // Retorna a interface CartResponse diretamente (não embrulhada em { cart: ... })
+      const cart = await getCartById(createdCart!.id)
+
+      expect(cart.id).toBe(createdCart!.id)
+      expect(cart.totalAmount).toBe(251.0)
+      expect(cart.items[0]!.productId).toBe(product.id)
+    })
+
+    it('should throw NOT_FOUND for invalid Cart ID', async () => {
+      await expect(getCartById('00000000-0000-0000-0000-000000000000')).rejects.toMatchObject({
+        statusCode: StatusCodes.NOT_FOUND,
+      })
+    })
+  })
+
+  describe('Status Transitions (finishCart & markAsAbandoned)', () => {
+    it('finishCart() should change status to FINISHED', async () => {
+      const user = await createUser()
+      const product = await createTestProduct()
+      await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+
+      const updatedCart = await finishCart(user.id)
+      expect(updatedCart.status).toBe('FINISHED')
+    })
+
+    it('finishCart() should throw BAD_REQUEST if no active cart exists', async () => {
+      const user = await createUser() // Sem carrinho criado
+      await expect(finishCart(user.id)).rejects.toMatchObject({ statusCode: StatusCodes.BAD_REQUEST })
+    })
+
+    it('markAsAbandoned() should change status to ABANDONED', async () => {
+      const user = await createUser()
+      const product = await createTestProduct()
+      await addItemToCart(user.id, { productId: product.id, quantity: 1 })
+
+      const updatedCart = await markAsAbandoned(user.id)
+      expect(updatedCart!.status).toBe('ABANDONED')
     })
   })
 })

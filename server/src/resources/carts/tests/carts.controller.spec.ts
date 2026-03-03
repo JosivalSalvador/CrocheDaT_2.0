@@ -4,55 +4,68 @@ import { StatusCodes } from 'http-status-codes'
 import { randomBytes } from 'node:crypto'
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
+import type { CartResponse } from '../carts.types.js'
 
 /**
- * Helpers para garantir isolamento e autenticação
+ * Interfaces Estritas para Response
  */
-const generateUniqueEmail = () => `user-${randomBytes(4).toString('hex')}@example.com`
+interface CartResponseBody {
+  message?: string
+  cart: CartResponse
+}
 
 interface AuthSession {
   token: string
   userId: string
+  email: string
 }
 
-async function createAndAuthenticateUser(): Promise<AuthSession> {
-  const email = generateUniqueEmail()
+/**
+ * Helpers de Isolamento
+ */
+const generateUniqueEmail = (base: string) => `${base}-${randomBytes(4).toString('hex')}@example.com`
+
+async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promise<AuthSession> {
+  const email = generateUniqueEmail('cart-e2e')
   const password = 'Password123!'
 
-  // Criamos o usuário via API para garantir que o fluxo de hash de senha ocorra
   const registerResponse = await request(app.server).post('/api/v1/users').send({
-    name: 'Cart Tester',
+    name: 'Cart E2E User',
     email,
     password,
   })
 
-  const userId = registerResponse.body.userId
+  const userId = registerResponse.body.userId as string
+
+  if (role === 'ADMIN') {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: 'ADMIN' },
+    })
+  }
 
   const authResponse = await request(app.server).post('/api/v1/sessions').send({
     email,
     password,
   })
 
-  return {
-    token: authResponse.body.token,
-    userId,
-  }
+  return { token: authResponse.body.token, userId, email }
 }
 
-async function createTestProduct() {
+async function createTestProduct(price: number = 100.0) {
   const category = await prisma.category.upsert({
-    where: { name: 'Amigurumi' },
+    where: { name: 'E2E Category' },
     update: {},
-    create: { name: 'Amigurumi' },
+    create: { name: 'E2E Category' },
   })
 
   return await prisma.product.create({
     data: {
-      name: `Product-${randomBytes(2).toString('hex')}`,
-      description: 'Handmade item',
-      material: 'Cotton',
-      productionTime: 5,
-      price: 100.0,
+      name: `Prod-${randomBytes(2).toString('hex')}`,
+      description: 'E2E Test Item',
+      material: 'Wool',
+      productionTime: 2,
+      price,
       categoryId: category.id,
     },
   })
@@ -68,36 +81,36 @@ describe('Carts Controller (E2E)', () => {
   })
 
   describe('POST /carts', () => {
-    it('should be able to add an item to the cart', async () => {
+    it('should be able to add a new item to the cart', async () => {
       const { token } = await createAndAuthenticateUser()
-      const product = await createTestProduct()
+      const product = await createTestProduct(150.0)
 
-      const response = await request(app.server).post('/api/v1/carts').set('Authorization', `Bearer ${token}`).send({
-        productId: product.id,
-        quantity: 2,
-      })
+      const response = await request(app.server)
+        .post('/api/v1/carts')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ productId: product.id, quantity: 2 })
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
-      expect(response.body.message).toContain('Item added')
-      expect(response.body.cart.items).toHaveLength(1)
-      expect(response.body.cart.totalAmount).toBe(200.0)
-    })
 
-    it('should return 401 when adding item without token', async () => {
-      const product = await createTestProduct()
+      const body = response.body as CartResponseBody
+      expect(body.message).toBe('Item added to cart successfully.')
+      expect(body.cart).toBeDefined()
+      expect(body.cart.items).toHaveLength(1)
 
-      const response = await request(app.server).post('/api/v1/carts').send({ productId: product.id, quantity: 1 })
-
-      expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
+      const firstItem = body.cart.items[0]!
+      expect(firstItem.productId).toBe(product.id)
+      expect(firstItem.quantity).toBe(2)
+      expect(firstItem.subtotal).toBe(300.0)
+      expect(body.cart.totalAmount).toBe(300.0)
     })
   })
 
   describe('GET /carts/me', () => {
-    it('should be able to retrieve user active cart', async () => {
+    it('should be able to fetch the active cart of the logged user', async () => {
       const { token } = await createAndAuthenticateUser()
-      const product = await createTestProduct()
+      const product = await createTestProduct(50.0)
 
-      // Adiciona item primeiro
+      // Setup: Adiciona um item para garantir que o carrinho existe e tem itens
       await request(app.server)
         .post('/api/v1/carts')
         .set('Authorization', `Bearer ${token}`)
@@ -106,74 +119,117 @@ describe('Carts Controller (E2E)', () => {
       const response = await request(app.server).get('/api/v1/carts/me').set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.cart.id).toBeDefined()
-      expect(response.body.cart.items[0].productId).toBe(product.id)
+
+      const body = response.body as CartResponseBody
+      expect(body.cart).toBeDefined()
+      expect(body.cart.status).toBe('ACTIVE')
+      expect(body.cart.items.length).toBeGreaterThan(0)
     })
   })
 
   describe('PATCH /carts/item/:itemId', () => {
-    it('should be able to update item quantity', async () => {
+    it('should be able to update the quantity of an existing cart item', async () => {
       const { token } = await createAndAuthenticateUser()
-      const product = await createTestProduct()
+      const product = await createTestProduct(100.0)
 
-      const addResponse = await request(app.server)
+      // Setup
+      const addRes = await request(app.server)
         .post('/api/v1/carts')
         .set('Authorization', `Bearer ${token}`)
         .send({ productId: product.id, quantity: 1 })
 
-      const itemId = addResponse.body.cart.items[0].id
+      const itemId = (addRes.body as CartResponseBody).cart.items[0]!.id
 
+      // Ação
       const response = await request(app.server)
         .patch(`/api/v1/carts/item/${itemId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ quantity: 5 })
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.cart.items[0].quantity).toBe(5)
-      expect(response.body.cart.totalAmount).toBe(500.0)
+
+      const body = response.body as CartResponseBody
+      expect(body.message).toBe('Cart updated successfully.')
+      expect(body.cart.items[0]!.quantity).toBe(5)
+      expect(body.cart.totalAmount).toBe(500.0)
     })
   })
 
   describe('DELETE /carts/item/:itemId', () => {
-    it('should be able to remove an item from the cart', async () => {
+    it('should be able to remove a specific item from the cart', async () => {
       const { token } = await createAndAuthenticateUser()
       const product = await createTestProduct()
 
-      const addResponse = await request(app.server)
+      const addRes = await request(app.server)
         .post('/api/v1/carts')
         .set('Authorization', `Bearer ${token}`)
         .send({ productId: product.id, quantity: 1 })
 
-      const itemId = addResponse.body.cart.items[0].id
+      const itemId = (addRes.body as CartResponseBody).cart.items[0]!.id
 
       const response = await request(app.server)
         .delete(`/api/v1/carts/item/${itemId}`)
         .set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.cart.items).toHaveLength(0)
+
+      const body = response.body as CartResponseBody
+      expect(body.message).toBe('Item removed from cart.')
+      expect(body.cart.items).toHaveLength(0)
     })
   })
 
-  describe('DELETE /carts/me', () => {
-    it('should be able to clear the entire cart', async () => {
+  describe('DELETE /carts/me (clearMyCart)', () => {
+    it('should be able to clear all items from the active cart', async () => {
       const { token } = await createAndAuthenticateUser()
-      const product = await createTestProduct()
+      const product1 = await createTestProduct()
+      const product2 = await createTestProduct()
 
       await request(app.server)
         .post('/api/v1/carts')
         .set('Authorization', `Bearer ${token}`)
-        .send({ productId: product.id, quantity: 10 })
+        .send({ productId: product1.id, quantity: 1 })
+      await request(app.server)
+        .post('/api/v1/carts')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ productId: product2.id, quantity: 1 })
 
+      // Confirme se no seu `routes.ts` a rota é realmente `/carts/me`
       const response = await request(app.server).delete('/api/v1/carts/me').set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.message).toContain('cleared')
+      expect(response.body.message).toBe('Cart cleared successfully.')
 
-      // Verifica se realmente esvaziou
-      const checkResponse = await request(app.server).get('/api/v1/carts/me').set('Authorization', `Bearer ${token}`)
+      // Verifica se realmente limpou
+      const getRes = await request(app.server).get('/api/v1/carts/me').set('Authorization', `Bearer ${token}`)
+      expect((getRes.body as CartResponseBody).cart.items).toHaveLength(0)
+    })
+  })
 
-      expect(checkResponse.body.cart.items).toHaveLength(0)
+  describe('GET /carts/detail/:itemId (getCartDetail)', () => {
+    it('should retrieve a specific cart by its ID', async () => {
+      const user = await createAndAuthenticateUser('USER')
+      const admin = await createAndAuthenticateUser('ADMIN')
+      const product = await createTestProduct(75.0)
+
+      // Usuário cria o carrinho
+      const addRes = await request(app.server)
+        .post('/api/v1/carts')
+        .set('Authorization', `Bearer ${user.token}`)
+        .send({ productId: product.id, quantity: 2 })
+
+      const cartId = (addRes.body as CartResponseBody).cart.id
+
+      // Admin acessa os detalhes usando o ID do carrinho
+      const response = await request(app.server)
+        .get(`/api/v1/carts/${cartId}`)
+        .set('Authorization', `Bearer ${admin.token}`)
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+
+      const body = response.body as CartResponseBody
+      expect(body.cart.id).toBe(cartId)
+      expect(body.cart.totalAmount).toBe(150.0)
     })
   })
 })

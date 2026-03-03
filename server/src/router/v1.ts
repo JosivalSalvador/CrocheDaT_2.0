@@ -5,6 +5,7 @@ import { refreshRoutes } from '../resources/tokens/refresh.router.js' // Importa
 import { categoriesRoutes } from '../resources/categories/categories.router.js'
 import { productsRoutes } from '../resources/products/products.router.js'
 import { cartsRoutes } from '../resources/carts/carts.router.js'
+import { chatsRoutes } from '../resources/chats/chats.router.js'
 
 export async function routesV1(app: FastifyInstance) {
   // Aqui você registra todos os recursos da versão 1
@@ -14,4 +15,5 @@ export async function routesV1(app: FastifyInstance) {
   app.register(categoriesRoutes)
   app.register(productsRoutes)
   app.register(cartsRoutes)
+  app.register(chatsRoutes)
 }

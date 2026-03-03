@@ -73,6 +73,7 @@ export async function getCart(userId: string): Promise<{ cart: CartResponse | nu
   const cart = await prisma.cart.findFirst({
     where: { userId, status: 'ACTIVE' },
     include: {
+      chat: { select: { id: true } },
       items: {
         include: {
           product: {
@@ -109,6 +110,7 @@ export async function getCart(userId: string): Promise<{ cart: CartResponse | nu
     items,
     totalAmount,
     updatedAt: cart.updatedAt,
+    chatId: cart.chat?.id || null,
   }
 
   return { cart: response }
@@ -172,6 +174,91 @@ export async function clearCart(userId: string) {
   if (cart) {
     await prisma.cartItem.deleteMany({
       where: { cartId: cart.id },
+    })
+  }
+}
+
+/**
+ * BUSCAR CARRINHO POR ID
+ * Essencial para o Admin ver os itens de um chat de encomenda (ORDER)
+ * onde o carrinho já está como 'FINISHED'
+ */
+export async function getCartById(cartId: string): Promise<CartResponse> {
+  const cart = await prisma.cart.findUnique({
+    where: { id: cartId },
+    include: {
+      chat: { select: { id: true } },
+      items: {
+        include: {
+          product: {
+            include: { images: { take: 1 } },
+          },
+        },
+      },
+    },
+  })
+
+  if (!cart) {
+    throw new AppError('Cart not found.', StatusCodes.NOT_FOUND)
+  }
+
+  const items = cart.items.map((item) => {
+    const price = Number(item.product.price)
+    return {
+      id: item.id,
+      productId: item.productId,
+      name: item.product.name,
+      price,
+      quantity: item.quantity,
+      subtotal: price * item.quantity,
+      imageUrl: item.product.images[0]?.url || null,
+    }
+  })
+
+  const totalAmount = items.reduce((acc, item) => acc + item.subtotal, 0)
+
+  return {
+    id: cart.id,
+    status: cart.status,
+    items,
+    totalAmount,
+    updatedAt: cart.updatedAt,
+    chatId: cart.chat?.id || null,
+  }
+}
+
+/**
+ * FINALIZAR CARRINHO
+ * Muda o status para FINISHED. Invocado quando o chat de encomenda é aberto.
+ */
+export async function finishCart(userId: string) {
+  const cart = await prisma.cart.findFirst({
+    where: { userId, status: 'ACTIVE' },
+  })
+
+  if (!cart || cart.status !== 'ACTIVE') {
+    throw new AppError('No active cart found to finish.', StatusCodes.BAD_REQUEST)
+  }
+
+  return await prisma.cart.update({
+    where: { id: cart.id },
+    data: { status: 'FINISHED' },
+  })
+}
+
+/**
+ * MARCAR COMO ABANDONADO
+ * Transita o carrinho para ABANDONED (limpeza de banco ou inatividade)
+ */
+export async function markAsAbandoned(userId: string) {
+  const cart = await prisma.cart.findFirst({
+    where: { userId, status: 'ACTIVE' },
+  })
+
+  if (cart) {
+    return await prisma.cart.update({
+      where: { id: cart.id },
+      data: { status: 'ABANDONED' },
     })
   }
 }

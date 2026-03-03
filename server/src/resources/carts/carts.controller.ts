@@ -69,3 +69,14 @@ export async function clearMyCart(request: FastifyRequest, reply: FastifyReply) 
     message: 'Cart cleared successfully.',
   })
 }
+
+/**
+ * BUSCAR CARRINHO POR ID (Para Admin/Suporte via Chat)
+ */
+export async function getCartDetail(request: FastifyRequest, reply: FastifyReply) {
+  // Pegamos o cartId dos parâmetros da URL
+  const { itemId: cartId } = request.params as { itemId: string }
+  const cart = await cartsService.getCartById(cartId)
+
+  return reply.status(StatusCodes.OK).send({ cart })
+}
