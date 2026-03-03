@@ -61,17 +61,17 @@ model Token {
   @@map("tokens")
 }
 
-
-
-
-
-
 // --- ENUMS ADICIONAIS ---
 
 enum CartStatus {
   ACTIVE
   FINISHED
   ABANDONED
+}
+
+enum ChatType {
+  ORDER    // Encomenda (Relacionado a um carrinho)
+  SUPPORT  // Dúvida/Suporte Geral
 }
 
 // --- NOVOS MODELOS ---
@@ -123,6 +123,7 @@ model Cart {
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   items     CartItem[]
+  chat      Chat?
 
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
@@ -146,9 +147,16 @@ model CartItem {
 model Chat {
   id        String    @id @default(uuid())
   isOpen    Boolean   @default(true) @map("is_open")
+  type      ChatType  @default(SUPPORT) // Define se é dúvida ou encomenda
   
   userId    String    @map("user_id")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 2. Relacionamento Opcional com o Cart
+  // Um chat de ENCOMENDA aponta para um carrinho. Um de DÚVIDA fica nulo aqui.
+  cartId    String?   @unique @map("cart_id") 
+  cart      Cart?     @relation(fields: [cartId], references: [id])
+  lastMessageAt   DateTime  @default(now()) @map("last_message_at")
   
   messages  Message[]
 

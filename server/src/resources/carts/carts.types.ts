@@ -24,4 +24,5 @@ export interface CartResponse {
   items: CartItemResponse[]
   totalAmount: number
   updatedAt: Date
+  chatId?: string | null
 }

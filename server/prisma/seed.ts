@@ -1,6 +1,6 @@
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, Role, TokenType, CartStatus } from '@prisma/client'
+import { PrismaClient, Role, TokenType, CartStatus, ChatType } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 const connectionString = process.env.DATABASE_URL
@@ -11,29 +11,43 @@ const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.info('Iniciando Seed do Ecossistema Crochê...')
+  console.info('🔥 Iniciando Seed COMPLETO do Ecossistema...')
   const start = Date.now()
 
-  // 1. Limpeza de dados
-  // O onDelete: Cascade no Schema cuidará das tabelas dependentes
-  await prisma.user.deleteMany()
+  // Ordem correta por causa das FKs
+  await prisma.message.deleteMany()
+  await prisma.chat.deleteMany()
+  await prisma.cartItem.deleteMany()
+  await prisma.cart.deleteMany()
+  await prisma.productImage.deleteMany()
+  await prisma.product.deleteMany()
+  await prisma.token.deleteMany()
   await prisma.category.deleteMany()
-  console.info('Banco de dados limpo.')
+  await prisma.user.deleteMany()
 
-  // 2. Credenciais padrão
+  console.info('🧹 Banco limpo.')
+
   const DEFAULT_PASSWORD = 'password123'
   const passwordHash = await hash(DEFAULT_PASSWORD, 10)
 
-  // 3. Categorias
-  console.info('Criando categorias...')
-  const categories = await Promise.all([
+  /*
+   |--------------------------------------------------------------------------
+   | CATEGORIAS
+   |--------------------------------------------------------------------------
+   */
+
+  const [tapetes, amigurumis, sousplats] = await Promise.all([
     prisma.category.create({ data: { name: 'Tapetes' } }),
     prisma.category.create({ data: { name: 'Amigurumis' } }),
     prisma.category.create({ data: { name: 'Sousplats' } }),
   ])
 
-  // 4. Personas (Admin, Suporte e Cliente)
-  console.info('Criando usuários...')
+  /*
+   |--------------------------------------------------------------------------
+   | USUÁRIOS
+   |--------------------------------------------------------------------------
+   */
+
   const admin = await prisma.user.create({
     data: {
       name: 'Admin Sistema',
@@ -61,33 +75,73 @@ async function main() {
     },
   })
 
-  // 5. Produtos e Imagens (Nested Writes)
-  console.info('Populando catálogo de produtos...')
-  const product1 = await prisma.product.create({
+  /*
+   |--------------------------------------------------------------------------
+   | PRODUTOS + IMAGENS
+   |--------------------------------------------------------------------------
+   */
+
+  const tapeteOval = await prisma.product.create({
     data: {
       name: 'Tapete Oval Russo',
       description: 'Tapete luxuoso com detalhes em relevo.',
       material: 'Barbante Fio 6 - 100% Algodão',
       productionTime: 5,
       price: 120.5,
-      categoryId: categories[0].id,
+      categoryId: tapetes.id,
       images: {
         create: [
-          { name: 'Principal', url: 'https://link.com/tapete1.jpg' },
-          { name: 'Detalhe', url: 'https://link.com/tapete1-zoom.jpg' },
+          { name: 'Principal', url: 'https://img.com/tapete1.jpg' },
+          { name: 'Detalhe', url: 'https://img.com/tapete1-zoom.jpg' },
         ],
       },
     },
   })
 
-  // 6. Simulação de Carrinho e Chat
-  console.info('Criando interações iniciais...')
-  await prisma.cart.create({
+  const ursoAmigurumi = await prisma.product.create({
+    data: {
+      name: 'Urso Amigurumi',
+      description: 'Urso artesanal feito à mão.',
+      material: 'Linha 100% algodão + enchimento antialérgico',
+      productionTime: 3,
+      price: 89.9,
+      categoryId: amigurumis.id,
+      images: {
+        create: [{ name: 'Principal', url: 'https://img.com/urso.jpg' }],
+      },
+    },
+  })
+
+  const sousplatLuxo = await prisma.product.create({
+    data: {
+      name: 'Sousplat Floral Luxo',
+      description: 'Sousplat sofisticado para mesas elegantes.',
+      material: 'Barbante Fio 4',
+      productionTime: 2,
+      price: 35.0,
+      categoryId: sousplats.id,
+      images: {
+        create: [{ name: 'Principal', url: 'https://img.com/sousplat.jpg' }],
+      },
+    },
+  })
+
+  /*
+   |--------------------------------------------------------------------------
+   | CARRINHOS
+   |--------------------------------------------------------------------------
+   */
+
+  // Carrinho ativo
+  const activeCart = await prisma.cart.create({
     data: {
       userId: client.id,
       status: CartStatus.ACTIVE,
       items: {
-        create: [{ productId: product1.id, quantity: 1 }],
+        create: [
+          { productId: tapeteOval.id, quantity: 1 },
+          { productId: sousplatLuxo.id, quantity: 4 },
+        ],
       },
     },
   })
@@ -95,27 +149,127 @@ async function main() {
   await prisma.chat.create({
     data: {
       userId: client.id,
+      type: ChatType.ORDER,
+      cartId: activeCart.id,
       isOpen: true,
       messages: {
         create: [
-          { content: 'Olá, qual o prazo de entrega?', senderId: client.id },
-          { content: 'Olá! O prazo é de 5 dias úteis.', senderId: supporter.id },
+          {
+            content: 'Quero confirmar o prazo desse tapete.',
+            senderId: client.id,
+          },
+          {
+            content: 'Produção em 5 dias + envio.',
+            senderId: supporter.id,
+          },
         ],
       },
     },
   })
 
-  // 7. Token de Sessão
-  await prisma.token.create({
+  // Carrinho finalizado (simulando pedido)
+  const finishedCart = await prisma.cart.create({
     data: {
-      type: TokenType.REFRESH_TOKEN,
-      userId: admin.id,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      userId: client.id,
+      status: CartStatus.FINISHED,
+      items: {
+        create: [{ productId: ursoAmigurumi.id, quantity: 2 }],
+      },
     },
   })
 
+  // Carrinho abandonado
+  await prisma.cart.create({
+    data: {
+      userId: client.id,
+      status: CartStatus.ABANDONED,
+      items: {
+        create: [{ productId: sousplatLuxo.id, quantity: 1 }],
+      },
+    },
+  })
+
+  /*
+   |--------------------------------------------------------------------------
+   | CHAT DE SUPORTE
+   |--------------------------------------------------------------------------
+   */
+
+  await prisma.chat.create({
+    data: {
+      userId: client.id,
+      type: ChatType.SUPPORT,
+      isOpen: true,
+      messages: {
+        create: [
+          {
+            content: 'Vocês fazem sob medida?',
+            senderId: client.id,
+          },
+          {
+            content: 'Sim! Nos envie as dimensões desejadas.',
+            senderId: supporter.id,
+          },
+        ],
+      },
+    },
+  })
+
+  /*
+   |--------------------------------------------------------------------------
+   | CHAT DE PEDIDO (ORDER) VINCULADO AO CARRINHO
+   |--------------------------------------------------------------------------
+   */
+
+  await prisma.chat.create({
+    data: {
+      userId: client.id,
+      type: ChatType.ORDER,
+      cartId: finishedCart.id,
+      isOpen: false,
+      messages: {
+        create: [
+          {
+            content: 'Gostaria de confirmar o endereço.',
+            senderId: supporter.id,
+          },
+          {
+            content: 'Confirmado! Pode enviar.',
+            senderId: client.id,
+          },
+        ],
+      },
+    },
+  })
+
+  /*
+   |--------------------------------------------------------------------------
+   | TOKENS
+   |--------------------------------------------------------------------------
+   */
+
+  await prisma.token.createMany({
+    data: [
+      {
+        type: TokenType.REFRESH_TOKEN,
+        userId: admin.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      },
+      {
+        type: TokenType.PASSWORD_RESET,
+        userId: client.id,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+      {
+        type: TokenType.EMAIL_VERIFY,
+        userId: supporter.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    ],
+  })
+
   const end = Date.now()
-  console.info(`Seed finalizado em ${end - start}ms`)
+  console.info(`✅ Seed finalizado em ${end - start}ms`)
   console.info('Admin: admin@crochedat.com | Senha: ' + DEFAULT_PASSWORD)
 }
 
