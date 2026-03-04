@@ -8,6 +8,7 @@ import type { AddToCartInput, UpdateCartItemInput, CartItemParams } from './cart
  */
 export async function addItem(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as AddToCartInput
   const { cart } = await cartsService.addItemToCart(userId, body)
 
@@ -32,6 +33,7 @@ export async function getMyCart(request: FastifyRequest, reply: FastifyReply) {
  */
 export async function updateQuantity(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo nas variáveis
   const { itemId } = request.params as CartItemParams
   const body = request.body as UpdateCartItemInput
 
@@ -48,6 +50,7 @@ export async function updateQuantity(request: FastifyRequest, reply: FastifyRepl
  */
 export async function removeItem(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo na variável
   const { itemId } = request.params as CartItemParams
 
   const { cart } = await cartsService.removeItem(userId, itemId)
@@ -74,8 +77,8 @@ export async function clearMyCart(request: FastifyRequest, reply: FastifyReply) 
  * BUSCAR CARRINHO POR ID (Para Admin/Suporte via Chat)
  */
 export async function getCartDetail(request: FastifyRequest, reply: FastifyReply) {
-  // Pegamos o cartId dos parâmetros da URL
-  const { itemId: cartId } = request.params as { itemId: string }
+  // Ajuste aqui: cast de tipo na variável
+  const { itemId: cartId } = request.params as CartItemParams
   const cart = await cartsService.getCartById(cartId)
 
   return reply.status(StatusCodes.OK).send({ cart })

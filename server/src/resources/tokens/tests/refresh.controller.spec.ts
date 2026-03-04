@@ -36,22 +36,31 @@ describe('Refresh Token Controller (E2E)', () => {
 
       // 1. Login para obter o cookie assinado
       const loginResponse = await agent.post('/api/v1/sessions').send({ email, password })
-
       expect(loginResponse.statusCode).toBe(StatusCodes.OK)
+
       const loginCookies = loginResponse.headers['set-cookie']
+      if (!loginCookies) {
+        throw new Error('O cookie refreshToken não foi retornado no login')
+      }
 
       // 2. Refresh utilizando o cookie do agent
       const refreshResponse = await agent.patch('/api/v1/token/refresh').send()
 
       expect(refreshResponse.statusCode).toBe(StatusCodes.OK)
-      expect(refreshResponse.body.token).toEqual(expect.any(String))
+
+      // Valida o schema de sucesso retornado (tokenResponseSchema)
+      expect(refreshResponse.body).toHaveProperty('token')
+      expect(typeof refreshResponse.body.token).toBe('string')
 
       const refreshCookies = refreshResponse.headers['set-cookie']
-      expect(refreshCookies).toBeDefined()
-      expect(refreshCookies![0]).toContain('refreshToken=')
+      if (!refreshCookies) {
+        throw new Error('O cookie refreshToken não foi rotacionado/retornado no header')
+      }
+
+      expect(refreshCookies[0]).toContain('refreshToken=')
 
       // Verifica se houve rotação (cookie novo diferente do antigo)
-      expect(refreshCookies![0]).not.toEqual(loginCookies![0])
+      expect(refreshCookies[0]).not.toEqual(loginCookies[0])
     })
 
     it('should set Secure cookie when in production mode', async () => {
@@ -69,22 +78,25 @@ describe('Refresh Token Controller (E2E)', () => {
       const agent = request.agent(app.server)
 
       // Realiza o login em ambiente normal
-      await agent.post('/api/v1/sessions').send({ email, password })
+      const loginResponse = await agent.post('/api/v1/sessions').send({ email, password })
+      expect(loginResponse.statusCode).toBe(StatusCodes.OK)
 
       // Simula produção apenas para checar o header do cookie
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
 
       const refreshResponse = await agent.patch('/api/v1/token/refresh').send()
-
       const refreshCookies = refreshResponse.headers['set-cookie']
 
-      // Restauramos antes das asserções para evitar efeitos colaterais
+      // Restauramos antes das asserções para evitar efeitos colaterais nos outros testes
       process.env.NODE_ENV = originalEnv
 
+      if (!refreshCookies) {
+        throw new Error('O cookie refreshToken não foi retornado em produção')
+      }
+
       // Verificamos se o atributo Secure foi enviado no header
-      expect(refreshCookies).toBeDefined()
-      expect(refreshCookies![0]).toContain('Secure')
+      expect(refreshCookies[0]).toContain('Secure')
     })
 
     it('should not be able to refresh without cookie', async () => {
@@ -92,6 +104,8 @@ describe('Refresh Token Controller (E2E)', () => {
       const response = await request(app.server).patch('/api/v1/token/refresh').send()
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
+      // Valida o schema de erro (tokenErrorSchema)
+      expect(response.body).toHaveProperty('message')
       expect(response.body.message).toMatch(/missing/i)
     })
 
@@ -102,6 +116,7 @@ describe('Refresh Token Controller (E2E)', () => {
         .send()
 
       expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
+      expect(response.body).toHaveProperty('message')
     })
   })
 })

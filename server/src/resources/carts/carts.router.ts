@@ -4,15 +4,15 @@ import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import * as cartsController from './carts.controller.js'
-import { addToCartSchema, updateCartItemSchema, cartItemParamsSchema } from './carts.schema.js'
 import { verifyUserRole } from '../../middlewares/verify-user-role.js'
+// Importando os schemas estruturados
+import { addToCartSchema, updateCartItemSchema, cartItemParamsSchema, cartResponseSchema } from './carts.schema.js'
 
 export async function cartsRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
 
   /**
    * ROTA: Adicionar item ao carrinho
-   * POST /carts
    */
   router.post(
     '/carts',
@@ -25,7 +25,7 @@ export async function cartsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.CREATED]: z.object({
             message: z.string(),
-            cart: z.any(), // O Service já retorna o CartResponse estruturado
+            cart: cartResponseSchema, // Tipado!
           }),
         },
       },
@@ -35,7 +35,6 @@ export async function cartsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Buscar carrinho do usuário logado
-   * GET /carts/me
    */
   router.get(
     '/carts/me',
@@ -46,7 +45,7 @@ export async function cartsRoutes(app: FastifyInstance) {
         summary: 'Get current user active cart',
         response: {
           [StatusCodes.OK]: z.object({
-            cart: z.any().nullable(),
+            cart: cartResponseSchema.nullable(), // Tipado e permite nulo
           }),
         },
       },
@@ -56,7 +55,6 @@ export async function cartsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Atualizar quantidade de um item
-   * PATCH /carts/item/:itemId
    */
   router.patch(
     '/carts/item/:itemId',
@@ -70,7 +68,7 @@ export async function cartsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
-            cart: z.any(),
+            cart: cartResponseSchema, // Tipado!
           }),
         },
       },
@@ -80,7 +78,6 @@ export async function cartsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Remover item específico
-   * DELETE /carts/item/:itemId
    */
   router.delete(
     '/carts/item/:itemId',
@@ -93,7 +90,7 @@ export async function cartsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
-            cart: z.any(),
+            cart: cartResponseSchema, // Tipado!
           }),
         },
       },
@@ -103,7 +100,6 @@ export async function cartsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Esvaziar carrinho
-   * DELETE /carts/me
    */
   router.delete(
     '/carts/me',
@@ -124,20 +120,18 @@ export async function cartsRoutes(app: FastifyInstance) {
 
   /**
    * ROTA: Buscar detalhes de um carrinho específico (Admin/Suporte)
-   * GET /carts/:itemId
    */
   router.get(
     '/carts/:itemId',
     {
-      // Aqui a mágica acontece: Verifica o Token E se é da "equipe"
       onRequest: [verifyJwt, verifyUserRole('ADMIN', 'SUPPORTER')],
       schema: {
-        tags: ['carts'],
+        tags: ['admin'],
         summary: 'Get specific cart details (Admin/Support only)',
         params: cartItemParamsSchema,
         response: {
           [StatusCodes.OK]: z.object({
-            cart: z.any(),
+            cart: cartResponseSchema, // Tipado!
           }),
         },
       },

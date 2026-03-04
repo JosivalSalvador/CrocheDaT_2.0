@@ -4,7 +4,7 @@ import { TokenType } from '@prisma/client'
 import { prisma } from '../../lib/prisma.js'
 import { AppError } from '../../errors/app-error.js'
 import type { LoginInput } from './sessions.types.js'
-import { REFRESH_TOKEN_TTL_DAYS } from '../tokens/tokens.config.js'
+import { TOKEN_TTL_CONFIG } from '../tokens/tokens.types.js'
 
 /**
  * Autentica um usuário existente e gera Refresh Token
@@ -26,8 +26,7 @@ export async function authenticateUser(input: LoginInput) {
     throw new AppError('Invalid credentials.', StatusCodes.UNAUTHORIZED)
   }
 
-  const expirationDate = new Date()
-  expirationDate.setDate(expirationDate.getDate() + REFRESH_TOKEN_TTL_DAYS)
+  const expirationDate = TOKEN_TTL_CONFIG[TokenType.REFRESH_TOKEN].getExpirationDate()
 
   const refreshToken = await prisma.token.create({
     data: {
@@ -42,7 +41,7 @@ export async function authenticateUser(input: LoginInput) {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role, // O Prisma já garante que isso é o Enum correto
     },
     refreshToken: refreshToken.id,
   }
@@ -53,18 +52,11 @@ export async function authenticateUser(input: LoginInput) {
  * Recebe o UUID puro vindo do unsignCookie do controller
  */
 export async function signOut(refreshTokenId: string) {
-  // Solução de mercado: Deletamos o token e tratamos a idempotência
-  await prisma.token
-    .deleteMany({
-      where: {
-        id: refreshTokenId,
-      },
-    })
-    .catch((error) => {
-      // P2025: Erro do Prisma para "Registro não encontrado"
-      // Se o token já não existe, o objetivo (logout) foi alcançado, então ignoramos.
-      if (error.code !== 'P2025') {
-        throw error
-      }
-    })
+  // Código nível sênior: deleteMany não quebra se o ID não existir.
+  // Ele retorna { count: 0 }, garantindo idempotência absoluta sem overhead de try/catch.
+  await prisma.token.deleteMany({
+    where: {
+      id: refreshTokenId,
+    },
+  })
 }

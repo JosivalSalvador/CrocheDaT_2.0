@@ -3,14 +3,14 @@ import { prisma } from '../../lib/prisma.js'
 import { AppError } from '../../errors/app-error.js'
 import { finishCart } from '../carts/carts.service.js'
 import type { Prisma } from '@prisma/client'
-import type { CreateChatInput, SendMessageInput, ChatResponse } from './chats.types.js'
+import type { CreateChatInput, SendMessageInput } from './chats.types.js' // Removemos o ChatResponse daqui
 
 /**
  * CRIA UM NOVO CHAT (SUPPORT ou ORDER)
  * Garante que encomendas finalizem o carrinho e suporte seja direto.
  * Agora valida se já existe um chat de ORDER aberto para o usuário.
  */
-export async function createChat(userId: string, input: CreateChatInput): Promise<ChatResponse> {
+export async function createChat(userId: string, input: CreateChatInput) {
   const { type, cartId, firstMessage } = input
 
   // 1. Validação de Regra de Negócio para Encomendas
@@ -78,7 +78,8 @@ export async function createChat(userId: string, input: CreateChatInput): Promis
     },
   })
 
-  return chat as unknown as ChatResponse
+  // O Prisma tipa o 'chat' perfeitamente com todas as relations que pedimos acima.
+  return chat
 }
 
 /**
@@ -121,19 +122,19 @@ export async function sendMessage(userId: string, role: string, chatId: string, 
 /**
  * LISTAR CHATS DO USUÁRIO LOGADO
  */
-export async function listUserChats(userId: string): Promise<ChatResponse[]> {
+export async function listUserChats(userId: string) {
   const chats = await prisma.chat.findMany({
     where: { userId },
     orderBy: { lastMessageAt: 'desc' },
   })
 
-  return chats as unknown as ChatResponse[]
+  return chats
 }
 
 /**
  * LISTAR TODOS OS CHATS (Acesso Admin/Suporte)
  */
-export async function listAllChats(): Promise<ChatResponse[]> {
+export async function listAllChats() {
   const chats = await prisma.chat.findMany({
     orderBy: { lastMessageAt: 'desc' },
     include: {
@@ -141,13 +142,13 @@ export async function listAllChats(): Promise<ChatResponse[]> {
     },
   })
 
-  return chats as unknown as ChatResponse[]
+  return chats
 }
 
 /**
  * BUSCAR DETALHES DE UM CHAT ESPECÍFICO
  */
-export async function getChatDetails(chatId: string, userId: string, role: string): Promise<ChatResponse> {
+export async function getChatDetails(chatId: string, userId: string, role: string) {
   const chat = await prisma.chat.findUnique({
     where: { id: chatId },
     include: {
@@ -169,7 +170,7 @@ export async function getChatDetails(chatId: string, userId: string, role: strin
     throw new AppError('Access denied.', StatusCodes.FORBIDDEN)
   }
 
-  return chat as unknown as ChatResponse
+  return chat
 }
 
 /**

@@ -8,6 +8,8 @@ import {
   productIdSchema,
   addImageSchema,
   imageIdParamSchema,
+  productResponseSchema, // Importado
+  productImageResponseSchema, // Importado
 } from './products.schema.js'
 import * as productsController from './products.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
@@ -27,15 +29,7 @@ export async function productsRoutes(app: FastifyInstance) {
         summary: 'List all products with category and main image',
         response: {
           [StatusCodes.OK]: z.object({
-            products: z.array(
-              z.object({
-                id: z.uuid(),
-                name: z.string(),
-                price: z.any(), // Decimal do Prisma
-                category: z.object({ name: z.string() }),
-                images: z.array(z.any()),
-              }),
-            ),
+            products: z.array(productResponseSchema), // Limpo e tipado!
           }),
         },
       },
@@ -55,7 +49,7 @@ export async function productsRoutes(app: FastifyInstance) {
         params: productIdSchema,
         response: {
           [StatusCodes.OK]: z.object({
-            product: z.any(),
+            product: productResponseSchema, // Limpo e tipado!
           }),
         },
       },
@@ -77,11 +71,7 @@ export async function productsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.CREATED]: z.object({
             message: z.string(),
-            product: z.object({
-              id: z.uuid(),
-              name: z.string(),
-              images: z.array(z.any()).optional(),
-            }),
+            product: productResponseSchema, // Limpo e tipado!
           }),
         },
       },
@@ -104,7 +94,7 @@ export async function productsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
-            product: z.any(),
+            product: productResponseSchema, // Limpo e tipado!
           }),
         },
       },
@@ -127,12 +117,7 @@ export async function productsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.CREATED]: z.object({
             message: z.string(),
-            image: z.object({
-              id: z.uuid(),
-              name: z.string(),
-              url: z.url(),
-              productId: z.uuid(),
-            }),
+            image: productImageResponseSchema, // Limpo e tipado!
           }),
         },
       },
@@ -152,7 +137,7 @@ export async function productsRoutes(app: FastifyInstance) {
         summary: 'Remove specific product image by ID (Admin only)',
         params: imageIdParamSchema,
         response: {
-          [StatusCodes.NO_CONTENT]: z.null(),
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
         },
       },
     },
@@ -171,7 +156,7 @@ export async function productsRoutes(app: FastifyInstance) {
         summary: 'Delete a product (Admin only)',
         params: productIdSchema,
         response: {
-          [StatusCodes.NO_CONTENT]: z.null(),
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
         },
       },
     },

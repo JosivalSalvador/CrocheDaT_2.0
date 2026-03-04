@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChatType } from '@prisma/client'
+import { ChatType, Role } from '@prisma/client'
 
 // =========================
 // UUID Schema
@@ -11,7 +11,7 @@ const uuidSchema = z.uuid({ message: 'ID em formato inválido' })
 // ==========================================
 export const createChatSchema = z
   .object({
-    type: z.enum(ChatType, {
+    type: z.enum([ChatType.ORDER, ChatType.SUPPORT], {
       error: 'Tipo de chat inválido. Escolha ORDER ou SUPPORT.',
     }),
     cartId: uuidSchema.optional(),
@@ -50,4 +50,30 @@ export const sendMessageSchema = z.object({
 // ==========================================
 export const chatParamsSchema = z.object({
   chatId: uuidSchema,
+})
+
+// ==========================================
+// Schemas de Resposta (Output)
+// ==========================================
+export const messageResponseSchema = z.object({
+  id: z.uuid(),
+  content: z.string(),
+  createdAt: z.coerce.date(),
+  senderId: z.uuid(),
+  sender: z.object({
+    name: z.string(),
+    role: z.enum([Role.ADMIN, Role.SUPPORTER, Role.USER]),
+  }),
+})
+
+export const chatResponseSchema = z.object({
+  id: z.uuid(),
+  isOpen: z.boolean(),
+  type: z.enum([ChatType.ORDER, ChatType.SUPPORT]),
+  userId: z.uuid(),
+  cartId: z.uuid().nullable().optional(),
+  lastMessageAt: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  messages: z.array(messageResponseSchema).optional(),
 })

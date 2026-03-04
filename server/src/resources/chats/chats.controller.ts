@@ -8,6 +8,7 @@ import type { CreateChatInput, SendMessageInput, ChatParams } from './chats.type
  */
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as CreateChatInput
 
   const chat = await chatsService.createChat(userId, body)
@@ -23,11 +24,11 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
  */
 export async function sendMessage(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
-  const { role } = request.user // <--- MUDANÇA 1: Extraímos a role do token
+  const { role } = request.user // Extraímos a role do token
+  // Ajuste aqui: cast de tipo nas variáveis
   const { chatId } = request.params as ChatParams
   const body = request.body as SendMessageInput
 
-  // <--- MUDANÇA 2: Agora enviamos 4 argumentos para o Service
   const message = await chatsService.sendMessage(userId, role, chatId, body)
 
   return reply.status(StatusCodes.CREATED).send({ message })
@@ -49,6 +50,7 @@ export async function listMyChats(request: FastifyRequest, reply: FastifyReply) 
 export async function getDetails(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
   const { role } = request.user
+  // Ajuste aqui: cast de tipo na variável
   const { chatId } = request.params as ChatParams
 
   const chat = await chatsService.getChatDetails(chatId, userId, role)
@@ -72,6 +74,7 @@ export async function listAll(request: FastifyRequest, reply: FastifyReply) {
  * ALTERAR STATUS (Fechar ou Reabrir Chat)
  */
 export async function toggleStatus(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo nas variáveis
   const { chatId } = request.params as ChatParams
   const { isOpen } = request.body as { isOpen: boolean }
 

@@ -2,7 +2,8 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
-import { categorySchema, categoryIdSchema } from './categories.schema.js'
+// 1. Importamos o schema de resposta que criamos
+import { categorySchema, categoryIdSchema, categoryResponseSchema } from './categories.schema.js'
 import * as categoriesController from './categories.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import { verifyUserRole } from '../../middlewares/verify-user-role.js'
@@ -22,12 +23,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
         summary: 'List all categories',
         response: {
           [StatusCodes.OK]: z.object({
-            categories: z.array(
-              z.object({
-                id: z.uuid(),
-                name: z.string(),
-              }),
-            ),
+            categories: z.array(categoryResponseSchema), // 2. Trocamos o inline por ele aqui
           }),
         },
       },
@@ -48,10 +44,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
         params: categoryIdSchema,
         response: {
           [StatusCodes.OK]: z.object({
-            category: z.object({
-              id: z.uuid(),
-              name: z.string(),
-            }),
+            category: categoryResponseSchema, // 2. E aqui
           }),
         },
       },
@@ -74,10 +67,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.CREATED]: z.object({
             message: z.string(),
-            category: z.object({
-              id: z.uuid(),
-              name: z.string(),
-            }),
+            category: categoryResponseSchema, // 2. E aqui
           }),
         },
       },
@@ -101,10 +91,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.OK]: z.object({
             message: z.string(),
-            category: z.object({
-              id: z.uuid(),
-              name: z.string(),
-            }),
+            category: categoryResponseSchema, // 2. E aqui
           }),
         },
       },
@@ -125,7 +112,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
         summary: 'Delete category (Admin only)',
         params: categoryIdSchema,
         response: {
-          [StatusCodes.NO_CONTENT]: z.null(),
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
         },
       },
     },

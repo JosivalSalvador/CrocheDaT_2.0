@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../../lib/prisma.js'
 import * as productsService from '../products.service.js'
 import { Prisma } from '@prisma/client'
+import { AppError } from '../../../errors/app-error.js' // ← ADICIONADO: Para checagem estrita de erro
 
 /**
  * Helper para garantir unicidade e isolamento
@@ -43,7 +44,10 @@ describe('Products Service (Integration)', () => {
         include: { images: true },
       })
 
-      if (!dbProduct) throw new Error('Product not found in DB')
+      // Bloqueio duro para o TS
+      if (!dbProduct) {
+        throw new Error('Product not found in DB after creation')
+      }
 
       expect(dbProduct.price).toBeInstanceOf(Prisma.Decimal)
       expect(dbProduct.price.toNumber()).toBe(150.0)
@@ -53,16 +57,17 @@ describe('Products Service (Integration)', () => {
     it('should throw BAD_REQUEST if category does not exist', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000'
 
-      await expect(
-        productsService.createProduct({
-          name: 'Erro',
-          description: 'Descricao valida',
-          material: 'M',
-          productionTime: 1,
-          price: 10,
-          categoryId: fakeId,
-        }),
-      ).rejects.toMatchObject({
+      const promise = productsService.createProduct({
+        name: 'Erro Name', // Ajustado para bater com a regra Zod (min 3)
+        description: 'Descricao valida',
+        material: 'Material', // Ajustado para bater com a regra Zod (min 3)
+        productionTime: 1,
+        price: 10,
+        categoryId: fakeId,
+      })
+
+      await expect(promise).rejects.toBeInstanceOf(AppError)
+      await expect(promise).rejects.toMatchObject({
         statusCode: StatusCodes.BAD_REQUEST,
         message: 'Category not found.',
       })
@@ -72,9 +77,9 @@ describe('Products Service (Integration)', () => {
   describe('updateProduct()', () => {
     it('should update text fields and ignore undefined properties', async () => {
       const { product: created } = await productsService.createProduct({
-        name: 'Original',
+        name: createUniqueName('Original'),
         description: 'Descricao valida original',
-        material: 'M1',
+        material: 'Material 1', // Ajustado
         productionTime: 1,
         price: 50,
         categoryId,
@@ -86,16 +91,17 @@ describe('Products Service (Integration)', () => {
       })
 
       expect(updated.name).toBe('Updated Name')
-      expect(updated.material).toBe('M1') // Manteve o original
+      expect(updated.material).toBe('Material 1') // Manteve o original
     })
 
     it('should allow changing category to a new valid one', async () => {
-      const newCat = await prisma.category.create({ data: { name: 'New Cat' } })
+      // ← ATUALIZADO: Helper para evitar colisão
+      const newCat = await prisma.category.create({ data: { name: createUniqueName('New Cat') } })
 
       const { product: created } = await productsService.createProduct({
-        name: 'P1',
+        name: 'Prod 1', // Ajustado
         description: 'Descricao valida',
-        material: 'M1',
+        material: 'Material 1', // Ajustado
         productionTime: 1,
         price: 10,
         categoryId,
@@ -112,9 +118,9 @@ describe('Products Service (Integration)', () => {
   describe('addProductImage() and removeProductImage()', () => {
     it('should manage images granularly without affecting product data', async () => {
       const { product } = await productsService.createProduct({
-        name: 'Granular Test',
+        name: createUniqueName('Granular'),
         description: 'Descricao valida',
-        material: 'M',
+        material: 'Material', // Ajustado
         productionTime: 1,
         price: 10,
         categoryId,
@@ -123,7 +129,7 @@ describe('Products Service (Integration)', () => {
       // 1. Adicionar
       const { image } = await productsService.addProductImage(product.id, {
         name: 'New Img',
-        url: 'https://new.com',
+        url: 'https://new.com/img.jpg', // Zod pede URL válida
       })
 
       expect(image.productId).toBe(product.id)
@@ -139,13 +145,13 @@ describe('Products Service (Integration)', () => {
   describe('deleteProduct()', () => {
     it('should delete product and cascade delete images', async () => {
       const { product } = await productsService.createProduct({
-        name: 'To Delete',
+        name: createUniqueName('To Delete'),
         description: 'Descricao valida',
-        material: 'M',
+        material: 'Material', // Ajustado
         productionTime: 1,
         price: 10,
         categoryId,
-        images: [{ name: 'Img', url: 'https://img.com' }],
+        images: [{ name: 'Img', url: 'https://img.com/delete.jpg' }], // URL válida
       })
 
       await productsService.deleteProduct(product.id)

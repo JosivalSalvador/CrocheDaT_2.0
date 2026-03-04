@@ -1,7 +1,8 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { StatusCodes } from 'http-status-codes'
+import { TokenType } from '@prisma/client' // ← ADICIONADO: Precisamos do enum para acessar o config
 import * as refreshService from './refresh.service.js'
-import { REFRESH_TOKEN_TTL_DAYS } from './tokens.config.js'
+import { TOKEN_TTL_CONFIG } from './tokens.types.js' // ← ATUALIZADO: Importando do novo arquivo
 
 export async function refresh(request: FastifyRequest, reply: FastifyReply) {
   // 1. Tenta ler e desassinar o cookie
@@ -37,7 +38,8 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
       sameSite: 'strict',
       httpOnly: true,
       signed: true, // ← Mantém o padrão de segurança que definimos
-      maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
+      // ← ATUALIZADO: Buscando a quantidade de dias da nossa constante centralizada
+      maxAge: TOKEN_TTL_CONFIG[TokenType.REFRESH_TOKEN].days * 24 * 60 * 60,
     })
     .status(StatusCodes.OK)
     .send({

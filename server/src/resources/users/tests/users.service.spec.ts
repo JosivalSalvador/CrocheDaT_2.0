@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { compare } from 'bcryptjs'
 import { randomBytes } from 'node:crypto'
 import { StatusCodes } from 'http-status-codes'
+import { Role } from '@prisma/client' // ← ADICIONADO: Importando o Enum oficial
 import { registerUser, getUserById, updateUser, updatePassword, deleteUser, updateUserRole } from '../users.service.js'
 import { prisma } from '../../../lib/prisma.js'
 
@@ -22,10 +23,14 @@ describe('Users Service (Integration)', () => {
 
       const userInDb = await prisma.user.findUnique({ where: { id: user.id } })
 
-      expect(userInDb).not.toBeNull()
-      const isHashed = await compare('password123', userInDb!.password_hash)
+      // Validação segura para o TypeScript não reclamar de null
+      if (!userInDb) {
+        throw new Error('Usuário não foi persistido no banco de dados')
+      }
+
+      const isHashed = await compare('password123', userInDb.password_hash)
       expect(isHashed).toBe(true)
-      expect(user.role).toBe('USER') // Garantindo o valor default
+      expect(user.role).toBe(Role.USER) // ← ATUALIZADO: Usando o Enum
     })
 
     it('should throw error if email already exists', async () => {
@@ -116,7 +121,12 @@ describe('Users Service (Integration)', () => {
       })
 
       const dbUser = await prisma.user.findUnique({ where: { id: user.id } })
-      const isNewValid = await compare('new-password', dbUser!.password_hash)
+      // Validação segura para o TS
+      if (!dbUser) {
+        throw new Error('Usuário desapareceu do banco durante o teste')
+      }
+
+      const isNewValid = await compare('new-password', dbUser.password_hash)
       expect(isNewValid).toBe(true)
     })
 
@@ -140,12 +150,13 @@ describe('Users Service (Integration)', () => {
       const email = createEmail('role')
       const { user } = await registerUser({ name: 'User', email, password: 'p' })
 
-      const { user: updated } = await updateUserRole(user.id, { role: 'ADMIN' })
+      // ← ATUALIZADO: Usando o Enum
+      const { user: updated } = await updateUserRole(user.id, { role: Role.ADMIN })
 
-      expect(updated.role).toBe('ADMIN')
+      expect(updated.role).toBe(Role.ADMIN)
 
       const dbUser = await prisma.user.findUnique({ where: { id: user.id } })
-      expect(dbUser?.role).toBe('ADMIN')
+      expect(dbUser?.role).toBe(Role.ADMIN)
     })
   })
 
