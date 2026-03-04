@@ -63,7 +63,8 @@ export const updateUserSchema = z.object({
 // Schema para Atualizar Cargo (Exclusivo Admin)
 // ==========================================
 export const updateRoleSchema = z.object({
-  role: z.enum(Role, {
+  role: z.enum([Role.ADMIN, Role.SUPPORTER, Role.USER], {
+    // Ajuste fino: Array explicito para o Zod entender o enum do Prisma perfeitamente na doc
     error: 'Cargo inválido. Escolha entre ADMIN, SUPPORTER ou USER.',
   }),
 })
@@ -74,4 +75,15 @@ export const updateRoleSchema = z.object({
 export const updatePasswordSchema = z.object({
   oldPassword: z.string().min(1, { message: 'Senha antiga é obrigatória' }),
   newPassword: passwordSchema, // Reutiliza sua regra forte de senha
+})
+
+// ==========================================
+// Schema de Resposta (Retorno da API)
+// ==========================================
+export const userResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  email: z.email(),
+  role: z.string(),
+  createdAt: z.coerce.date().optional(),
 })

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { randomBytes } from 'node:crypto'
+import { Role } from '@prisma/client' // ← ADICIONADO: Importando o Enum oficial
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
 
@@ -18,7 +19,8 @@ interface AuthSession {
   userId: string
 }
 
-async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promise<AuthSession> {
+// ← ATUALIZADO: Usando o Enum do Prisma como tipo do argumento
+async function createAndAuthenticateUser(role: Role = Role.USER): Promise<AuthSession> {
   const email = `test-${randomBytes(4).toString('hex')}@example.com`
   const password = 'Password123!'
 
@@ -30,10 +32,11 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promi
 
   const userId = registerResponse.body.userId
 
-  if (role === 'ADMIN') {
+  // Atualiza no banco caso precisemos de um perfil superior
+  if (role !== Role.USER) {
     await prisma.user.update({
       where: { id: userId },
-      data: { role: 'ADMIN' },
+      data: { role },
     })
   }
 
@@ -62,6 +65,13 @@ describe('Categories Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.OK)
       expect(Array.isArray(response.body.categories)).toBe(true)
+
+      // ← ADICIONADO: Valida se o formato da lista bate com o categoryResponseSchema
+      if (response.body.categories.length > 0) {
+        const firstCategory = response.body.categories[0]
+        expect(firstCategory).toHaveProperty('id')
+        expect(firstCategory).toHaveProperty('name')
+      }
     })
 
     it('should be able to get a category by ID', async () => {
@@ -70,13 +80,15 @@ describe('Categories Controller (E2E)', () => {
       const response = await request(app.server).get(`/api/v1/categories/${category.id}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(response.body.category).toBeDefined()
+      expect(response.body.category.id).toBe(category.id)
       expect(response.body.category.name).toBe(category.name)
     })
   })
 
   describe('Fluxo Administrativo (POST/PATCH/DELETE)', () => {
     it('should return 403 when a regular user tries to create a category', async () => {
-      const { token } = await createAndAuthenticateUser('USER')
+      const { token } = await createAndAuthenticateUser(Role.USER) // ← Enum
 
       const response = await request(app.server)
         .post('/api/v1/categories')
@@ -87,7 +99,7 @@ describe('Categories Controller (E2E)', () => {
     })
 
     it('should allow an admin to create, update and delete a category', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN) // ← Enum
       const categoryName = generateUniqueName('Admin CRUD')
 
       // 1. CREATE
@@ -97,7 +109,11 @@ describe('Categories Controller (E2E)', () => {
         .send({ name: categoryName })
 
       expect(createRes.statusCode).toBe(StatusCodes.CREATED)
-      const categoryId = createRes.body.category.id
+      expect(createRes.body.category).toBeDefined()
+      expect(createRes.body.category).toHaveProperty('id')
+      expect(createRes.body.category).toHaveProperty('name')
+
+      const categoryId: string = createRes.body.category.id // ← Tipagem forçada para as próximas rotas
 
       // 2. UPDATE
       const updateRes = await request(app.server)
@@ -121,7 +137,7 @@ describe('Categories Controller (E2E)', () => {
     })
 
     it('should return 400 when creating a category with an invalid name', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
 
       const response = await request(app.server)
         .post('/api/v1/categories')
@@ -129,6 +145,7 @@ describe('Categories Controller (E2E)', () => {
         .send({ name: 'ab' }) // Zod exige min 3 caracteres
 
       expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
+      expect(response.body.message).toBeDefined()
     })
   })
 })

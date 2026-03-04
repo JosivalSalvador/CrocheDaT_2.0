@@ -2,25 +2,33 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { randomBytes } from 'node:crypto'
+import { z } from 'zod'
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
-import type { ChatResponse, MessageResponse } from '../chats.types.js'
+import { chatResponseSchema, messageResponseSchema } from '../chats.schema.js'
 
 /**
- * Interfaces Estritas para Response
+ * ==========================================
+ * Schemas Auxiliares para Validação de Resposta
+ * Inferem os tipos automaticamente e testam o contrato
+ * ==========================================
  */
-interface ChatResponseBody {
-  message?: string
-  chat: ChatResponse
-}
+const chatWithMsgSchema = z.object({
+  message: z.string(),
+  chat: chatResponseSchema,
+})
 
-interface ChatsListResponseBody {
-  chats: ChatResponse[]
-}
+const chatOnlySchema = z.object({
+  chat: chatResponseSchema,
+})
 
-interface MessageResponseBody {
-  message: MessageResponse
-}
+const chatsListSchema = z.object({
+  chats: z.array(chatResponseSchema),
+})
+
+const messageResponseBodySchema = z.object({
+  message: messageResponseSchema,
+})
 
 interface AuthSession {
   token: string
@@ -29,7 +37,9 @@ interface AuthSession {
 }
 
 /**
+ * ==========================================
  * Helpers de Isolamento
+ * ==========================================
  */
 const generateUniqueEmail = (base: string) => `${base}-${randomBytes(4).toString('hex')}@example.com`
 
@@ -45,7 +55,8 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' | 'SUPPORTER' = 
       password,
     })
 
-  const userId = registerResponse.body.userId as string
+  // Parse validando o retorno do registro
+  const { userId } = z.object({ userId: z.string() }).parse(registerResponse.body)
 
   if (role !== 'USER') {
     await prisma.user.update({
@@ -59,7 +70,10 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' | 'SUPPORTER' = 
     password,
   })
 
-  return { token: authResponse.body.token, userId, email }
+  // Parse validando o token
+  const { token } = z.object({ token: z.string() }).parse(authResponse.body)
+
+  return { token, userId, email }
 }
 
 async function createActiveCart(userId: string) {
@@ -68,6 +82,11 @@ async function createActiveCart(userId: string) {
   })
 }
 
+/**
+ * ==========================================
+ * Suíte de Testes (E2E)
+ * ==========================================
+ */
 describe('Chats Controller (E2E)', () => {
   beforeAll(async () => {
     await app.ready()
@@ -88,7 +107,8 @@ describe('Chats Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
 
-      const body = response.body as ChatResponseBody
+      // Validação Estrita + Tipagem Automática
+      const body = chatWithMsgSchema.parse(response.body)
       expect(body.message).toBe('Chat opened successfully.')
       expect(body.chat.type).toBe('SUPPORT')
       expect(body.chat.isOpen).toBe(true)
@@ -107,13 +127,16 @@ describe('Chats Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
 
-      const body = response.body as ChatResponseBody
+      const body = chatWithMsgSchema.parse(response.body)
       expect(body.chat.type).toBe('ORDER')
       expect(body.chat.cartId).toBe(cart.id)
 
       // Valida se o carrinho foi finalizado no banco (E2E real)
       const finishedCart = await prisma.cart.findUnique({ where: { id: cart.id } })
-      expect(finishedCart!.status).toBe('FINISHED')
+
+      // Type Narrowing em vez de Non-null assertion (!)
+      if (!finishedCart) throw new Error('O carrinho deveria existir no banco.')
+      expect(finishedCart.status).toBe('FINISHED')
     })
   })
 
@@ -127,7 +150,8 @@ describe('Chats Controller (E2E)', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ type: 'SUPPORT' })
 
-      const chatId = (createRes.body as ChatResponseBody).chat.id
+      const setupBody = chatWithMsgSchema.parse(createRes.body)
+      const chatId = setupBody.chat.id
 
       // Ação: Envia a mensagem
       const response = await request(app.server)
@@ -136,7 +160,8 @@ describe('Chats Controller (E2E)', () => {
         .send({ content: 'Nova mensagem do usuário' })
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
-      const body = response.body as MessageResponseBody
+
+      const body = messageResponseBodySchema.parse(response.body)
       expect(body.message.content).toBe('Nova mensagem do usuário')
     })
 
@@ -150,7 +175,8 @@ describe('Chats Controller (E2E)', () => {
         .set('Authorization', `Bearer ${user.token}`)
         .send({ type: 'SUPPORT' })
 
-      const chatId = (createRes.body as ChatResponseBody).chat.id
+      const setupBody = chatWithMsgSchema.parse(createRes.body)
+      const chatId = setupBody.chat.id
 
       // Ação: Suporte responde
       const response = await request(app.server)
@@ -159,7 +185,8 @@ describe('Chats Controller (E2E)', () => {
         .send({ content: 'Olá, sou do suporte!' })
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
-      const body = response.body as MessageResponseBody
+
+      const body = messageResponseBodySchema.parse(response.body)
       expect(body.message.content).toBe('Olá, sou do suporte!')
       expect(body.message.senderId).toBe(supporter.userId)
     })
@@ -175,9 +202,14 @@ describe('Chats Controller (E2E)', () => {
       const response = await request(app.server).get('/api/v1/chats/me').set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      const body = response.body as ChatsListResponseBody
+
+      const body = chatsListSchema.parse(response.body)
       expect(body.chats.length).toBeGreaterThanOrEqual(2)
-      expect(body.chats[0]!.type).toBe('SUPPORT')
+
+      const firstChat = body.chats[0]
+      if (!firstChat) throw new Error('A lista de chats não deveria estar vazia.')
+
+      expect(firstChat.type).toBe('SUPPORT')
     })
   })
 
@@ -190,12 +222,14 @@ describe('Chats Controller (E2E)', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ type: 'SUPPORT', firstMessage: 'Init' })
 
-      const chatId = (createRes.body as ChatResponseBody).chat.id
+      const setupBody = chatWithMsgSchema.parse(createRes.body)
+      const chatId = setupBody.chat.id
 
       const response = await request(app.server).get(`/api/v1/chats/${chatId}`).set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      const body = response.body as ChatResponseBody
+
+      const body = chatOnlySchema.parse(response.body)
       expect(body.chat.id).toBe(chatId)
       expect(body.chat.messages).toHaveLength(1)
     })
@@ -215,7 +249,8 @@ describe('Chats Controller (E2E)', () => {
       const response = await request(app.server).get('/api/v1/chats').set('Authorization', `Bearer ${admin.token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      const body = response.body as ChatsListResponseBody
+
+      const body = chatsListSchema.parse(response.body)
       expect(body.chats.length).toBeGreaterThanOrEqual(1)
     })
   })
@@ -230,7 +265,8 @@ describe('Chats Controller (E2E)', () => {
         .set('Authorization', `Bearer ${user.token}`)
         .send({ type: 'SUPPORT' })
 
-      const chatId = (createRes.body as ChatResponseBody).chat.id
+      const setupBody = chatWithMsgSchema.parse(createRes.body)
+      const chatId = setupBody.chat.id
 
       const response = await request(app.server)
         .patch(`/api/v1/chats/${chatId}/status`)
@@ -238,7 +274,8 @@ describe('Chats Controller (E2E)', () => {
         .send({ isOpen: false })
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      const body = response.body as ChatResponseBody
+
+      const body = chatWithMsgSchema.parse(response.body)
       expect(body.message).toBe('Chat closed successfully.')
       expect(body.chat.isOpen).toBe(false)
     })

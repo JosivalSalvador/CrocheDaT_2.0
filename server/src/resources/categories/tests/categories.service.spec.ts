@@ -23,8 +23,12 @@ describe('Categories Service (Integration)', () => {
 
       const categoryInDb = await prisma.category.findUnique({ where: { id: category.id } })
 
-      expect(categoryInDb).not.toBeNull()
-      expect(categoryInDb?.name).toBe(name)
+      // Validação dura para o TypeScript e para a integridade do teste
+      if (!categoryInDb) {
+        throw new Error('Categoria não foi persistida no banco de dados')
+      }
+
+      expect(categoryInDb.name).toBe(name)
     })
 
     it('should throw CONFLICT if category name already exists', async () => {
@@ -40,18 +44,24 @@ describe('Categories Service (Integration)', () => {
 
   describe('listCategories()', () => {
     it('should return a list of categories ordered by name', async () => {
-      // Criando categorias com nomes que facilitam testar a ordem (B e A)
-      await createCategory({ name: 'B - Category' })
-      await createCategory({ name: 'A - Category' })
+      // Criando categorias com prefixos para forçar a ordem, mas mantendo a unicidade
+      const nameB = createUniqueName('B_Category')
+      const nameA = createUniqueName('A_Category')
+
+      await createCategory({ name: nameB })
+      await createCategory({ name: nameA })
 
       const { categories } = await listCategories()
 
       expect(categories.length).toBeGreaterThanOrEqual(2)
 
-      // Encontrar os índices para garantir que A vem antes de B
-      const indexA = categories.findIndex((c) => c.name === 'A - Category')
-      const indexB = categories.findIndex((c) => c.name === 'B - Category')
+      // Encontrar os índices para garantir que A vem antes de B na ordenação alfabética
+      const indexA = categories.findIndex((c) => c.name === nameA)
+      const indexB = categories.findIndex((c) => c.name === nameB)
 
+      // Garante que ambos foram encontrados antes de comparar
+      expect(indexA).not.toBe(-1)
+      expect(indexB).not.toBe(-1)
       expect(indexA).toBeLessThan(indexB)
     })
   })
@@ -76,7 +86,7 @@ describe('Categories Service (Integration)', () => {
 
   describe('updateCategory()', () => {
     it('should update the category name correctly', async () => {
-      const { category: created } = await createCategory({ name: 'Old Name' })
+      const { category: created } = await createCategory({ name: createUniqueName('Old Name') })
       const newName = createUniqueName('New Name')
 
       const { category: updated } = await updateCategory(created.id, { name: newName })
@@ -84,7 +94,12 @@ describe('Categories Service (Integration)', () => {
       expect(updated.name).toBe(newName)
 
       const dbCategory = await prisma.category.findUnique({ where: { id: created.id } })
-      expect(dbCategory?.name).toBe(newName)
+
+      if (!dbCategory) {
+        throw new Error('Categoria desapareceu do banco durante o teste de atualização')
+      }
+
+      expect(dbCategory.name).toBe(newName)
     })
 
     it('should throw CONFLICT when updating to a name that already exists', async () => {

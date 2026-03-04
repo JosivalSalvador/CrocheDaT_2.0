@@ -3,9 +3,16 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import * as chatsController from './chats.controller.js'
-import { createChatSchema, sendMessageSchema, chatParamsSchema } from './chats.schema.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import { verifyUserRole } from '../../middlewares/verify-user-role.js'
+// Importando os schemas estruturados
+import {
+  createChatSchema,
+  sendMessageSchema,
+  chatParamsSchema,
+  chatResponseSchema, // <-- Schema do Chat completo
+  messageResponseSchema, // <-- Schema de Mensagem
+} from './chats.schema.js'
 
 export async function chatsRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
@@ -24,14 +31,7 @@ export async function chatsRoutes(app: FastifyInstance) {
         response: {
           [StatusCodes.CREATED]: z.object({
             message: z.string(),
-            chat: z.object({
-              id: z.uuid(),
-              type: z.enum(['ORDER', 'SUPPORT']),
-              isOpen: z.boolean(),
-              lastMessageAt: z.date(),
-              cartId: z.string().nullable().optional(), // <-- ADICIONAR ESTA LINHA
-              messages: z.array(z.any()).optional(),
-            }),
+            chat: chatResponseSchema, // Tipado!
           }),
         },
       },
@@ -51,14 +51,7 @@ export async function chatsRoutes(app: FastifyInstance) {
         summary: 'List my active and past chats',
         response: {
           [StatusCodes.OK]: z.object({
-            chats: z.array(
-              z.object({
-                id: z.uuid(),
-                type: z.enum(['ORDER', 'SUPPORT']),
-                isOpen: z.boolean(),
-                lastMessageAt: z.date(),
-              }),
-            ),
+            chats: z.array(chatResponseSchema), // Tipado!
           }),
         },
       },
@@ -79,22 +72,7 @@ export async function chatsRoutes(app: FastifyInstance) {
         params: chatParamsSchema,
         response: {
           [StatusCodes.OK]: z.object({
-            chat: z.object({
-              id: z.uuid(),
-              type: z.enum(['ORDER', 'SUPPORT']),
-              isOpen: z.boolean(),
-              messages: z.array(
-                z.object({
-                  id: z.uuid(),
-                  content: z.string(),
-                  createdAt: z.date(),
-                  sender: z.object({
-                    name: z.string(),
-                    role: z.string(),
-                  }),
-                }),
-              ),
-            }),
+            chat: chatResponseSchema, // Tipado!
           }),
         },
       },
@@ -116,16 +94,7 @@ export async function chatsRoutes(app: FastifyInstance) {
         body: sendMessageSchema,
         response: {
           [StatusCodes.CREATED]: z.object({
-            message: z.object({
-              id: z.uuid(),
-              content: z.string(),
-              createdAt: z.date(),
-              senderId: z.string(),
-              sender: z.object({
-                name: z.string(),
-                role: z.string(),
-              }),
-            }),
+            message: messageResponseSchema, // Tipado!
           }),
         },
       },
@@ -144,6 +113,11 @@ export async function chatsRoutes(app: FastifyInstance) {
       schema: {
         tags: ['staff'],
         summary: 'List all chats (Staff only)',
+        response: {
+          [StatusCodes.OK]: z.object({
+            chats: z.array(chatResponseSchema), // Tipado!
+          }),
+        },
       },
     },
     chatsController.listAll,
@@ -160,6 +134,12 @@ export async function chatsRoutes(app: FastifyInstance) {
         body: z.object({
           isOpen: z.boolean(),
         }),
+        response: {
+          [StatusCodes.OK]: z.object({
+            message: z.string(),
+            chat: chatResponseSchema, // Tipado!
+          }),
+        },
       },
     },
     chatsController.toggleStatus,

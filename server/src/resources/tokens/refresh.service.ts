@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import { TokenType } from '@prisma/client'
 import { prisma } from '../../lib/prisma.js'
 import { AppError } from '../../errors/app-error.js'
-import { REFRESH_TOKEN_TTL_DAYS } from './tokens.config.js' // ← ADICIONADO: TTL isolado por domínio
+import { TOKEN_TTL_CONFIG } from './tokens.types.js' // ← ATUALIZADO: Importando do novo arquivo
 
 /**
  * Renova o par de tokens (Access + Refresh)
@@ -22,7 +22,7 @@ export async function refreshUserToken(refreshTokenId: string) {
 
   // 3. Garante que o token é do tipo correto
   if (token.type !== TokenType.REFRESH_TOKEN) {
-    throw new AppError('Invalid token type.', StatusCodes.UNAUTHORIZED) // ← ADICIONADO
+    throw new AppError('Invalid token type.', StatusCodes.UNAUTHORIZED)
   }
 
   // 4. Verifica expiração
@@ -35,10 +35,10 @@ export async function refreshUserToken(refreshTokenId: string) {
   const newRefreshToken = await prisma.$transaction(async (tx) => {
     await tx.token.delete({
       where: { id: refreshTokenId },
-    }) // ← ALTERADO: agora dentro de transação
+    })
 
-    const expirationDate = new Date()
-    expirationDate.setDate(expirationDate.getDate() + REFRESH_TOKEN_TTL_DAYS) // ← ALTERADO
+    // ← ALTERADO: Usando a função utilitária do nosso types para pegar a data pronta
+    const expirationDate = TOKEN_TTL_CONFIG[TokenType.REFRESH_TOKEN].getExpirationDate()
 
     return tx.token.create({
       data: {

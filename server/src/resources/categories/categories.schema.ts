@@ -21,3 +21,11 @@ export const categorySchema = z.object({
 export const categoryIdSchema = z.object({
   id: z.uuid({ message: 'ID da categoria inválido' }),
 })
+
+// ==========================================
+// Schema de Resposta (Retorno da API)
+// ==========================================
+export const categoryResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+})

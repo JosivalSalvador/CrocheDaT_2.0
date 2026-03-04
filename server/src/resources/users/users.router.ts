@@ -2,10 +2,17 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
-import { registerUserSchema } from './users.schema.js'
 import * as usersController from './users.controller.js'
 import { verifyJwt } from '../../middlewares/verify-jwt.js'
 import { verifyUserRole } from '../../middlewares/verify-user-role.js'
+// Importando TUDO do seu arquivo de schemas
+import {
+  registerUserSchema,
+  updateUserSchema,
+  updatePasswordSchema,
+  updateRoleSchema,
+  userResponseSchema,
+} from './users.schema.js'
 
 export async function usersRoutes(app: FastifyInstance) {
   const router = app.withTypeProvider<ZodTypeProvider>()
@@ -48,13 +55,7 @@ export async function usersRoutes(app: FastifyInstance) {
         summary: 'Get current user profile',
         response: {
           [StatusCodes.OK]: z.object({
-            user: z.object({
-              id: z.string(),
-              name: z.string(),
-              email: z.string(),
-              role: z.string(),
-              createdAt: z.date(),
-            }),
+            user: userResponseSchema,
           }),
         },
       },
@@ -73,14 +74,18 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         tags: ['users'],
         summary: 'Update profile info',
-        body: z.object({
-          name: z.string().optional(),
-          email: z.email().optional(),
-        }),
+        body: updateUserSchema, // Schema importado
+        response: {
+          [StatusCodes.OK]: z.object({
+            message: z.string(),
+            user: userResponseSchema,
+          }),
+        },
       },
     },
     usersController.updateProfile,
   )
+
   /**
    * ROTA: Alterar senha
    * POST /users/me/password
@@ -92,10 +97,15 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         tags: ['users'],
         summary: 'Change account password',
-        body: z.object({
-          oldPassword: z.string(),
-          newPassword: z.string(),
-        }),
+        body: updatePasswordSchema, // Schema importado
+        response: {
+          [StatusCodes.OK]: z.object({
+            message: z.string(),
+          }),
+          [StatusCodes.BAD_REQUEST]: z.object({
+            message: z.string(),
+          }),
+        },
       },
     },
     usersController.changePassword,
@@ -108,12 +118,12 @@ export async function usersRoutes(app: FastifyInstance) {
   router.delete(
     '/users/me',
     {
-      onRequest: [verifyJwt], // Apenas verifica se está logado
+      onRequest: [verifyJwt],
       schema: {
         tags: ['users'],
         summary: 'Delete my own account',
         response: {
-          [StatusCodes.NO_CONTENT]: z.null(),
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
         },
       },
     },
@@ -131,6 +141,11 @@ export async function usersRoutes(app: FastifyInstance) {
       schema: {
         tags: ['admin'],
         summary: 'List all users (Admin only)',
+        response: {
+          [StatusCodes.OK]: z.object({
+            users: z.array(userResponseSchema),
+          }),
+        },
       },
     },
     usersController.listAll,
@@ -148,7 +163,13 @@ export async function usersRoutes(app: FastifyInstance) {
         tags: ['admin'],
         summary: 'Change user role (Admin only)',
         params: z.object({ id: z.uuid() }),
-        body: z.object({ role: z.enum(['ADMIN', 'SUPPORTER', 'USER']) }),
+        body: updateRoleSchema, // Schema importado
+        response: {
+          [StatusCodes.OK]: z.object({
+            message: z.string(),
+            user: userResponseSchema, // Reaproveitando o schema de resposta
+          }),
+        },
       },
     },
     usersController.updateRole,
@@ -166,6 +187,9 @@ export async function usersRoutes(app: FastifyInstance) {
         tags: ['admin'],
         summary: 'Delete any user (Admin only)',
         params: z.object({ id: z.uuid() }),
+        response: {
+          [StatusCodes.NO_CONTENT]: z.null().describe('No content'),
+        },
       },
     },
     usersController.adminDelete,

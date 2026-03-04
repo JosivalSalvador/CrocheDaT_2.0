@@ -2,7 +2,8 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
-import { loginSchema } from './sessions.schema.js'
+// ← ATUALIZADO: Importando nossos schemas de resposta centralizados
+import { loginSchema, loginResponseSchema, authErrorSchema } from './sessions.schema.js'
 import * as sessionsController from './sessions.controller.js'
 
 export async function sessionsRoutes(app: FastifyInstance) {
@@ -19,17 +20,9 @@ export async function sessionsRoutes(app: FastifyInstance) {
         summary: 'Authenticate with email and password',
         body: loginSchema,
         response: {
-          [StatusCodes.OK]: z.object({
-            token: z.string(),
-            user: z.object({
-              name: z.string(),
-              email: z.email(),
-              role: z.string(),
-            }),
-          }),
-          [StatusCodes.UNAUTHORIZED]: z.object({
-            message: z.string(),
-          }),
+          // ← ATUALIZADO: Código absurdamente mais limpo e seguro!
+          [StatusCodes.OK]: loginResponseSchema,
+          [StatusCodes.UNAUTHORIZED]: authErrorSchema,
         },
       },
     },

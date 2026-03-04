@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { hash } from 'bcryptjs'
-import { TokenType } from '@prisma/client'
+import { TokenType, Role } from '@prisma/client' // ← ADICIONADO: Enum Role
 import { randomBytes, randomUUID } from 'node:crypto'
 import { prisma } from '../../../lib/prisma.js'
 import { AppError } from '../../../errors/app-error.js'
@@ -23,6 +23,7 @@ describe('Sessions Service (Integration)', () => {
           name: 'John Session',
           email: uniqueEmail,
           password_hash: await hash(password, 6),
+          // role assume o default 'USER' do banco
         },
       })
 
@@ -32,17 +33,23 @@ describe('Sessions Service (Integration)', () => {
         password,
       })
 
-      // Asserções
+      // Asserções para garantir que o mapeamento do Service está correto
       expect(result.user.id).toEqual(user.id)
       expect(result.user.email).toEqual(uniqueEmail)
+      expect(result.user.name).toEqual('John Session')
+      expect(result.user.role).toEqual(Role.USER) // ← ATUALIZADO: Verificando contra o Enum estrito
 
       const token = await prisma.token.findUnique({
         where: { id: result.refreshToken },
       })
 
-      expect(token).not.toBeNull()
-      expect(token?.userId).toEqual(user.id)
-      expect(token?.type).toEqual(TokenType.REFRESH_TOKEN)
+      // ← ATUALIZADO: Validação dura para limpar os avisos do TS
+      if (!token) {
+        throw new Error('Refresh token was not saved in the database')
+      }
+
+      expect(token.userId).toEqual(user.id)
+      expect(token.type).toEqual(TokenType.REFRESH_TOKEN)
     })
 
     it('should not authenticate with wrong password', async () => {
@@ -70,7 +77,7 @@ describe('Sessions Service (Integration)', () => {
       const email = generateUniqueEmail('logout.success')
       const password = 'Password123!'
 
-      // AJUSTE: Criamos o registro no banco sem declarar uma variável 'user'
+      // Criamos o registro no banco sem declarar uma variável 'user'
       // que não seria lida, evitando o erro de lint/TS.
       await prisma.user.create({
         data: {
@@ -99,8 +106,10 @@ describe('Sessions Service (Integration)', () => {
 
     it('should not throw error if token does not exist (idempotency)', async () => {
       /**
-       * Este teste valida o bloco .catch que trata o erro P2025 do Prisma.
-       * O signOut deve resolver com sucesso mesmo que o ID seja inválido.
+       * ← ATUALIZADO: Comentário reflete a nova realidade do Service.
+       * Este teste valida a abordagem usando deleteMany.
+       * O signOut deve resolver com sucesso (count: 0) mesmo que o ID seja inválido,
+       * garantindo idempotência absoluta sem a necessidade de um bloco try/catch.
        */
       const nonExistingTokenId = randomUUID()
 

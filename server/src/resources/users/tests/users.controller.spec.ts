@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { randomBytes } from 'node:crypto'
+import { Role } from '@prisma/client' // ← ADICIONADO: Importando o Enum oficial
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
 
@@ -18,7 +19,8 @@ interface AuthSession {
   email: string
 }
 
-async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promise<AuthSession> {
+// ← ATUALIZADO: Usando o Enum do Prisma como tipo do argumento
+async function createAndAuthenticateUser(role: Role = Role.USER): Promise<AuthSession> {
   const email = generateUniqueEmail('test')
   const password = 'Password123!'
 
@@ -31,10 +33,11 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promi
 
   const userId = registerResponse.body.userId
 
-  if (role === 'ADMIN') {
+  // Atualiza no banco caso precisemos de um perfil superior (ADMIN, SUPPORTER)
+  if (role !== Role.USER) {
     await prisma.user.update({
       where: { id: userId },
-      data: { role: 'ADMIN' },
+      data: { role },
     })
   }
 
@@ -62,12 +65,17 @@ describe('Users Controller (E2E)', () => {
 
   describe('Autogestão (/me)', () => {
     it('should be able to get profile', async () => {
-      const { token } = await createAndAuthenticateUser()
+      const { token, userId, email } = await createAndAuthenticateUser()
 
       const response = await request(app.server).get('/api/v1/users/me').set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.user.id).toBeDefined()
+
+      // ← ADICIONADO: Validação completa do payload mapeado pelo Zod
+      expect(response.body.user).toBeDefined()
+      expect(response.body.user.id).toBe(userId)
+      expect(response.body.user.email).toBe(email)
+      expect(response.body.user.role).toBe(Role.USER)
     })
 
     it('should be able to delete account and clear cookies', async () => {
@@ -77,18 +85,21 @@ describe('Users Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.NO_CONTENT)
 
-      const cookies = response.get('Set-Cookie')
-      expect(cookies).toBeDefined()
-      // Garante que o array de cookies não é undefined antes de acessar o índice
-      if (cookies) {
-        expect(cookies[0]).toContain('refreshToken=;')
+      const cookies = response.headers['set-cookie']
+
+      // ← ATUALIZADO: Se o cookie não vier, falhamos o teste de forma ruidosa (Strict Mode)
+      if (!cookies) {
+        throw new Error('O header set-cookie com refreshToken não foi retornado na deleção')
       }
+
+      expect(cookies[0]).toContain('refreshToken=;')
     })
   })
 
   describe('Administração (/users)', () => {
     it('should return 403 when non-admin tries to list users', async () => {
-      const { token } = await createAndAuthenticateUser('USER')
+      // ← ATUALIZADO: Usando Enum
+      const { token } = await createAndAuthenticateUser(Role.USER)
 
       const response = await request(app.server).get('/api/v1/users').set('Authorization', `Bearer ${token}`)
 
@@ -96,25 +107,37 @@ describe('Users Controller (E2E)', () => {
     })
 
     it('should return 200 when admin lists users', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      // ← ATUALIZADO: Usando Enum
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
 
       const response = await request(app.server).get('/api/v1/users').set('Authorization', `Bearer ${token}`)
 
       expect(response.statusCode).toBe(StatusCodes.OK)
       expect(Array.isArray(response.body.users)).toBe(true)
+
+      // Garante que o retorno é no formato do Zod userResponseSchema
+      if (response.body.users.length > 0) {
+        const firstUser = response.body.users[0]
+        expect(firstUser).toHaveProperty('id')
+        expect(firstUser).toHaveProperty('name')
+        expect(firstUser).toHaveProperty('email')
+        expect(firstUser).toHaveProperty('role')
+      }
     })
 
     it('should allow admin to change a user role', async () => {
-      const admin = await createAndAuthenticateUser('ADMIN')
-      const targetUser = await createAndAuthenticateUser('USER')
+      const admin = await createAndAuthenticateUser(Role.ADMIN)
+      const targetUser = await createAndAuthenticateUser(Role.USER)
 
       const response = await request(app.server)
         .patch(`/api/v1/users/${targetUser.userId}/role`)
         .set('Authorization', `Bearer ${admin.token}`)
-        .send({ role: 'SUPPORTER' })
+        // ← ATUALIZADO: Enviando a role via Enum para bater certinho no Zod
+        .send({ role: Role.SUPPORTER })
 
       expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.body.user.role).toBe('SUPPORTER')
+      expect(response.body.user).toBeDefined()
+      expect(response.body.user.role).toBe(Role.SUPPORTER)
     })
   })
 })

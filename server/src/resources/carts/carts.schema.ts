@@ -33,3 +33,25 @@ export const updateCartItemSchema = z.object({
 export const cartItemParamsSchema = z.object({
   itemId: z.uuid({ message: 'ID do item inválido' }),
 })
+
+// ==========================================
+// Schemas de Resposta (Output)
+// ==========================================
+export const cartItemResponseSchema = z.object({
+  id: z.uuid(),
+  productId: z.uuid(),
+  name: z.string(),
+  price: z.number(),
+  quantity: z.number().int(),
+  subtotal: z.number(),
+  imageUrl: z.url().nullable(),
+})
+
+export const cartResponseSchema = z.object({
+  id: z.uuid(),
+  status: z.enum(['ACTIVE', 'FINISHED', 'ABANDONED']),
+  items: z.array(cartItemResponseSchema),
+  totalAmount: z.number(),
+  updatedAt: z.coerce.date(),
+  chatId: z.uuid().nullable().optional(),
+})

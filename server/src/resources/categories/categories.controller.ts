@@ -1,12 +1,13 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { StatusCodes } from 'http-status-codes'
 import * as categoriesService from './categories.service.js'
-import type { CategoryInput } from './categories.types.js'
+import type { CategoryInput, CategoryParams } from './categories.types.js'
 
 /**
  * CRIAR CATEGORIA (Admin)
  */
 export async function create(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as CategoryInput
   const { category } = await categoriesService.createCategory(body)
 
@@ -28,7 +29,8 @@ export async function list(request: FastifyRequest, reply: FastifyReply) {
  * BUSCAR POR ID (Público/Admin)
  */
 export async function getById(request: FastifyRequest, reply: FastifyReply) {
-  const { id } = request.params as { id: string }
+  // Ajuste aqui: cast de tipo na variável
+  const { id } = request.params as CategoryParams
   const { category } = await categoriesService.getCategoryById(id)
 
   return reply.status(StatusCodes.OK).send({ category })
@@ -38,7 +40,8 @@ export async function getById(request: FastifyRequest, reply: FastifyReply) {
  * ATUALIZAR CATEGORIA (Admin)
  */
 export async function update(request: FastifyRequest, reply: FastifyReply) {
-  const { id } = request.params as { id: string }
+  // Ajuste aqui: cast de tipo nas variáveis
+  const { id } = request.params as CategoryParams
   const body = request.body as CategoryInput
   const { category } = await categoriesService.updateCategory(id, body)
 
@@ -52,7 +55,8 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
  * DELETAR CATEGORIA (Admin)
  */
 export async function remove(request: FastifyRequest, reply: FastifyReply) {
-  const { id } = request.params as { id: string }
+  // Ajuste aqui: cast de tipo na variável
+  const { id } = request.params as CategoryParams
   await categoriesService.deleteCategory(id)
 
   return reply.status(StatusCodes.NO_CONTENT).send()

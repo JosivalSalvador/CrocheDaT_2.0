@@ -13,6 +13,7 @@ import type {
  * CRIAR PRODUTO (Admin)
  */
 export async function create(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as CreateProductInput
   const { product } = await productsService.createProduct(body)
 
@@ -26,6 +27,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
  * BUSCAR POR ID (Público)
  */
 export async function getById(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const { id } = request.params as ProductParams
   const { product } = await productsService.getProductById(id)
 
@@ -45,6 +47,7 @@ export async function list(request: FastifyRequest, reply: FastifyReply) {
  * ATUALIZAR DADOS DO PRODUTO (Admin)
  */
 export async function update(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo nas variáveis
   const { id } = request.params as ProductParams
   const body = request.body as UpdateProductInput
   const { product } = await productsService.updateProduct(id, body)
@@ -59,6 +62,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
  * ADICIONAR NOVA IMAGEM AO PRODUTO (Admin)
  */
 export async function addImage(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo nas variáveis
   const { id } = request.params as ProductParams
   const body = request.body as AddImageInput
 
@@ -74,6 +78,7 @@ export async function addImage(request: FastifyRequest, reply: FastifyReply) {
  * REMOVER IMAGEM ESPECÍFICA (Admin)
  */
 export async function removeImage(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const { imageId } = request.params as ImageParams
 
   await productsService.removeProductImage(imageId)
@@ -85,6 +90,7 @@ export async function removeImage(request: FastifyRequest, reply: FastifyReply) 
  * DELETAR PRODUTO COMPLETO (Admin)
  */
 export async function remove(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const { id } = request.params as ProductParams
   await productsService.deleteProduct(id)
 

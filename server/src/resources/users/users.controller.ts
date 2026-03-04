@@ -6,8 +6,9 @@ import type { RegisterUserInput, UpdatePasswordInput, UpdateRoleInput, UpdateUse
 /**
  * Registro de Usuário
  */
-export async function register(request: FastifyRequest<{ Body: RegisterUserInput }>, reply: FastifyReply) {
-  const { name, email, password } = request.body
+export async function register(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
+  const { name, email, password } = request.body as RegisterUserInput
   const { user } = await usersService.registerUser({ name, email, password })
 
   return reply.status(StatusCodes.CREATED).send({
@@ -32,6 +33,7 @@ export async function getProfile(request: FastifyRequest, reply: FastifyReply) {
  */
 export async function updateProfile(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as UpdateUserInput
   const { user } = await usersService.updateUser(userId, body)
 
@@ -46,6 +48,7 @@ export async function updateProfile(request: FastifyRequest, reply: FastifyReply
  */
 export async function changePassword(request: FastifyRequest, reply: FastifyReply) {
   const userId = request.user.sub
+  // Ajuste aqui: cast de tipo na variável
   const body = request.body as UpdatePasswordInput
   await usersService.updatePassword(userId, body)
 
@@ -78,6 +81,7 @@ export async function listAll(request: FastifyRequest, reply: FastifyReply) {
  * ATUALIZAR CARGO (Admin promovendo alguém)
  */
 export async function updateRole(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo nas variáveis
   const { id } = request.params as { id: string }
   const body = request.body as UpdateRoleInput
   const { user } = await usersService.updateUserRole(id, body)
@@ -92,6 +96,7 @@ export async function updateRole(request: FastifyRequest, reply: FastifyReply) {
  * BANIR/DELETAR USUÁRIO (Admin removendo alguém)
  */
 export async function adminDelete(request: FastifyRequest, reply: FastifyReply) {
+  // Ajuste aqui: cast de tipo na variável
   const { id } = request.params as { id: string }
   await usersService.deleteUser(id)
 

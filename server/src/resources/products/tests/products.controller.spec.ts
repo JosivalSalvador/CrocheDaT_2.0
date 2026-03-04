@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { randomBytes } from 'node:crypto'
+import { Role } from '@prisma/client' // ← ADICIONADO: Importando o Enum oficial
 import { app } from '../../../app.js'
 import { prisma } from '../../../lib/prisma.js'
 
@@ -11,7 +12,7 @@ import { prisma } from '../../../lib/prisma.js'
 const generateUniqueName = (base: string): string => `${base}-${randomBytes(4).toString('hex')}`
 
 /**
- * Interfaces para tipagem rigorosa das respostas do Supertest
+ * Interfaces para tipagem rigorosa das respostas do helper
  */
 interface AuthSession {
   token: string
@@ -19,23 +20,10 @@ interface AuthSession {
   email: string
 }
 
-interface ProductImage {
-  id: string
-  name: string
-  url: string
-}
-
-interface Product {
-  id: string
-  name: string
-  categoryId: string
-  images: ProductImage[]
-}
-
 /**
  * Helper para criar usuário e autenticar com Role específica
  */
-async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promise<AuthSession> {
+async function createAndAuthenticateUser(role: Role = Role.USER): Promise<AuthSession> {
   const email = `${generateUniqueName('test')}@example.com`
   const password = 'Password123!'
 
@@ -45,13 +33,15 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promi
     password,
   })
 
-  const userId = registerRes.body.userId as string
-  if (!userId) throw new Error(`Registration failed: ${JSON.stringify(registerRes.body)}`)
+  const userId = registerRes.body.userId
+  if (typeof userId !== 'string') {
+    throw new Error(`Registration failed: ${JSON.stringify(registerRes.body)}`)
+  }
 
-  if (role === 'ADMIN') {
+  if (role !== Role.USER) {
     await prisma.user.update({
       where: { id: userId },
-      data: { role: 'ADMIN' },
+      data: { role },
     })
   }
 
@@ -60,8 +50,10 @@ async function createAndAuthenticateUser(role: 'USER' | 'ADMIN' = 'USER'): Promi
     password,
   })
 
-  const token = authRes.body.token as string
-  if (!token) throw new Error('Authentication failed: Token not found')
+  const token = authRes.body.token
+  if (typeof token !== 'string') {
+    throw new Error('Authentication failed: Token not found or not a string')
+  }
 
   return {
     token,
@@ -88,10 +80,10 @@ describe('Products Controller (E2E)', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({ name: generateUniqueName('Category') })
 
-    // Verificação de segurança: tenta pegar res.body.id ou res.body.category.id
-    const id = (res.body.id || res.body.category?.id) as string | undefined
+    // Busca o ID do formato exato que construímos no Controller de Categorias
+    const id = res.body.category?.id
 
-    if (!id) {
+    if (typeof id !== 'string') {
       throw new Error(`Failed to capture Category ID. Response body: ${JSON.stringify(res.body)}`)
     }
 
@@ -100,7 +92,7 @@ describe('Products Controller (E2E)', () => {
 
   describe('Fluxo de Gerenciamento de Produtos', () => {
     it('should be able to create a product as admin', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
       const categoryId = await createCategory(token)
 
       const response = await request(app.server)
@@ -115,16 +107,18 @@ describe('Products Controller (E2E)', () => {
           categoryId,
           images: [{ name: 'Foto 1', url: 'https://cdn.com/f1.jpg' }],
         })
-
       expect(response.statusCode).toBe(StatusCodes.CREATED)
 
-      const product = response.body.product as Product
+      // Validações estritas do Zod (productResponseSchema)
+      const product = response.body.product
       expect(product).toBeDefined()
-      expect(product.id).toBeDefined()
+      expect(typeof product.id).toBe('string')
+      expect(product.name).toBe('Produto Teste')
+      expect(product.categoryId).toBe(categoryId)
     })
 
     it('should be able to add an image to an existing product', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
       const categoryId = await createCategory(token)
 
       // Criando produto via Prisma com segurança de tipos
@@ -146,12 +140,16 @@ describe('Products Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.CREATED)
 
-      const body = response.body as { image: ProductImage }
-      expect(body.image?.url).toBe('https://cdn.com/nova.jpg')
+      // Validação do productImageResponseSchema
+      const image = response.body.image
+      expect(image).toBeDefined()
+      expect(typeof image.id).toBe('string')
+      expect(image.url).toBe('https://cdn.com/nova.jpg')
+      expect(image.productId).toBe(product.id)
     })
 
     it('should be able to update product and change its category', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
       const cat1Id = await createCategory(token)
       const cat2Id = await createCategory(token)
 
@@ -173,13 +171,14 @@ describe('Products Controller (E2E)', () => {
 
       expect(response.statusCode).toBe(StatusCodes.OK)
 
-      const updatedProduct = response.body.product as Product
+      const updatedProduct = response.body.product
+      expect(updatedProduct).toBeDefined()
       expect(updatedProduct.name).toBe('Nome Novo')
       expect(updatedProduct.categoryId).toBe(cat2Id)
     })
 
     it('should return 403 when a non-admin tries to delete a product', async () => {
-      const { token } = await createAndAuthenticateUser('USER')
+      const { token } = await createAndAuthenticateUser(Role.USER)
       // UUID fake válido
       const fakeId = '00000000-0000-0000-0000-000000000000'
 
@@ -191,7 +190,7 @@ describe('Products Controller (E2E)', () => {
     })
 
     it('should be able to remove a specific image', async () => {
-      const { token } = await createAndAuthenticateUser('ADMIN')
+      const { token } = await createAndAuthenticateUser(Role.ADMIN)
       const categoryId = await createCategory(token)
 
       const product = await prisma.product.create({
@@ -202,7 +201,7 @@ describe('Products Controller (E2E)', () => {
           productionTime: 3,
           price: 80,
           category: { connect: { id: categoryId } },
-          images: { create: { name: 'Delete-me', url: 'https://del.jpg' } },
+          images: { create: { name: 'Delete-me', url: 'https://del.jpg' } }, // Note que mudei para .jpg por segurança de URL
         },
         include: { images: true },
       })

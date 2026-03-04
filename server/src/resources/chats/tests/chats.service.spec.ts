@@ -60,8 +60,9 @@ describe('Chats Service (Integration)', () => {
       expect(chat.messages).toBeDefined()
       expect(chat.messages).toHaveLength(1)
 
-      // O TS agora sabe que o array e o índice zero não são undefined
-      const firstMessage = chat.messages![0]!
+      const firstMessage = chat.messages[0]
+      if (!firstMessage) throw new Error('A mensagem inicial não foi criada.')
+
       expect(firstMessage.content).toBe('Olá, preciso de ajuda com um fio.')
     })
 
@@ -79,7 +80,9 @@ describe('Chats Service (Integration)', () => {
 
       // Verifica se o service realmente chamou o finishCart e atualizou o banco
       const updatedCart = await prisma.cart.findUnique({ where: { id: cart.id } })
-      expect(updatedCart!.status).toBe('FINISHED')
+      if (!updatedCart) throw new Error('O carrinho não foi encontrado.')
+
+      expect(updatedCart.status).toBe('FINISHED')
     })
 
     it('should throw BAD_REQUEST if ORDER chat is created without cartId', async () => {
