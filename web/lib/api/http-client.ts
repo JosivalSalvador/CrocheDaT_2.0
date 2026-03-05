@@ -1,5 +1,5 @@
 import { env } from "../utils/env";
-import type { HttpError } from "../types";
+import type { HttpError } from "../../types/index"; // <- Ajuste no caminho (raiz do projeto)
 import {
   getSession,
   getRefreshToken,
@@ -29,11 +29,18 @@ async function internalFetch(
 
   const headers = new Headers(init?.headers);
 
-  // --- AJUSTE DE MERCADO 1: Content-Type condicional ---
-  // Se não houver body (ex: Logout), não enviamos Content-Type.
-  // Isso evita o erro FST_ERR_CTP_EMPTY_JSON_BODY no Fastify.
-  if (init?.body && !headers.has("Content-Type")) {
-    headers.set("Content-Type", "application/json");
+  // --- AJUSTE DE MERCADO 1: Content-Type condicional e Stringify automático ---
+  if (init?.body) {
+    // Se for FormData (ex: upload de imagem), o navegador lida com o Content-Type
+    if (!(init.body instanceof FormData)) {
+      if (!headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json");
+      }
+      // Se você mandar um objeto direto do Service, ele vira string automaticamente
+      if (typeof init.body === "object") {
+        init.body = JSON.stringify(init.body);
+      }
+    }
   }
 
   if (typeof window === "undefined") {
@@ -71,17 +78,26 @@ async function internalFetch(
             getCookieValue(setCookieHeader, "refreshToken") ?? refreshToken;
 
           const session = await getSession();
+
+          // Graças ao ajuste de 7 dias no session.ts, a sessão existirá aqui.
           if (session) {
             await setSession(newAccessToken, newRefreshTokenId, session.user);
+
+            const retryHeaders = new Headers(headers);
+            retryHeaders.set("Authorization", `Bearer ${newAccessToken}`);
+
+            return fetch(url, { ...init, headers: retryHeaders });
+          } else {
+            // Fallback de segurança se o cookie principal foi deletado manualmente
+            await destroySession();
+            throw {
+              status: 401,
+              message: "Sessão inválida.",
+            } satisfies HttpError;
           }
-
-          const retryHeaders = new Headers(headers);
-          retryHeaders.set("Authorization", `Bearer ${newAccessToken}`);
-
-          return fetch(url, { ...init, headers: retryHeaders });
+        } else {
+          await destroySession();
         }
-
-        await destroySession();
       } catch {
         await destroySession();
       }
@@ -111,7 +127,6 @@ export async function httpClient<T>(
   const response = await internalFetch(path, init);
 
   // --- AJUSTE DE MERCADO 2: Tratamento de No Content ---
-  // Respostas 204 não têm corpo. Tentar dar .json() causaria erro.
   if (response.status === 204) {
     return {} as T;
   }
@@ -122,7 +137,6 @@ export async function httpClient<T>(
 export async function httpClientFull<T>(path: string, init?: RequestInit) {
   const response = await internalFetch(path, init);
 
-  // Mesma lógica aqui para o httpClientFull
   const data =
     response.status === 204 ? ({} as T) : ((await response.json()) as T);
 

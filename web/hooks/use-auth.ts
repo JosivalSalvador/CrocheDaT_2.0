@@ -1,40 +1,64 @@
-"use client";
+// web/hooks/use-auth.ts
 
-import { useQuery } from "@tanstack/react-query";
-import { getUserAction } from "@/app/(auth)/_actions/get-user.action";
+import { useMutation } from "@tanstack/react-query";
+import {
+  loginAction,
+  registerAction,
+  logoutAction,
+} from "../actions/auth.actions";
+import { LoginInput, RegisterUserInput } from "../types/index";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-/**
- * Hook de Autenticação
- * Centraliza o estado do usuário logado consumindo a sessão via Server Action.
- */
 export function useAuth() {
-  const {
-    data: userData,
-    isLoading,
-    refetch,
-    isFetching,
-  } = useQuery({
-    queryKey: ["auth-user"],
-    queryFn: async () => {
-      // Busca a sessão descriptografada do cookie através da Server Action
-      const user = await getUserAction();
-      return user ?? null;
+  const router = useRouter();
+
+  const login = useMutation({
+    mutationFn: async (data: LoginInput) => {
+      const response = await loginAction(data);
+      // Se a Action devolveu success: false, forçamos um erro para o React Query capturar
+      if (!response.success) throw new Error(response.error);
+      return response;
     },
-    // Mantém o dado como "fresco" por 5 minutos para evitar re-execuções desnecessárias
-    staleTime: 1000 * 60 * 5,
-    // Revalida quando o usuário volta para a aba, garantindo que a sessão não expirou no servidor
-    refetchOnWindowFocus: true,
+    onSuccess: () => {
+      toast.success("Bem-vindo de volta!");
+      // Jogamos para a raiz ("/"). O nosso proxy.ts vai interceptar instantaneamente,
+      // ler o novo cookie e redirecionar pro /dashboard ou /home dependendo do cargo!
+      router.push("/");
+      router.refresh(); // Força o Next.js a revalidar a árvore de componentes
+    },
+    onError: (error: Error) => {
+      // Exibe a mensagem exata do backend (ex: "Credenciais inválidas")
+      toast.error(error.message);
+    },
+  });
+
+  const register = useMutation({
+    mutationFn: async (data: RegisterUserInput) => {
+      const response = await registerAction(data);
+      if (!response.success) throw new Error(response.error);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Conta criada com sucesso! Faça login para continuar.");
+      router.push("/login");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const logout = useMutation({
+    mutationFn: async () => {
+      // O logoutAction já tem o redirect("/login") embutido no lado do servidor
+      await logoutAction();
+    },
+    // Não precisamos de onSuccess aqui porque a Action já expulsa o usuário da tela
   });
 
   return {
-    user: userData,
-    isLoading: isLoading || isFetching,
-    isAuthenticated: !!userData,
-    // Verificações de permissão baseadas nas Roles do seu Prisma
-    isAdmin: userData?.role === "ADMIN",
-    isSupporter: userData?.role === "SUPPORTER",
-    isUser: userData?.role === "USER",
-    // Função para forçar a atualização dos dados do usuário (ex: após editar perfil)
-    refreshUser: refetch,
+    login,
+    register,
+    logout,
   };
 }
