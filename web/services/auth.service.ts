@@ -1,3 +1,4 @@
+import { getRefreshToken } from "@/lib/auth/session";
 import { httpClient, httpClientFull } from "../lib/api/http-client";
 import { LoginInput, LoginResponse, RegisterUserInput } from "../types/index";
 
@@ -41,9 +42,12 @@ export const authService = {
    * Invalida a sessão no backend
    */
   logout: async () => {
+    const refreshToken = await getRefreshToken();
     return httpClient<void>("/sessions/logout", {
       method: "POST",
-      body: JSON.stringify({}),
+      headers: refreshToken
+        ? { Cookie: `refreshToken=${refreshToken}` }
+        : undefined,
     });
   },
 };
