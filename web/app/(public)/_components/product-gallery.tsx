@@ -3,82 +3,96 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/utils";
-import { ImageOff } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react"; // Consistência visual com o ProductCard
 
 interface ProductGalleryProps {
-  // Seguindo o padrão que vi no seu ProductCard: product.images?.[0]?.url
   images?: { url: string }[];
 }
 
 export function ProductGallery({ images = [] }: ProductGalleryProps) {
-  // Controlamos apenas o índice. A URL da imagem é derivada disso.
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [imgError, setImgError] = useState(false);
 
-  // Fallback se não houver imagens no array
+  // =========================================
+  // 1. FALLBACK DE PRODUTO SEM FOTOS
+  // Usando a mesma linguagem visual de "vazio" da sua vitrine
+  // =========================================
   if (!images.length) {
     return (
-      <div className="border-border/60 bg-muted/20 flex aspect-square w-full flex-col items-center justify-center rounded-2xl border border-dashed">
-        <ImageOff className="text-muted-foreground/40 h-12 w-12" />
-        <p className="text-muted-foreground/60 mt-2 text-sm">Sem fotos</p>
+      <div className="border-border/60 bg-card/30 text-muted-foreground flex aspect-square w-full flex-col items-center justify-center rounded-4xl border border-dashed backdrop-blur-sm">
+        <ImageIcon className="mb-3 h-12 w-12 opacity-40" />
+        <span className="text-sm font-semibold tracking-wider uppercase opacity-60">
+          Sem fotos
+        </span>
       </div>
     );
   }
 
-  // Imagem atual baseada no índice selecionado
   const currentImage = images[selectedIndex]?.url;
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* IMAGEM PRINCIPAL */}
-      <div className="border-border/40 bg-muted/10 relative aspect-square w-full overflow-hidden rounded-2xl border">
+    <div className="flex flex-col gap-4 sm:gap-6">
+      {/* =========================================
+          2. IMAGEM PRINCIPAL (Responsiva e Fluida)
+      ========================================= */}
+      <div className="border-border/50 bg-card/50 relative aspect-square w-full overflow-hidden rounded-4xl border shadow-sm backdrop-blur-sm">
         {currentImage && !imgError ? (
           <Image
             src={currentImage}
-            alt="Foto do produto"
+            alt="Foto principal do produto"
             fill
             priority
-            className="object-cover transition-all duration-500 hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 hover:scale-105"
             onError={() => setImgError(true)}
           />
         ) : (
           <div className="bg-secondary/30 text-muted-foreground flex h-full w-full flex-col items-center justify-center">
-            <ImageOff className="h-10 w-10 opacity-40" />
-            <span className="mt-2 text-xs font-medium uppercase">
+            <ImageIcon className="mb-3 h-12 w-12 opacity-40" />
+            <span className="text-sm font-semibold tracking-wider uppercase opacity-60">
               Imagem Indisponível
             </span>
           </div>
         )}
       </div>
 
-      {/* CARROSSEL DE MINIATURAS */}
+      {/* =========================================
+          3. CARROSSEL DE MINIATURAS INTELIGENTE
+          Mobile: Scroll horizontal escondido
+          Desktop: Quebra de linha automática (flex-wrap)
+      ========================================= */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-3 overflow-x-auto scroll-smooth pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0 [&::-webkit-scrollbar]:hidden">
           {images.map((img, idx) => {
             const isSelected = selectedIndex === idx;
             return (
               <button
                 key={idx}
                 type="button"
+                aria-label={`Ver imagem ${idx + 1}`}
                 onClick={() => {
                   setSelectedIndex(idx);
-                  setImgError(false); // Reset do erro para tentar carregar a nova imagem
+                  setImgError(false); // Permite tentar carregar a nova foto principal
                 }}
                 className={cn(
-                  "relative aspect-square h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all",
+                  "focus-visible:ring-primary relative aspect-square w-16 shrink-0 overflow-hidden rounded-2xl border-2 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-20",
                   isSelected
-                    ? "border-primary ring-primary/20 ring-2"
-                    : "border-transparent opacity-60 hover:opacity-100",
+                    ? "border-primary ring-primary/20 scale-105 shadow-sm ring-2"
+                    : "bg-card/50 border-transparent opacity-60 hover:scale-105 hover:opacity-100",
                 )}
               >
                 <Image
                   src={img.url}
-                  alt={`Miniatura ${idx}`}
+                  alt={`Miniatura ${idx + 1}`}
                   fill
-                  sizes="80px"
+                  sizes="(max-width: 768px) 64px, 80px"
                   className="object-cover"
-                  // Se a miniatura falhar, apenas esconde o botão daquela thumb específica
-                  onError={(e) => (e.currentTarget.style.display = "none")}
+                  // Correção do Bug: Se a miniatura quebrar, escondemos o botão inteiro (parentElement)
+                  onError={(e) => {
+                    if (e.currentTarget.parentElement) {
+                      e.currentTarget.parentElement.style.display = "none";
+                    }
+                  }}
                 />
               </button>
             );

@@ -1,20 +1,18 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useProduct } from "@/hooks/use-products"; // Hook que você me mandou
+import { useProduct } from "@/hooks/use-products";
 import { GridBackground } from "@/components/ui/grid-background";
 import { ProductGallery } from "../../_components/product-gallery";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ArrowLeft,
   ShoppingBag,
   MessageCircle,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
   AlertCircle,
+  Layers,
+  Hourglass,
 } from "lucide-react";
 
 export default function ProductDetailsPage() {
@@ -22,40 +20,42 @@ export default function ProductDetailsPage() {
   const router = useRouter();
   const id = params.id as string;
 
-  // Usando o hook específico que você mandou
   const { data, isLoading, isError } = useProduct(id);
-
-  // O seu hook retorna a estrutura baseada no seu Action
   const product = data?.product;
 
-  // Formatação de preço (Moeda Brasileira)
   const formattedPrice = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
   }).format(product?.price || 0);
 
   // =========================================
-  // 1. TRATAMENTO DE ERRO OU PRODUTO INEXISTENTE
+  // LÓGICA DE ÁREA PÚBLICA (REDIRECIONAMENTO)
+  // =========================================
+  const handleProtectedAction = () => {
+    router.push("/login");
+  };
+
+  // =========================================
+  // TRATAMENTO DE ERRO OU PRODUTO INEXISTENTE
   // =========================================
   if (isError || (!isLoading && !product)) {
     return (
       <div className="relative flex min-h-[70vh] items-center justify-center px-4">
         <GridBackground />
         <div className="animate-in fade-in zoom-in-95 relative z-10 flex max-w-md flex-col items-center text-center duration-500">
-          <AlertCircle className="text-destructive h-16 w-16 opacity-50" />
-          <h2 className="mt-4 text-2xl font-bold tracking-tight">
-            Ops! Produto não encontrado.
+          <AlertCircle className="text-destructive h-12 w-12 opacity-50" />
+          <h2 className="mt-4 text-xl font-bold tracking-tight">
+            Obra não encontrada
           </h2>
-          <p className="text-muted-foreground mt-2">
-            A peça que você procura pode ter sido removida ou o link está
-            incorreto.
+          <p className="text-muted-foreground mt-2 text-sm">
+            Esta peça pode ter sido removida do acervo ou o link está incorreto.
           </p>
           <Button
             onClick={() => router.push("/")}
-            className="mt-8 rounded-xl"
-            variant="default"
+            className="mt-8 rounded-full px-8"
+            variant="outline"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a vitrine
+            Voltar para a galeria
           </Button>
         </div>
       </div>
@@ -63,28 +63,50 @@ export default function ProductDetailsPage() {
   }
 
   return (
-    <div className="selection:bg-primary/30 relative min-h-screen">
-      <div className="absolute inset-0 z-0">
+    <div className="selection:bg-primary/20 relative min-h-screen pb-36 lg:pb-16">
+      <div className="pointer-events-none absolute inset-0 z-0">
         <GridBackground />
       </div>
 
-      <main className="relative z-10 container mx-auto px-4 py-8 md:py-16">
-        {/* Navegação Voltar */}
+      {/* =========================================
+          BARRA DE AÇÃO FIXA MOBILE 
+      ========================================= */}
+      {!isLoading && product && (
+        <div className="animate-in slide-in-from-bottom-full border-border/40 bg-background/90 fixed right-0 bottom-0 left-0 z-50 flex items-center justify-between border-t px-4 pt-4 pb-6 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] backdrop-blur-xl lg:hidden">
+          <div className="flex flex-col">
+            <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase">
+              Investimento
+            </span>
+            <span className="text-primary text-2xl font-extrabold">
+              {formattedPrice}
+            </span>
+          </div>
+          <Button
+            onClick={handleProtectedAction}
+            className="shadow-primary/25 h-12 rounded-full px-8 font-bold shadow-lg transition-transform active:scale-95"
+          >
+            Adquirir Peça
+          </Button>
+        </div>
+      )}
+
+      <main className="relative z-10 container mx-auto max-w-7xl px-4 pt-6 md:pt-12">
+        {/* Navegação Voltar - Desktop (lg) */}
         <button
           onClick={() => router.back()}
-          className="group text-muted-foreground hover:text-primary mb-8 flex items-center gap-2 text-sm font-medium transition-colors"
+          className="group text-muted-foreground hover:text-primary mb-10 hidden items-center gap-2 text-xs font-bold tracking-widest uppercase transition-colors lg:inline-flex"
         >
-          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-          Voltar
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-2" />
+          Voltar ao Acervo
         </button>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="flex flex-col items-start gap-8 lg:flex-row lg:gap-16 xl:gap-20">
           {/* =========================================
-              COLUNA ESQUERDA: GALERIA (USA SEU COMPONENTE)
+              COLUNA ESQUERDA: GALERIA 
           ========================================= */}
-          <div className="animate-in fade-in slide-in-from-left-4 duration-700">
+          <div className="animate-in fade-in slide-in-from-bottom-4 w-full duration-700 lg:sticky lg:top-24 lg:w-[55%] xl:w-[60%]">
             {isLoading ? (
-              <Skeleton className="bg-muted/40 aspect-square w-full rounded-3xl" />
+              <Skeleton className="bg-muted/30 aspect-square w-full rounded-4xl" />
             ) : (
               <ProductGallery images={product?.images} />
             )}
@@ -93,87 +115,132 @@ export default function ProductDetailsPage() {
           {/* =========================================
               COLUNA DIREITA: INFORMAÇÕES E COMPRA
           ========================================= */}
-          <div className="animate-in fade-in slide-in-from-right-4 flex flex-col delay-150 duration-700">
+          <div className="animate-in fade-in slide-in-from-bottom-8 flex w-full flex-col delay-150 duration-700 lg:w-[45%] xl:w-[40%]">
             {isLoading ? (
-              <div className="space-y-6">
-                <Skeleton className="bg-muted/40 h-6 w-24 rounded-full" />
-                <Skeleton className="bg-muted/40 h-12 w-3/4 rounded-lg" />
-                <Skeleton className="bg-muted/40 h-24 w-full rounded-xl" />
-                <Skeleton className="bg-muted/40 h-12 w-40 rounded-lg" />
+              <div className="mt-4 space-y-8">
+                <Skeleton className="bg-muted/30 h-8 w-3/4 rounded-lg" />
+                <Skeleton className="bg-muted/30 h-10 w-1/3 rounded-lg" />
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                  <Skeleton className="bg-muted/30 h-24 w-full rounded-3xl" />
+                  <Skeleton className="bg-muted/30 h-24 w-full rounded-3xl" />
+                </div>
+                <div className="space-y-3 pt-6">
+                  <Skeleton className="bg-muted/30 h-4 w-full rounded-md" />
+                  <Skeleton className="bg-muted/30 h-4 w-full rounded-md" />
+                  <Skeleton className="bg-muted/30 h-4 w-3/4 rounded-md" />
+                </div>
               </div>
             ) : (
-              <>
-                <div className="border-border/40 mb-6 space-y-4 border-b pb-6">
-                  <Badge
-                    variant="secondary"
-                    className="bg-primary/10 text-primary hover:bg-primary/15 px-3 py-1"
-                  >
-                    {product?.category?.name || "Artesanato"}
-                  </Badge>
-                  <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              <div className="flex flex-col lg:pt-4">
+                {/* CABEÇALHO DA OBRA */}
+                <div className="mb-8">
+                  {/* CATEGORIA DESTACADA */}
+                  <div className="mb-5">
+                    <span className="bg-primary/10 text-primary inline-flex items-center justify-center rounded-full px-4 py-1.5 text-[11px] font-bold tracking-widest uppercase">
+                      {product?.category?.name || "Design Autoral"}
+                    </span>
+                  </div>
+
+                  <h1 className="text-foreground text-4xl leading-[1.1] font-bold tracking-tight text-balance sm:text-5xl lg:text-5xl xl:text-6xl">
                     {product?.name}
                   </h1>
-                  <p className="text-primary text-3xl font-bold tracking-tight sm:text-4xl">
-                    {formattedPrice}
-                  </p>
+
+                  {/* PREÇO DESKTOP */}
+                  <div className="mt-8 hidden lg:block">
+                    <p className="text-primary text-4xl font-extrabold tracking-tight drop-shadow-sm xl:text-5xl">
+                      {formattedPrice}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mb-10">
-                  <h3 className="text-muted-foreground/80 mb-3 text-sm font-bold tracking-widest uppercase">
-                    Sobre a peça
-                  </h3>
-                  <p className="text-muted-foreground/90 text-lg leading-relaxed">
+                {/* FICHA TÉCNICA - Cards com Ícones Estilizados */}
+                <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                  {/* Card: Material */}
+                  <div className="group bg-secondary/30 border-border/50 hover:bg-secondary/60 hover:border-primary/20 flex flex-col gap-3 rounded-3xl border p-5 transition-all">
+                    <div className="bg-background/80 border-border/50 flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-transform group-hover:scale-110">
+                      <Layers
+                        className="text-primary h-4 w-4"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground mb-1 block text-[10px] font-bold tracking-widest uppercase">
+                        Material da Obra
+                      </span>
+                      <span className="text-foreground block text-sm leading-tight font-semibold sm:text-base">
+                        {product?.material}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card: Prazo */}
+                  <div className="group bg-secondary/30 border-border/50 hover:bg-secondary/60 hover:border-primary/20 flex flex-col gap-3 rounded-3xl border p-5 transition-all">
+                    <div className="bg-background/80 border-border/50 flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition-transform group-hover:scale-110">
+                      <Hourglass
+                        className="text-primary h-4 w-4"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground mb-1 block text-[10px] font-bold tracking-widest uppercase">
+                        Tempo de Produção
+                      </span>
+                      <span className="text-foreground block text-sm leading-tight font-semibold sm:text-base">
+                        {product?.productionTime} dias úteis
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* DESCRIÇÃO DA OBRA - Ajuste de Unidade Visual */}
+                <div className="bg-secondary/30 border-border/50 hover:bg-secondary/40 mb-8 rounded-3xl border p-5 transition-colors sm:p-7">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="bg-primary h-4 w-1 rounded-full shadow-[0_0_10px_rgba(var(--primary),0.2)]"></div>
+                    <h3 className="text-primary text-[10px] leading-none font-black tracking-[0.2em] uppercase">
+                      Detalhes da Obra
+                    </h3>
+                  </div>
+
+                  <p className="text-foreground/90 text-sm leading-relaxed font-medium sm:text-[15px] md:text-base">
                     {product?.description}
                   </p>
                 </div>
 
-                {/* BOTÕES DE AÇÃO */}
-                <div className="mb-12 flex flex-col gap-4 sm:flex-row">
+                {/* BOTÕES DE AÇÃO DESKTOP */}
+                <div className="hidden flex-col gap-4 lg:flex">
                   <Button
                     size="lg"
-                    className="shadow-primary/20 h-16 flex-1 gap-3 rounded-2xl text-lg font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+                    onClick={handleProtectedAction}
+                    className="shadow-primary/20 h-14 w-full rounded-full text-base font-bold shadow-xl transition-transform active:scale-95"
                   >
-                    <ShoppingBag className="h-6 w-6" />
+                    <ShoppingBag className="mr-2 h-5 w-5" />
                     Adicionar ao Carrinho
                   </Button>
+
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-border bg-card/40 hover:bg-accent h-16 flex-1 gap-3 rounded-2xl text-lg font-semibold backdrop-blur-md transition-all active:scale-95"
+                    onClick={handleProtectedAction}
+                    className="border-border/60 hover:bg-secondary/40 h-14 w-full rounded-full text-base font-semibold transition-transform active:scale-95"
                   >
-                    <MessageCircle className="h-6 w-6" />
-                    Tirar Dúvida
+                    <MessageCircle className="mr-2 h-5 w-5" />
+                    Consultar o Artesão
                   </Button>
                 </div>
 
-                {/* TRUST BADGES (Estilo Enterprise) */}
-                <div className="border-border/40 bg-card/20 grid grid-cols-3 gap-2 rounded-2xl border p-6 backdrop-blur-sm">
-                  <div className="flex flex-col items-center gap-2 text-center">
-                    <div className="bg-primary/5 rounded-full p-2">
-                      <ShieldCheck className="text-primary/70 h-5 w-5" />
-                    </div>
-                    <span className="text-[10px] font-bold tracking-tighter uppercase sm:text-xs">
-                      Seguro
-                    </span>
-                  </div>
-                  <div className="border-border/40 flex flex-col items-center gap-2 border-x px-2 text-center">
-                    <div className="bg-primary/5 rounded-full p-2">
-                      <Truck className="text-primary/70 h-5 w-5" />
-                    </div>
-                    <span className="text-[10px] font-bold tracking-tighter uppercase sm:text-xs">
-                      Envio Rápido
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-2 text-center">
-                    <div className="bg-primary/5 rounded-full p-2">
-                      <RotateCcw className="text-primary/70 h-5 w-5" />
-                    </div>
-                    <span className="text-[10px] font-bold tracking-tighter uppercase sm:text-xs">
-                      Troca Grátis
-                    </span>
-                  </div>
+                {/* BOTÃO SECUNDÁRIO NO MOBILE/TABLET */}
+                <div className="mt-2 lg:hidden">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={handleProtectedAction}
+                    className="border-border/60 hover:bg-secondary/40 h-14 w-full rounded-full text-sm font-semibold transition-transform active:scale-95"
+                  >
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Dúvidas? Fale com o Artesão
+                  </Button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

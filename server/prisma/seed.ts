@@ -36,9 +36,11 @@ async function main() {
    |--------------------------------------------------------------------------
    */
 
-  const [tapetes, amigurumis, sousplats] = await Promise.all([
+  const [tapetes, amigurumis, , , sousplats] = await Promise.all([
     prisma.category.create({ data: { name: 'Tapetes' } }),
     prisma.category.create({ data: { name: 'Amigurumis' } }),
+    prisma.category.create({ data: { name: 'Saias' } }),
+    prisma.category.create({ data: { name: 'Tops' } }),
     prisma.category.create({ data: { name: 'Sousplats' } }),
   ])
 
@@ -91,8 +93,11 @@ async function main() {
       categoryId: tapetes.id,
       images: {
         create: [
-          { name: 'Principal', url: 'https://img.com/tapete1.jpg' },
-          { name: 'Detalhe', url: 'https://img.com/tapete1-zoom.jpg' },
+          { name: 'Principal', url: 'https://res.cloudinary.com/derzus8uh/image/upload/v1755108410/topCa5_cwe8hh.jpg' },
+          {
+            name: 'Detalhe',
+            url: 'https://res.cloudinary.com/derzus8uh/image/upload/v1754340600/WhatsApp_Image_2025-08-04_at_14.31.21_2_zuyonf.jpg',
+          },
         ],
       },
     },
@@ -107,7 +112,7 @@ async function main() {
       price: 89.9,
       categoryId: amigurumis.id,
       images: {
-        create: [{ name: 'Principal', url: 'https://img.com/urso.jpg' }],
+        create: [],
       },
     },
   })
@@ -122,6 +127,22 @@ async function main() {
       categoryId: sousplats.id,
       images: {
         create: [{ name: 'Principal', url: 'https://img.com/sousplat.jpg' }],
+      },
+    },
+  })
+
+  const sousplat = await prisma.product.create({
+    data: {
+      name: 'Sousplat Floral Luxo',
+      description: 'Sousplat sofisticado para mesas elegantes.',
+      material: 'Barbante Fio 4',
+      productionTime: 2,
+      price: 35.0,
+      categoryId: sousplats.id,
+      images: {
+        create: [
+          { name: 'Principal', url: 'https://res.cloudinary.com/derzus8uh/image/upload/v1755108410/topCa5_cwe8hh.jpg' },
+        ],
       },
     },
   })
@@ -141,6 +162,7 @@ async function main() {
         create: [
           { productId: tapeteOval.id, quantity: 1 },
           { productId: sousplatLuxo.id, quantity: 4 },
+          { productId: sousplat.id, quantity: 4 },
         ],
       },
     },
