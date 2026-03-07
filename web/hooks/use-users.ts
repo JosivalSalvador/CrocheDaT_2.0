@@ -79,6 +79,11 @@ export function useUsersMutations() {
       if (response && !response.success) throw new Error(response.error);
       return response;
     },
+    onSuccess: () => {
+      // Como a sessão já foi destruída na action, a gente só joga o cara pro login
+      // usando o window.location para forçar o recarregamento da página e passar pelo proxy
+      window.location.href = "/login";
+    },
     onError: (error: Error) => toast.error(error.message),
   });
 

@@ -175,7 +175,7 @@ model Message {
   chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   
   senderId  String   @map("sender_id")
-  sender    User     @relation(fields: [senderId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   @@map("messages")
 }

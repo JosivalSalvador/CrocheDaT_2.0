@@ -4,7 +4,6 @@
 import { usersService } from "../services/users.service";
 import { destroySession } from "../lib/auth/session";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import {
   UpdateUserInput,
   UpdatePasswordInput,
@@ -99,7 +98,7 @@ export async function deleteAccountAction(): Promise<ActionResponse> {
   // 2. O Next.js exige que o redirect() aconteça FORA do bloco try/catch
   // (porque por baixo dos panos o redirect joga um erro especial de navegação)
   await destroySession();
-  redirect("/login");
+  return { success: true, message: "Conta excluída com sucesso." };
 }
 
 // ==========================================
