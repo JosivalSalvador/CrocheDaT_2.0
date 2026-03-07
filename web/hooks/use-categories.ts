@@ -60,6 +60,7 @@ export function useCategoryMutations() {
       toast.success(data.message || "Categoria atualizada!");
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: (error: Error) => toast.error(error.message),
   });
