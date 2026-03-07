@@ -30,7 +30,7 @@ export default function GlobalNotFound() {
               size="lg"
               className="h-12 rounded-xl px-10 text-base font-semibold transition-all hover:scale-105"
             >
-              <Link href="/">Voltar para a vitrine</Link>
+              <Link href="/home">Voltar para a vitrine</Link>
             </Button>
           </div>
         </div>

@@ -1,5 +1,6 @@
-import { CustomerHeader } from "./_components/header";
+import { HeaderCustomer } from "./_components/header";
 import { GridBackground } from "@/components/ui/grid-background";
+import { Footer } from "./_components/footer";
 
 export default function CustomerLayout({
   children,
@@ -14,10 +15,11 @@ export default function CustomerLayout({
       </div>
 
       {/* Header Fixo no Topo */}
-      <CustomerHeader />
+      <HeaderCustomer />
 
       {/* Conteúdo das Páginas Filhas renderizado aqui */}
       <main className="relative z-10 flex flex-1 flex-col">{children}</main>
+      <Footer />
     </div>
   );
 }

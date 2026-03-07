@@ -55,7 +55,7 @@ export default function GlobalError({
               size="lg"
               className="hover:bg-muted h-12 rounded-xl px-10 text-base font-medium transition-all"
             >
-              <Link href="/">Voltar para a vitrine</Link>
+              <Link href="/home">Voltar para a vitrine</Link>
             </Button>
           </div>
         </div>
