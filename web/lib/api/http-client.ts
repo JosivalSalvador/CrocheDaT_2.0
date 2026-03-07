@@ -18,6 +18,11 @@ function getCookieValue(header: string | null, name: string): string | null {
   return match ? match[1] : null;
 }
 
+// === ADICIONADO: Variáveis de controle da Fila de Refresh ===
+let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
+// ==========================================================
+
 async function internalFetch(
   path: string,
   init?: RequestInit,
@@ -31,12 +36,10 @@ async function internalFetch(
 
   // --- AJUSTE DE MERCADO 1: Content-Type condicional e Stringify automático ---
   if (init?.body) {
-    // Se for FormData (ex: upload de imagem), o navegador lida com o Content-Type
     if (!(init.body instanceof FormData)) {
       if (!headers.has("Content-Type")) {
         headers.set("Content-Type", "application/json");
       }
-      // Se você mandar um objeto direto do Service, ele vira string automaticamente
       if (typeof init.body === "object") {
         init.body = JSON.stringify(init.body);
       }
@@ -59,47 +62,74 @@ async function internalFetch(
 
   const refreshPath = "/api/v1/token/refresh";
 
+  // --- O BLOCO DO 401 ATUALIZADO COM A FILA ---
   if (response.status === 401 && !url.includes(refreshPath)) {
     const refreshToken = await getRefreshToken();
 
     if (refreshToken) {
-      try {
-        const refreshResponse = await fetch(`${getBaseUrl()}${refreshPath}`, {
-          method: "PATCH",
-          headers: {
-            Cookie: `refreshToken=${refreshToken}`,
-          },
-        });
+      // Se não tem ninguém renovando, eu assumo a responsabilidade!
+      if (!isRefreshing) {
+        isRefreshing = true;
+        refreshPromise = (async () => {
+          try {
+            const refreshResponse = await fetch(
+              `${getBaseUrl()}${refreshPath}`,
+              {
+                method: "PATCH",
+                headers: {
+                  Cookie: `refreshToken=${refreshToken}`,
+                },
+              },
+            );
 
-        if (refreshResponse.ok) {
-          const { token: newAccessToken } = await refreshResponse.json();
-          const setCookieHeader = refreshResponse.headers.get("set-cookie");
-          const newRefreshTokenId =
-            getCookieValue(setCookieHeader, "refreshToken") ?? refreshToken;
+            if (refreshResponse.ok) {
+              const { token: newAccessToken } = await refreshResponse.json();
+              const setCookieHeader = refreshResponse.headers.get("set-cookie");
+              const newRefreshTokenId =
+                getCookieValue(setCookieHeader, "refreshToken") ?? refreshToken;
 
-          const session = await getSession();
+              const session = await getSession();
 
-          // Graças ao ajuste de 7 dias no session.ts, a sessão existirá aqui.
-          if (session) {
-            await setSession(newAccessToken, newRefreshTokenId, session.user);
-
-            const retryHeaders = new Headers(headers);
-            retryHeaders.set("Authorization", `Bearer ${newAccessToken}`);
-
-            return fetch(url, { ...init, headers: retryHeaders });
-          } else {
-            // Fallback de segurança se o cookie principal foi deletado manualmente
+              if (session) {
+                await setSession(
+                  newAccessToken,
+                  newRefreshTokenId,
+                  session.user,
+                );
+              }
+            } else {
+              await destroySession();
+              throw new Error("Refresh falhou");
+            }
+          } catch (error) {
             await destroySession();
-            throw {
-              status: 401,
-              message: "Sessão inválida.",
-            } satisfies HttpError;
+            throw error;
+          } finally {
+            // Terminei! Libero a fila para a próxima.
+            isRefreshing = false;
+            refreshPromise = null;
           }
+        })();
+      }
+
+      // Todo mundo que deu 401 (incluindo o primeiro) espera a promessa terminar aqui
+      try {
+        await refreshPromise;
+
+        // Terminou a espera! Pego o token novo da sessão e tento de novo!
+        const session = await getSession();
+        if (session?.token) {
+          const retryHeaders = new Headers(headers);
+          retryHeaders.set("Authorization", `Bearer ${session.token}`);
+          return fetch(url, { ...init, headers: retryHeaders });
         } else {
-          await destroySession();
+          throw new Error("Sessão vazia");
         }
       } catch {
-        await destroySession();
+        throw {
+          status: 401,
+          message: "Sessão inválida.",
+        } satisfies HttpError;
       }
     }
   }
