@@ -1,4 +1,7 @@
+"use client";
+
 import { Heart } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 // Ícones SVG nativos (livres de depreciação e dependências)
 const IconInstagram = ({ className }: { className?: string }) => (
@@ -34,6 +37,13 @@ const IconTikTok = ({ className }: { className?: string }) => (
 );
 
 export function Footer() {
+  const pathname = usePathname();
+  const isIndividualChatPage =
+    pathname.startsWith("/home/chats/") && pathname.split("/").length > 3;
+
+  if (isIndividualChatPage) {
+    return null; // Oculta o header inteiro se estiver no chat
+  }
   return (
     <footer className="border-border/40 bg-background/60 supports-backdrop-filter:bg-background/40 mt-auto w-full border-t backdrop-blur-lg">
       <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">

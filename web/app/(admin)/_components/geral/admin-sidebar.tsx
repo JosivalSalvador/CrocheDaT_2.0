@@ -67,7 +67,15 @@ export function AdminSidebar() {
   const { data: profileResponse, isLoading: isProfileLoading } = useProfile();
 
   const user = profileResponse?.user;
+
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const isIndividualChatPage =
+    pathname.startsWith("/dashboard/chats/") && pathname.split("/").length > 3;
+
+  if (isIndividualChatPage) {
+    return null;
+  }
 
   // ==============================================================
   // RENDERIZADOR REUTILIZÁVEL: Itens do Menu

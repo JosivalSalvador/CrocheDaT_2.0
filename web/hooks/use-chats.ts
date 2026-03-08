@@ -79,6 +79,8 @@ export function useChatMutations() {
       // Deixamos sem toast propositalmente para não poluir a tela a cada "Oi!" enviado
       // Apenas recarregamos o cache das mensagens daquele chat específico
       queryClient.invalidateQueries({ queryKey: ["chat", variables.chatId] });
+      queryClient.invalidateQueries({ queryKey: ["myChats"] });
+      queryClient.invalidateQueries({ queryKey: ["allChats"] });
     },
     onError: (error: Error) => toast.error(error.message),
   });
