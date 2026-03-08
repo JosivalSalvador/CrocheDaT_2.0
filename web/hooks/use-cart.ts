@@ -7,6 +7,7 @@ import {
   removeCartItemAction,
   clearCartAction,
   getMyCartAction,
+  getCartDetailAction,
 } from "../actions/carts.actions";
 import { AddToCartInput, UpdateCartItemInput } from "../types/index";
 import { toast } from "sonner";
@@ -19,6 +20,15 @@ export function useCart() {
   return useQuery({
     queryKey: ["cart"],
     queryFn: () => getMyCartAction(),
+  });
+}
+
+// NOVO HOOK ADICIONADO AQUI 👇
+export function useCartDetail(itemId: string) {
+  return useQuery({
+    queryKey: ["cartDetail", itemId],
+    queryFn: () => getCartDetailAction(itemId),
+    enabled: !!itemId, // Garante que a query só rode se o itemId existir
   });
 }
 

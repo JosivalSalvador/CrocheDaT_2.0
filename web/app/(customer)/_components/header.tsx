@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
+import { usePathname } from "next/navigation";
 import { useProfile } from "@/hooks/use-users";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -55,10 +55,17 @@ const IconCrochet = ({ className }: { className?: string }) => (
 );
 
 export function HeaderCustomer() {
+  const pathname = usePathname();
   const { data: profileData } = useProfile();
   const { logout } = useAuth();
 
   const user = profileData?.user;
+  const isIndividualChatPage =
+    pathname.startsWith("/home/chats/") && pathname.split("/").length > 3;
+
+  if (isIndividualChatPage) {
+    return null; // Oculta o header inteiro se estiver no chat
+  }
 
   const getInitials = (name?: string) => {
     if (!name) return "U";

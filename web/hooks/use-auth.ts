@@ -1,6 +1,6 @@
 // web/hooks/use-auth.ts
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   loginAction,
   registerAction,
@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 
 export function useAuth() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const login = useMutation({
     mutationFn: async (data: LoginInput) => {
@@ -51,6 +52,7 @@ export function useAuth() {
   const logout = useMutation({
     mutationFn: async () => {
       // O logoutAction já tem o redirect("/login") embutido no lado do servidor
+      queryClient.clear();
       await logoutAction();
     },
     // Não precisamos de onSuccess aqui porque a Action já expulsa o usuário da tela

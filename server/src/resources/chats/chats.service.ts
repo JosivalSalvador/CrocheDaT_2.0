@@ -126,6 +126,13 @@ export async function listUserChats(userId: string) {
   const chats = await prisma.chat.findMany({
     where: { userId },
     orderBy: { lastMessageAt: 'desc' },
+    include: {
+      messages: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: { sender: { select: { name: true, role: true } } },
+      },
+    },
   })
 
   return chats
@@ -139,6 +146,11 @@ export async function listAllChats() {
     orderBy: { lastMessageAt: 'desc' },
     include: {
       user: { select: { name: true, role: true } },
+      messages: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: { sender: { select: { name: true, role: true } } },
+      },
     },
   })
 
