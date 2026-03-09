@@ -69,11 +69,10 @@ export default function AboutPage() {
               Croche da T
             </h2>
             <p className="text-muted-foreground flex-1 text-sm leading-relaxed sm:text-base">
-              [ INSERIR TEXTO AQUI: Ex: Tudo começou com a vontade de
-              transformar fios em arte. Acreditamos que cada peça deve ter
-              personalidade própria, fugindo do padrão industrial. Trabalhamos
-              com cuidado em cada detalhe, do primeiro rascunho até o acabamento
-              final. ]
+              Tudo começou com a vontade de transformar fios em arte.
+              Acreditamos que cada peça deve ter personalidade própria, fugindo
+              do padrão industrial. Trabalhamos com cuidado em cada detalhe, do
+              primeiro rascunho até o acabamento final.
             </p>
           </div>
 
@@ -100,11 +99,10 @@ export default function AboutPage() {
               </div>
             </div>
             <p className="text-muted-foreground flex-1 text-center text-sm leading-relaxed sm:text-left sm:text-base">
-              [ INSERIR TEXTO SOBRE A THAYSSA: Ex: Sou apaixonada por
-              materializar ideias através do crochê. Cada pedido que recebo na
-              Croche da T é tratado de forma exclusiva. Meu objetivo é garantir
-              que você receba algo que foi pensado e executado com máxima
-              dedicação. ]
+              Sou apaixonada por materializar ideias através do crochê. Cada
+              pedido que recebo na Croche da T é tratado de forma exclusiva. Meu
+              objetivo é garantir que você receba algo que foi pensado e
+              executado com máxima dedicação.
             </p>
           </div>
         </section>
@@ -217,7 +215,7 @@ export default function AboutPage() {
               className="bg-background/50 h-12 w-full rounded-full px-6 text-sm font-bold backdrop-blur-md sm:h-14 sm:w-auto sm:px-8 sm:text-base"
             >
               <a
-                href="https://instagram.com/"
+                href="https://www.instagram.com/croche.dat/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -233,7 +231,7 @@ export default function AboutPage() {
               className="bg-background/50 h-12 w-full rounded-full px-6 text-sm font-bold backdrop-blur-md sm:h-14 sm:w-auto sm:px-8 sm:text-base"
             >
               <a
-                href="https://tiktok.com/"
+                href="https://www.tiktok.com/@croche.dat?_r=1&_t=ZS-94WtWEHgPHJ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"

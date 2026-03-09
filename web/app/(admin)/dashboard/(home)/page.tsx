@@ -14,6 +14,7 @@ import {
   AlertCircle,
   ArrowRight,
   Clock,
+  User,
 } from "lucide-react";
 
 import type { ChatResponse } from "@/types/index";
@@ -39,7 +40,6 @@ export default function DashboardOverviewPage() {
     const supportChats = openChats.filter((chat) => chat.type === "SUPPORT");
     const orderChats = openChats.filter((chat) => chat.type === "ORDER");
 
-    // Correção TS: Garantindo a tipagem de lastMessageAt
     const sortedWaitlist = [...openChats].sort((a, b) => {
       const dateA = a.lastMessageAt
         ? new Date(a.lastMessageAt as string | Date).getTime()
@@ -50,7 +50,6 @@ export default function DashboardOverviewPage() {
       return dateA - dateB;
     });
 
-    // Correção TS: Checando a existência de createdAt e garantindo tipagem
     const recentUsers = [...users]
       .sort((a, b) => {
         const dateA = a.createdAt
@@ -84,20 +83,31 @@ export default function DashboardOverviewPage() {
   const isLoading = isLoadingChats || isLoadingProducts || isLoadingUsers;
 
   // ==========================================
-  // ⏳ ESTADO DE LOADING
+  // ⏳ ESTADO DE LOADING (Aprimorado)
   // ==========================================
   if (isLoading) {
     return (
-      <div className="flex flex-col space-y-6 p-4 sm:p-6 md:p-8">
-        <Skeleton className="h-10 w-48 rounded-lg" />
+      <div className="mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8">
+        <div>
+          <Skeleton className="h-10 w-64 rounded-lg" />
+          <Skeleton className="mt-2 h-4 w-48 rounded-md" />
+        </div>
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-2xl" />
+            <div key={i} className="bg-card rounded-2xl border p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-10 w-10 rounded-full" />
+              </div>
+              <Skeleton className="h-8 w-16" />
+            </div>
           ))}
         </div>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <Skeleton className="h-96 w-full rounded-2xl lg:col-span-2" />
-          <Skeleton className="h-96 w-full rounded-2xl" />
+          <Skeleton className="h-100 w-full rounded-2xl lg:col-span-2" />
+          <Skeleton className="h-100 w-full rounded-2xl" />
         </div>
       </div>
     );
@@ -107,25 +117,25 @@ export default function DashboardOverviewPage() {
   // 🚀 TELA PRINCIPAL
   // ==========================================
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col space-y-8 p-4 sm:p-6 md:p-8">
+    <div className="mx-auto flex w-full max-w-7xl flex-col space-y-6 p-4 sm:space-y-8 sm:p-6 md:p-8">
       {/* HEADER */}
-      <div>
+      <div className="flex flex-col gap-1">
         <h1 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
           {greeting}, Equipe! 👋
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
+        <p className="text-muted-foreground text-sm sm:text-base">
           Aqui está o resumo do que está acontecendo na plataforma hoje.
         </p>
       </div>
 
       {/* METRIC CARDS (KPIs) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-card relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="bg-card group hover:border-primary/30 relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">
               Fila de Atendimento
             </p>
-            <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full">
+            <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-full transition-transform group-hover:scale-110">
               <MessageSquare className="h-5 w-5" />
             </div>
           </div>
@@ -139,42 +149,42 @@ export default function DashboardOverviewPage() {
           </div>
         </div>
 
-        <div className="bg-card relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="bg-card group relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:border-blue-500/30 hover:shadow-md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">
               Tipos de Ticket
             </p>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 transition-transform group-hover:scale-110">
               <ShoppingBag className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-4 flex items-center space-x-4">
-            <div>
-              <p className="text-foreground text-2xl font-bold tracking-tight">
+            <div className="flex flex-col">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
                 {metrics.orderTotal}
-              </p>
-              <p className="text-muted-foreground text-xs font-medium">
+              </span>
+              <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
                 Vendas
-              </p>
+              </span>
             </div>
             <div className="bg-border h-8 w-px"></div>
-            <div>
-              <p className="text-foreground text-2xl font-bold tracking-tight">
+            <div className="flex flex-col">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
                 {metrics.supportTotal}
-              </p>
-              <p className="text-muted-foreground text-xs font-medium">
+              </span>
+              <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
                 Dúvidas
-              </p>
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="bg-card relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="bg-card group relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:border-orange-500/30 hover:shadow-md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">
               Vitrine Ativa
             </p>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-500 transition-transform group-hover:scale-110">
               <PackageSearch className="h-5 w-5" />
             </div>
           </div>
@@ -188,18 +198,18 @@ export default function DashboardOverviewPage() {
           </div>
         </div>
 
-        <div className="bg-card relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="bg-card group relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all hover:border-emerald-500/30 hover:shadow-md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">
               Total de Contas
             </p>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 transition-transform group-hover:scale-110">
               <Users className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-4">
             {isUsersError ? (
-              <p className="text-muted-foreground text-sm font-medium">
+              <p className="text-muted-foreground text-xs font-medium">
                 Acesso restrito a Admins.
               </p>
             ) : (
@@ -220,7 +230,7 @@ export default function DashboardOverviewPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Esquerda: Fila de Espera */}
         <div className="bg-card flex flex-col rounded-2xl border shadow-sm lg:col-span-2">
-          <div className="flex items-center justify-between border-b p-6">
+          <div className="flex flex-col items-start justify-between border-b p-4 sm:flex-row sm:items-center sm:p-6">
             <div>
               <h3 className="text-lg font-bold">Fila de Espera</h3>
               <p className="text-muted-foreground text-sm">
@@ -228,7 +238,7 @@ export default function DashboardOverviewPage() {
               </p>
             </div>
             {metrics.waitlist.length > 0 && (
-              <span className="bg-destructive text-destructive-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
+              <span className="bg-destructive text-destructive-foreground mt-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold sm:mt-0">
                 {metrics.openTotal}
               </span>
             )}
@@ -236,12 +246,16 @@ export default function DashboardOverviewPage() {
 
           <div className="flex flex-1 flex-col p-0">
             {metrics.waitlist.length === 0 ? (
-              <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center p-8 text-center">
-                <div className="bg-primary/10 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-                  <span className="text-2xl">🎉</span>
+              <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center p-12 text-center">
+                <div className="bg-primary/10 mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+                  <span className="text-3xl">🎉</span>
                 </div>
-                <p className="font-medium">Nenhum cliente na fila!</p>
-                <p className="text-sm">Todos os chamados foram respondidos.</p>
+                <p className="text-foreground text-lg font-medium">
+                  Fila zerada!
+                </p>
+                <p className="mt-1 text-sm">
+                  Todos os clientes foram atendidos.
+                </p>
               </div>
             ) : (
               <div className="divide-y">
@@ -249,28 +263,27 @@ export default function DashboardOverviewPage() {
                   <Link
                     key={chat.id}
                     href={`/dashboard/chats/${chat.id}`}
-                    className="hover:bg-muted/50 flex flex-col items-start justify-between p-4 transition-colors sm:flex-row sm:items-center sm:p-6"
+                    className="hover:bg-muted/50 group flex flex-col items-start justify-between p-4 transition-colors sm:flex-row sm:items-center sm:p-6"
                   >
-                    <div className="flex items-center space-x-4">
+                    <div className="flex w-full items-center space-x-4 sm:w-auto">
                       <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${chat.type === "ORDER" ? "bg-blue-500/10 text-blue-500" : "bg-primary/10 text-primary"}`}
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${chat.type === "ORDER" ? "bg-blue-500/10 text-blue-500" : "bg-primary/10 text-primary"}`}
                       >
                         {chat.type === "ORDER" ? (
-                          <ShoppingBag className="h-5 w-5" />
+                          <ShoppingBag className="h-6 w-6" />
                         ) : (
-                          <MessageSquare className="h-5 w-5" />
+                          <MessageSquare className="h-6 w-6" />
                         )}
                       </div>
-                      <div>
-                        <p className="text-foreground font-semibold">
+                      <div className="flex-1">
+                        <p className="text-foreground text-sm font-semibold sm:text-base">
                           {chat.type === "ORDER"
                             ? "Nova Encomenda"
-                            : "Dúvida/Suporte"}
+                            : "Dúvida / Suporte"}
                         </p>
-                        <div className="text-muted-foreground flex items-center text-xs">
-                          <Clock className="mr-1 h-3 w-3" />
+                        <div className="text-muted-foreground mt-0.5 flex items-center text-xs sm:text-sm">
+                          <Clock className="mr-1.5 h-3.5 w-3.5" />
                           <span>
-                            {/* Correção TS no UI render */}
                             {chat.lastMessageAt
                               ? new Date(
                                   chat.lastMessageAt as string | Date,
@@ -278,15 +291,17 @@ export default function DashboardOverviewPage() {
                                   hour: "2-digit",
                                   minute: "2-digit",
                                 })
-                              : "Sem mensagens"}
+                              : "Aguardando mensagem..."}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 flex w-full items-center justify-end sm:mt-0 sm:w-auto">
-                      <span className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold shadow-sm">
-                        Responder <ArrowRight className="ml-1 h-3 w-3" />
+                    {/* Botão Responsivo: Ocupa tudo no Mobile, se ajusta no PC */}
+                    <div className="mt-4 flex w-full shrink-0 sm:mt-0 sm:w-auto">
+                      <span className="bg-primary text-primary-foreground group-hover:bg-primary/90 flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all sm:w-auto sm:rounded-full sm:px-4 sm:py-1.5 sm:text-xs">
+                        Responder{" "}
+                        <ArrowRight className="ml-2 h-4 w-4 sm:ml-1 sm:h-3 sm:w-3" />
                       </span>
                     </div>
                   </Link>
@@ -298,7 +313,7 @@ export default function DashboardOverviewPage() {
 
         {/* Direita: Atividade Recente */}
         <div className="bg-card flex flex-col rounded-2xl border shadow-sm">
-          <div className="border-b p-6">
+          <div className="border-b p-4 sm:p-6">
             <h3 className="text-lg font-bold">Novos Cadastros</h3>
             <p className="text-muted-foreground text-sm">
               Últimos clientes registrados.
@@ -307,38 +322,46 @@ export default function DashboardOverviewPage() {
 
           <div className="p-0">
             {isUsersError ? (
-              <div className="text-muted-foreground flex flex-col items-center justify-center p-8 text-center">
-                <AlertCircle className="mb-2 h-8 w-8 opacity-50" />
-                <p className="text-sm">
-                  Você não tem permissão para visualizar clientes.
-                </p>
+              <div className="text-muted-foreground flex flex-col items-center justify-center p-12 text-center">
+                <AlertCircle className="mb-3 h-10 w-10 opacity-50" />
+                <p className="text-sm">Área restrita a Administradores.</p>
               </div>
             ) : metrics.recentUsers.length === 0 ? (
-              <div className="text-muted-foreground p-8 text-center text-sm">
-                Nenhum usuário recente.
+              <div className="text-muted-foreground flex flex-col items-center justify-center p-12 text-center">
+                <Users className="mb-3 h-10 w-10 opacity-20" />
+                <p className="text-sm">Nenhum registro recente.</p>
               </div>
             ) : (
               <div className="divide-y">
                 {metrics.recentUsers.map((user) => (
                   <div
                     key={user.id}
-                    className="flex items-center justify-between p-4 sm:p-6"
+                    className="hover:bg-muted/30 flex items-center justify-between p-4 transition-colors sm:p-5"
                   >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-foreground truncate font-medium">
-                        {user.name}
-                      </p>
-                      <p className="text-muted-foreground truncate text-xs">
-                        {user.email}
-                      </p>
+                    <div className="flex min-w-0 flex-1 items-center space-x-3">
+                      {/* Avatar Adicionado para dar mais vida à lista */}
+                      <div className="bg-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                        <User className="text-muted-foreground h-5 w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-foreground truncate text-sm font-semibold">
+                          {user.name}
+                        </p>
+                        <p className="text-muted-foreground truncate text-xs">
+                          {user.email}
+                        </p>
+                      </div>
                     </div>
-                    <div className="ml-4 shrink-0">
-                      <span className="text-muted-foreground text-xs">
-                        {/* Correção TS no UI render */}
+
+                    <div className="ml-3 shrink-0 text-right">
+                      <span className="text-muted-foreground text-xs font-medium">
                         {user.createdAt
                           ? new Date(
                               user.createdAt as string | Date,
-                            ).toLocaleDateString("pt-BR")
+                            ).toLocaleDateString("pt-BR", {
+                              day: "2-digit",
+                              month: "short",
+                            })
                           : "-"}
                       </span>
                     </div>
