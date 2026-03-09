@@ -1,13 +1,29 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { useProfile } from "@/hooks/use-users";
 import { ProfileForm } from "@/app/(admin)/_components/geral/profile-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+// Funções auxiliares obrigatórias para o useSyncExternalStore
+const emptySubscribe = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default function ProfilePage() {
   const { data, isLoading, isError, error } = useProfile();
+
+  // A forma mais moderna (React 18+) de evitar erros de hidratação sem causar renders em cascata
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+
+  // Força o Skeleton enquanto está no servidor (getServerSnapshot) ou enquanto a API carrega
+  const showSkeleton = !isClient || isLoading;
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6 p-4 pb-20 sm:p-6 md:space-y-8 md:p-8">
@@ -24,7 +40,7 @@ export default function ProfilePage() {
       {/* 🧩 ÁREA DINÂMICA */}
       <div className="relative z-10">
         {/* 1. ESTADO DE CARREGAMENTO */}
-        {isLoading ? (
+        {showSkeleton ? (
           <div className="space-y-6">
             <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
               <Skeleton className="h-95 w-full rounded-xl" />
