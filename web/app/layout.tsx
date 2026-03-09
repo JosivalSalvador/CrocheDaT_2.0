@@ -16,9 +16,6 @@ export const metadata: Metadata = {
     template: "%s | Crochê da T", // Permite páginas internas mudarem o título (ex: Dashboard | Crochê da T)
   },
   description: "Sistema de gerenciamento de encomendas e peças de crochê.",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export const viewport: Viewport = {

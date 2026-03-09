@@ -3,7 +3,7 @@
 import { use } from "react";
 import { useChatDetails } from "@/hooks/use-chats";
 import { AdminChatHeader } from "@/app/(admin)/_components/chats/admin-chat-header";
-import { MessageThread } from "@/app/(customer)/_components/chat/message-thread";
+import { MessageThread } from "@/app/(admin)/_components/chats/admin-message-thread";
 import { ChatInput } from "@/app/(customer)/_components/chat/chat-input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";

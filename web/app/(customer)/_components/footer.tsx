@@ -62,7 +62,7 @@ export function Footer() {
             {/* Ícones de Redes Sociais com Links Reais */}
             <div className="flex items-center gap-4">
               <a
-                href="https://instagram.com/seu-perfil-aqui"
+                href="https://www.instagram.com/croche.dat/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-primary transition-colors hover:scale-110"
@@ -72,7 +72,7 @@ export function Footer() {
               </a>
 
               <a
-                href="https://tiktok.com/@seu-perfil-aqui"
+                href="https://www.tiktok.com/@croche.dat?_r=1&_t=ZS-94WtWEHgPHJ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-primary transition-colors hover:scale-110"
