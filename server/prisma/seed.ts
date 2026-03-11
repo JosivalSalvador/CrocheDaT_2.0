@@ -27,7 +27,7 @@ async function main() {
 
   console.info('🧹 Banco limpo.')
 
-  const DEFAULT_PASSWORD = 'password123'
+  const DEFAULT_PASSWORD = '@Js92434212'
   const passwordHash = await hash(DEFAULT_PASSWORD, 10)
 
   /*
@@ -53,7 +53,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       name: 'Admin Sistema',
-      email: 'admin@crochedat.com',
+      email: 'josivaladm@gmail.com',
       password_hash: passwordHash,
       role: Role.ADMIN,
     },
@@ -62,7 +62,7 @@ async function main() {
   const supporter = await prisma.user.create({
     data: {
       name: 'Suporte Maria',
-      email: 'support@crochedat.com',
+      email: 'josivalsup@gmail.com',
       password_hash: passwordHash,
       role: Role.SUPPORTER,
     },
@@ -71,7 +71,16 @@ async function main() {
   const client = await prisma.user.create({
     data: {
       name: 'Cliente Exemplo',
-      email: 'user@crochedat.com',
+      email: 'josivaluser@gmail.com',
+      password_hash: passwordHash,
+      role: Role.USER,
+    },
+  })
+
+  const client2 = await prisma.user.create({
+    data: {
+      name: 'Cliente Exemplo2',
+      email: 'josivaluser2@gmail.com',
       password_hash: passwordHash,
       role: Role.USER,
     },
@@ -112,7 +121,7 @@ async function main() {
       price: 89.9,
       categoryId: amigurumis.id,
       images: {
-        create: [],
+        create: [], // SEM IMAGEM PROPOSITALMENTE
       },
     },
   })
@@ -126,7 +135,7 @@ async function main() {
       price: 35.0,
       categoryId: sousplats.id,
       images: {
-        create: [{ name: 'Principal', url: 'https://img.com/sousplat.jpg' }],
+        create: [{ name: 'Principal', url: 'https://img.com/sousplat.jpg' }], // IMAGEM QUEBRADA PROPOSITALMENTE
       },
     },
   })
@@ -287,12 +296,23 @@ async function main() {
         userId: supporter.id,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       },
+      {
+        type: TokenType.EMAIL_VERIFY,
+        userId: client2.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
     ],
   })
 
   const end = Date.now()
   console.info(`✅ Seed finalizado em ${end - start}ms`)
-  console.info('Admin: admin@crochedat.com | Senha: ' + DEFAULT_PASSWORD)
+  console.info('--------------------------------------------------')
+  console.info('🧪 CREDENCIAIS PARA O E2E / CODEGEN:')
+  console.info(`👤 Admin:   josivaladm@gmail.com   | Senha: ${DEFAULT_PASSWORD}`)
+  console.info(`🎧 Suporte: josivalsup@gmail.com | Senha: ${DEFAULT_PASSWORD}`)
+  console.info(`🛒 Cliente: josivaluser@gmail.com    | Senha: ${DEFAULT_PASSWORD}`)
+  console.info(`🛒 Cliente: josivaluser2@gmail.com    | Senha: ${DEFAULT_PASSWORD}`)
+  console.info('--------------------------------------------------')
 }
 
 main()
