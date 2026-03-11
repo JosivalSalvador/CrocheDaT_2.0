@@ -38,10 +38,10 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -85,10 +85,10 @@ jobs:
         working-directory: ./web
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -108,9 +108,65 @@ jobs:
         env:
           # Evita que o T3 Env barre o build/teste por falta de envs de prod
           SKIP_ENV_VALIDATION: true
+    
+  # ====================================================
+  # 3. E2E TESTS (DOCKER + PLAYWRIGHT)
+  # ====================================================
+  e2e-tests:
+    name: E2E Tests (Playwright & Docker)
+    runs-on: ubuntu-latest
+    needs: [server-check, web-check] # Só roda se os testes rápidos passarem
+    
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Install Playwright Browsers
+        # Instala os navegadores do Playwright (Chromium, Firefox, Webkit) e dependências do Linux
+        working-directory: ./web
+        run: npx playwright install --with-deps
+
+      - name: Create .env.prod files for Docker Compose
+        run: |
+          echo "PORT=3333" >> server/.env.prod
+          echo "DATABASE_URL=postgresql://user:pass@postgres:5432/db" > server/.env.prod
+          echo "JWT_SECRET=ci-secret" >> server/.env.prod
+          echo "NODE_ENV=production" >> server/.env.prod
+
+          # 2. Cria o env do Frontend (Web)
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.prod
+          echo "API_INTERNAL_URL=http://api:3333" >> web/.env.prod
+
+          echo "DATABASE_URL=postgresql://user:pass@localhost:5432/db" > server/.env
+          echo "NODE_ENV=production" >> server/.env
+
+      - name: Generate Prisma Client
+        run: npm run db:gen
+
+      - name: Run E2E Tests
+        # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
+        run: npm run test:e2e
+
+      - name: Upload Playwright Report
+        # Se o teste falhar no CI, ele salva o HTML com o print do erro para você baixar e investigar
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-report
+          path: web/playwright-report/
+          retention-days: 7
 
   # ====================================================
-  # 3. BUILD DE PRODUÇÃO (DOCKERFILES)
+  # 4. BUILD DE PRODUÇÃO (DOCKERFILES)
   # ====================================================
   docker-build-check:
     name: Verify Production Docker Builds
@@ -118,7 +174,7 @@ jobs:
     needs: [server-check, web-check]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build server image
         run: |
@@ -135,16 +191,16 @@ jobs:
             -t crochedat-web:ci .
 
   # ====================================================
-  # 4. AUTO PR DEV → MAIN
+  # 5. AUTO PR DEV → MAIN
   # ====================================================
   auto-pr:
     name: Open PR to Main
     runs-on: ubuntu-latest
-    needs: [docker-build-check]
+    needs: [docker-build-check, e2e-tests]
     if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check existing PR
         id: check_pr

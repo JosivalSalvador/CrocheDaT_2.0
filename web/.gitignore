@@ -34,3 +34,10 @@ next-env.d.ts
 
 # Turborepo local cache
 .turbo/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
