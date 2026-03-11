@@ -56,7 +56,13 @@ test.describe("Fluxo Completo Customer: Busca, Carrinho e Chat", () => {
     await page
       .getByRole("button", { name: "Abrir Carrinho" })
       .click({ force: true });
-    await page.getByRole("button", { name: "Combinar Encomenda" }).click();
+
+    // AJUSTE: Aguarda o carrinho abrir e o botão ficar visível antes de clicar
+    const btnCombinar = page.getByRole("button", {
+      name: "Combinar Encomenda",
+    });
+    await expect(btnCombinar).toBeVisible();
+    await btnCombinar.click();
 
     // O PULO DO GATO: Se o carrinho ficou aberto na tela, ele esconde o resto do header.
     // O 'Escape' garante que qualquer modal/drawer seja fechado antes de seguirmos.
