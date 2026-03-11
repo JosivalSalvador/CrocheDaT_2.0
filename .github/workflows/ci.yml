@@ -147,6 +147,12 @@ jobs:
 
           echo "DATABASE_URL=postgresql://user:pass@localhost:5432/db" > server/.env
 
+      - name: Adaptar Prisma para o CI
+        run: |
+          # Troca 'migrate dev' por 'migrate deploy' direto no package.json do server.
+          # Isso garante que o Prisma não trave o CI pedindo confirmação [Y/n].
+          sed -i 's/prisma migrate dev/prisma migrate deploy/g' server/package.json
+
       - name: Generate Prisma Client
         working-directory: ./server
         run: npx prisma generate
