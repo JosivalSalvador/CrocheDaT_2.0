@@ -145,6 +145,9 @@ jobs:
           # 2. Cria o env do Frontend (Web)
           echo "NEXT_PUBLIC_API_URL=http://localhost:3333" > web/.env.prod
           echo "API_INTERNAL_URL=http://api:3333" >> web/.env.prod
+          
+      - name: Generate Prisma Client
+        run: npm run db:gen
 
       - name: Run E2E Tests
         # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
