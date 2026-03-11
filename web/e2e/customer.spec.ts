@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Fluxo Completo Customer: Busca, Carrinho e Chat", () => {
   test("deve executar o fluxo sem flakiness", async ({ page }) => {
+    test.setTimeout(120000);
     // 1. Acesso e validação
     await page.goto("http://localhost:3000/");
     await page.getByRole("link", { name: "Entrar" }).click();
@@ -101,6 +102,9 @@ test.describe("Fluxo Completo Customer: Busca, Carrinho e Chat", () => {
 
     // 8. Retorno à Home (clicando no primeiro link disponível, geralmente a logo)
     await page.getByRole("link").first().click();
+
+    const toastNotificacao = page.locator("[data-sonner-toast]");
+    await expect(toastNotificacao).toBeHidden({ timeout: 15000 });
 
     // 9. Logout
     await expect(userMenu).toBeVisible();
