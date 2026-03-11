@@ -150,6 +150,9 @@ jobs:
       - name: Generate Prisma Client
         working-directory: ./server
         run: npx prisma generate
+        env:
+          # Injetando a variável diretamente no step para o prisma.config.ts não dar erro
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
 
       - name: Run E2E Tests
         # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
