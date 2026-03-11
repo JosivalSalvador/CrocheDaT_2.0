@@ -149,6 +149,12 @@ jobs:
       - name: Run E2E Tests
         # Esse comando chama o seu global-setup.ts, que sobe o Docker, roda os testes e limpa tudo!
         run: npm run test:e2e
+        env:
+          # Isso aqui salva a vida do seu código prisma.ts!
+          # O Node.js vai achar o process.env.DATABASE_URL e passar pelo seu "if" de boa.
+          # Usamos localhost porque o runner do Github acessa o banco exposto pelo Docker.
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+          NODE_ENV: "production"
 
       - name: Upload Playwright Report
         # Se o teste falhar no CI, ele salva o HTML com o print do erro para você baixar e investigar
