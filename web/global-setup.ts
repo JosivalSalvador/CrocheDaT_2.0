@@ -18,7 +18,7 @@ async function globalSetup() {
 
   console.log("🌱 [SETUP] A executar as Migrations e o Seed...");
   // Utiliza os scripts exatos que tens no package.json da raiz
-  execSync("npm run db:migrate", { stdio: "inherit", cwd: rootDir });
+  execSync("npm run db:deploy", { stdio: "inherit", cwd: rootDir });
   execSync("npm run db:seed", { stdio: "inherit", cwd: rootDir });
 
   console.log("✅ [SETUP] Ambiente pronto! A iniciar os testes E2E...");
