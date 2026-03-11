@@ -54,15 +54,18 @@ test.describe("Fluxo Completo Customer: Busca, Carrinho e Chat", () => {
     await expect(btnAdicionar).toBeVisible();
     await btnAdicionar.click();
 
-    await page
-      .getByRole("button", { name: "Abrir Carrinho" })
-      .click({ force: true });
+    // NOVO: Espera a notificação do Sonner confirmar que a requisição terminou
+    const toastAdicionado = page.locator("[data-sonner-toast]").first();
+    await expect(toastAdicionado).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole("button", { name: "Abrir Carrinho" }).click();
 
     // AJUSTE: Aguarda o carrinho abrir e o botão ficar visível antes de clicar
     const btnCombinar = page.getByRole("button", {
       name: "Combinar Encomenda",
     });
-    await expect(btnCombinar).toBeVisible();
+    // NOVO: Tempo de espera estendido para 15s para garantir no CI
+    await expect(btnCombinar).toBeVisible({ timeout: 15000 });
     await btnCombinar.click();
 
     // O PULO DO GATO: Se o carrinho ficou aberto na tela, ele esconde o resto do header.
