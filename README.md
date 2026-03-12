@@ -1,114 +1,82 @@
-# CrocheDaT 2.0 (Base) - Arquitetura Monorepo
+# CrocheDaT
 
-Este repositório armazena o código-fonte da plataforma Crochê da T (versão 2.0), utilizando uma arquitetura de Monorepo gerenciada pelo Turborepo. O projeto unifica o desenvolvimento da API (Server) e do Frontend (Web), garantindo consistência de código, tipagem e processos de deploy.
+Sistema de e-commerce completo voltado para a venda de produtos de crochê. O projeto é estruturado em uma arquitetura de Monorepo utilizando NPM Workspaces e Turborepo, separando a aplicação em dois pacotes principais: o front-end web e a API de back-end.
 
-## Visão Geral da Estrutura
+## Estrutura do Monorepo
 
-O projeto utiliza NPM Workspaces para gerenciamento de dependências. A estrutura de diretórios é organizada da seguinte forma:
+O repositório está dividido nos seguintes diretórios principais:
 
-* **.github/**: Contém os fluxos de trabalho do GitHub Actions para Integração Contínua (CI) e Entrega Contínua (CD).
-* **.husky/**: Configuração de Git Hooks para validação automática de código antes do commit.
-* **.turbo/**: Diretório de cache do Turborepo para acelerar builds e tarefas repetitivas.
-* **server/**: Aplicação Backend desenvolvida com Fastify, TypeScript, Prisma ORM e PostgreSQL.
-* **web/**: Aplicação Frontend desenvolvida com Next.js (App Router), Tailwind CSS e TypeScript.
-* **docker-compose.dev.yml**: Orquestração de contêineres para o ambiente de desenvolvimento local (Bancos de dados).
-* **docker-compose.yml**: Orquestração de contêineres simulando o ambiente de produção final.
+* `/web`: Aplicação front-end desenvolvida com Next.js 16 (App Router), React, TailwindCSS v4 e integração com React Query. Inclui a área do cliente e o painel administrativo.
+* `/server`: API RESTful desenvolvida com Node.js, Fastify, Prisma ORM e PostgreSQL, utilizando arquitetura baseada em recursos e validação com Zod.
 
-## Pré-requisitos do Sistema
+Para detalhes técnicos específicos de cada ambiente, consulte as documentações individuais:
+* [Documentação do Web (Front-end)](./web/README.md)
+* [Documentação do Server (API)](./server/README.md)
 
-Para executar este projeto, o ambiente deve possuir as seguintes ferramentas instaladas:
+## Pré-requisitos
 
-* **Node.js**: Versão 22 (LTS) ou superior.
-* **NPM**: Versão 10 ou superior.
-* **Docker Engine & Docker Compose**: Para execução dos bancos de dados e simulação de produção.
+Certifique-se de ter as seguintes ferramentas instaladas em seu ambiente local:
 
-## Instalação e Configuração
+* Node.js (v20 ou superior recomendado)
+* NPM (v11+)
+* Docker e Docker Compose
 
-1.  **Instalação de Dependências**
-    Execute o comando na raiz do projeto para instalar as dependências de todos os workspaces (root, server e web) simultaneamente:
-    ```bash
+## Configuração do Ambiente
+
+1. Clone o repositório:
+    git clone [https://github.com/JosivalSalvador/CrocheDaT_2.0.git](https://github.com/JosivalSalvador/CrocheDaT_2.0.git)
+    cd CrocheDaT_2.0
+
+2. Instale as dependências na raiz (o NPM cuidará dos workspaces automaticamente):
     npm install
-    ```
 
-2.  **Configuração de Ambiente (Hooks)**
-    O comando de instalação executará automaticamente a configuração do Husky (`prepare`), ativando as validações de `pre-commit`.
+3. Configure as variáveis de ambiente:
+    Navegue até as pastas `/web` e `/server` e crie os arquivos `.env` baseados nos arquivos de exemplo disponibilizados no projeto.
+    
+    cp web/.env.example web/.env
+    cp server/.env.example server/.env
 
-## Ambiente de Desenvolvimento
+## Executando o Projeto com Docker
 
-### 1. Banco de Dados (PostgreSQL)
-O projeto utiliza dois contêineres de banco de dados isolados para evitar conflitos entre dados de desenvolvimento e execução de testes automatizados.
+O projeto possui dois arquivos de orquestração do Docker, dependendo da sua necessidade:
 
-Execute o comando abaixo para iniciar os bancos:
-```bash
-docker compose -f docker-compose.dev.yml up -d
-```
+**Opção A: Ambiente de Desenvolvimento (Apenas Banco de Dados)**
+Sobe apenas o banco de dados PostgreSQL principal e o banco de testes. Ideal para quando você quer rodar a aplicação localmente pelo terminal para ver os logs diretamente.
+    
+    docker compose -f docker-compose.dev.yml up -d
 
-* **Instância de Desenvolvimento**: Acessível na porta `5432`.
-* **Instância de Testes**: Acessível na porta `5433` (utilizada pelos testes de integração).
+**Opção B: Sistema Completo**
+Sobe todo o ecossistema do projeto (Banco de dados, API e Front-end) em containers.
+    
+    docker compose up -d
 
-### 2. Execução da Aplicação
-O Turborepo gerencia a execução paralela dos serviços. Para iniciar tanto o Backend quanto o Frontend em modo de desenvolvimento (watch mode):
+## Inicializando a Aplicação Localmente
 
-```bash
-npm run dev
-```
+Se você optou por rodar apenas o banco de dados via Docker (Opção A), siga os passos abaixo para preparar o banco e rodar a aplicação via Turborepo:
 
-Caso deseje executar os serviços individualmente:
-* Frontend apenas: `npm run dev:web`
-* Backend apenas: `npm run dev:server`
+1. Execute as migrations e popule o banco de dados:
+    npm run db:migrate
+    npm run db:seed
 
-### 3. Gerenciamento do Banco de Dados (Prisma)
-Os scripts de banco de dados são executados a partir da raiz, mas direcionados ao workspace do servidor:
+2. Inicie os servidores em modo de desenvolvimento:
+    npm run dev
 
-* **Aplicar Migrations**: `npm run db:migrate` (Atualiza o esquema do banco de desenvolvimento).
-* **Gerar Cliente Prisma**: `npm run db:gen` (Atualiza a tipagem do Prisma Client).
-* **Prisma Studio**: `npm run db:studio` (Interface visual para gerenciamento de dados).
-* **Seed Database**: `npm run db:seed` (Popula o banco com dados iniciais).
+Este comando utiliza o Turborepo para iniciar simultaneamente o servidor Fastify e a aplicação Next.js.
 
-## Scripts Disponíveis (Raiz)
+## Acesso à Aplicação
 
-| Script | Função | Escopo |
-| :--- | :--- | :--- |
-| `dev` | Inicia o ambiente de desenvolvimento completo. | Global (Turbo) |
-| `build` | Compila o Server e o Web para produção. | Global (Turbo) |
-| `lint` | Executa verificação estática de código (ESLint). | Global (Turbo) |
-| `type-check` | Verifica a integridade da tipagem TypeScript. | Global (Turbo) |
-| `test` | Executa a suíte de testes (Vitest). | Global (Turbo) |
+Com os servidores rodando, você pode acessar os serviços através dos seguintes endereços:
 
-## Qualidade de Código e CI/CD
+* **Aplicação Web (Front-end):** http://localhost:3000
+* **API (Back-end):** http://localhost:3333 (Verifique a porta exata no seu arquivo .env)
+* **Documentação da API (Scalar/Swagger):** http://localhost:3333/docs
 
-### Git Hooks (Husky)
-Antes de cada commit, o Husky executa o Turborepo para validar apenas os arquivos modificados na branch atual (`dev`) em relação à branch principal. São executados:
-* Linting
-* Type Checking
+## Comandos Úteis (Raiz)
 
-Isso impede que código fora dos padrões seja enviado ao repositório.
+O `package.json` na raiz do projeto exporta vários scripts unificados:
 
-### Integração Contínua (CI)
-O arquivo `.github/workflows/ci.yml` é acionado em pushes para a branch `dev` ou Pull Requests. O fluxo consiste em:
-
-1.  **Server Check**: Levanta um serviço Postgres temporário, gera o Prisma Client e executa Lint, Type-Check e Testes no Backend.
-2.  **Web Check**: Executa Lint, Type-Check e Testes no Frontend.
-3.  **Docker Build Check**: Verifica se os `Dockerfile` de produção de ambos os projetos são construídos com sucesso.
-4.  **Auto PR**: Se todas as etapas anteriores passarem na branch `dev`, um Pull Request é criado automaticamente para a branch `main`.
-
-### Entrega Contínua (CD)
-O arquivo `.github/workflows/cd.yml` é acionado em pushes para a branch `main`. O fluxo consiste em:
-
-1.  **Build Multi-arquitetura**: Constrói imagens Docker para arquiteturas `linux/amd64` e `linux/arm64`.
-2.  **Publicação**: Envia as imagens para o Docker Hub com as tags `latest` e o hash do commit (`sha`).
-    * API: `josivaljunior/croche-api`
-    * Web: `josivaljunior/croche-web`
-3.  **Injeção de Segredos**: As variáveis de ambiente do Frontend (URLs da API) são injetadas durante o build via GitHub Secrets.
-
-## Simulação de Produção (Docker Local)
-
-Para verificar o comportamento da aplicação final (exatamente como será implantada), utilize o Docker Compose de produção. Este comando irá compilar o código TypeScript, gerar os builds otimizados e subir os contêineres finais.
-
-```bash
-docker compose -f docker-compose.yml up --build
-```
-
-Acesse os serviços em:
-* **Web**: http://localhost:3000
-* **API**: http://localhost:3333
+* `npm run build`: Executa o build de todos os pacotes do monorepo.
+* `npm run lint`: Executa o linter (ESLint) em todo o código.
+* `npm run test`: Roda a suíte de testes em todo o projeto.
+* `npm run test:e2e:ui`: Abre a interface do Playwright para testes End-to-End no front-end.
+* `npm run db:studio`: Abre o Prisma Studio para visualização e edição direta dos dados no banco.
