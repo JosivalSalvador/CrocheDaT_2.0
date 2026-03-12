@@ -80,3 +80,22 @@ O `package.json` na raiz do projeto exporta vários scripts unificados:
 * `npm run test`: Roda a suíte de testes em todo o projeto.
 * `npm run test:e2e:ui`: Abre a interface do Playwright para testes End-to-End no front-end.
 * `npm run db:studio`: Abre o Prisma Studio para visualização e edição direta dos dados no banco.
+
+## Integração e Entrega Contínuas (CI/CD)
+
+O projeto utiliza **GitHub Actions** para garantir a qualidade do código e automatizar a publicação das imagens de produção. O fluxo está dividido em dois pipelines principais:
+
+### 1. Continuous Integration (CI)
+Acionado automaticamente em *pushes* ou *pull requests* nas branches `dev` e `main`. Ele atua como nossa barreira de qualidade:
+
+* **Checks do Server e Web:** Executa paralelamente o Linter, Type-check e testes locais para o back-end (com banco de dados de teste em memória) e front-end.
+* **Testes End-to-End (E2E):** Após a aprovação dos testes rápidos, o ambiente completo é levantado via Docker e testado na interface utilizando **Playwright**. Relatórios de erro em HTML são salvos como artefatos caso algo falhe.
+* **Validação de Build:** Simula o build dos Dockerfiles de produção para garantir que não há erros de compilação.
+* **Pull Request Automático:** Se um *push* for feito na branch `dev` e todos os testes passarem, o pipeline abre automaticamente um Pull Request para a branch `main`.
+
+### 2. Continuous Deployment (CD)
+Acionado exclusivamente ao realizar um merge (push) na branch `main`. 
+
+* **Build e Push (Docker Hub):** O pipeline constrói as imagens otimizadas para a API e Web, utilizando cache inteligente do GitHub Actions.
+* **Múltiplas Arquiteturas:** As imagens são geradas para `linux/amd64` e `linux/arm64`.
+* **Versionamento:** As imagens são publicadas no Docker Hub com a tag `latest` e uma tag específica com o hash do commit (`github.sha`), garantindo rastreabilidade e facilitando rollbacks.
